@@ -14,6 +14,9 @@ importers:
       '@vitejs/plugin-vue':
         specifier: ^5.2.4
         version: 5.2.4(vite@5.4.19)(vue@3.5.15)
+      pnpm:
+        specifier: ^10.11.0
+        version: 10.11.0
       vue:
         specifier: 3.5.15
         version: 3.5.15
@@ -481,6 +484,11 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
 
+  pnpm@10.11.0:
+    resolution: {integrity: sha512-ZUBYP0HMX2KOs9l3Ps7oAvT575kjzEW2mJD7R5kdSwkpZGlOw6T3OKQgyRijMwYsi5JdMS9C5PDCY+tgNVH5dw==}
+    engines: {node: '>=18.12'}
+    hasBin: true
+
   postcss@8.5.3:
     resolution: {integrity: sha512-dle9A3yYxlBSrt8Fu+IpjGT8SY8hN0mlaA6GY8t0P5PjIOZemULz/E2Bnm/2dcUOena75OTNkHI76uZBNUUq3A==}
     engines: {node: ^10 || ^12 || >=14}
@@ -932,6 +940,8 @@ snapshots:
   picocolors@1.1.1: {}
 
   picomatch@2.3.1: {}
+
+  pnpm@10.11.0: {}
 
   postcss@8.5.3:
     dependencies:
