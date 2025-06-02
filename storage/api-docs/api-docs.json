@@ -6,13 +6,13 @@
         "version": "0.1"
     },
     "paths": {
-        "/test": {
+        "/api/test": {
             "get": {
-                "summary": "테스트 API",
-                "operationId": "6164e85620ba303cf270690984a79b2b",
+                "summary": "Swagger를 테스트 해봅니다.",
+                "operationId": "dc097032a606e8d42c32d872872316c6",
                 "responses": {
                     "200": {
-                        "description": "API 테스트 성공",
+                        "description": "Swagger + API 테스트 성공",
                         "content": {
                             "application/json": {
                                 "schema": {

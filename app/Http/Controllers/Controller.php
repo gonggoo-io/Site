@@ -19,7 +19,7 @@ class Controller extends BaseController
 
     /**
      * @OA\Get(
-     *     path="/test",
+     *     path="/api/test",
      *     summary="Swagger를 테스트 해봅니다.",
      *     @OA\Response(
      *         response=200,
