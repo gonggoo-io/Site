@@ -16,25 +16,4 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
-
-    /**
-     * @OA\Get(
-     *     path="/api/test",
-     *     summary="Swagger를 테스트 해봅니다.",
-     *     @OA\Response(
-     *         response=200,
-     *         description="Swagger + API 테스트 성공",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Hello API!")
-     *         )
-     *     )
-     * )
-     */
-    public function test()
-    {
-        return response()->json([
-            'message' => 'Hello API!',
-            'status' => 'success'
-        ]);
-    }
 }

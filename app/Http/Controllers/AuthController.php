@@ -31,8 +31,8 @@ class AuthController extends Controller
      *             @OA\Property(property="password", type="string", format="password", example="password123"),
      *             @OA\Property(property="password_confirmation", type="string", format="password", example="password123"),
      *             example={
-     *                 "name": "홍길동",
-     *                 "email": "user@example.com",
+     *                 "name": "신희성",
+     *                 "email": "shinhuiseong07@gmail.com",
      *                 "password": "password123",
      *                 "password_confirmation": "password123"
      *             }
@@ -59,7 +59,7 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function register(Request $request)
+    public function signup(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',

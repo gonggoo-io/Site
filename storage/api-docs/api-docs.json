@@ -13,7 +13,7 @@
                 ],
                 "summary": "회원가입",
                 "description": "새로운 사용자를 등록합니다.",
-                "operationId": "65b7ef1b1e076c033bf91055f53bd9a1",
+                "operationId": "7e21f43155c4b9f9bfb7143d38a8554e",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -77,30 +77,6 @@
                     },
                     "422": {
                         "description": "유효성 검사 실패"
-                    }
-                }
-            }
-        },
-        "/api/test": {
-            "get": {
-                "summary": "Swagger를 테스트 해봅니다.",
-                "operationId": "dc097032a606e8d42c32d872872316c6",
-                "responses": {
-                    "200": {
-                        "description": "Swagger + API 테스트 성공",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Hello API!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
                     }
                 }
             }
