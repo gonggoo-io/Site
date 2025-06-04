@@ -12,3 +12,4 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::post('/signup', [AuthController::class, 'signup']);
+Route::post('/signin', [AuthController::class, 'signin']);

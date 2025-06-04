@@ -11,7 +11,7 @@ use Illuminate\Validation\ValidationException;
 /**
  * @OA\Tag(
  *     name="Auth",
- *     description="인증 관련 API"
+ *     description="인증"
  * )
  */
 class AuthController extends Controller
@@ -79,7 +79,48 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(Request $request)
+    /**
+     * @OA\Post(
+     *     path="/api/signin",
+     *     summary="로그인",
+     *     description="사용자 로그인을 처리합니다.",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="password123"),
+     *             example={
+     *                 "email": "shinhuiseong07@gmail.com",
+     *                 "password": "password123"
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="로그인 성공",
+     *         @OA\JsonContent(
+     *             example={
+     *                 "message": "로그인이 완료되었습니다.",
+     *                 "access_token": "1|abcdef123456...",
+     *                 "token_type": "Bearer",
+     *                 "user": {
+     *                     "id": 1,
+     *                     "name": "홍길동",
+     *                     "email": "user@example.com",
+     *                     "created_at": "2024-03-14T12:00:00.000000Z"
+     *                 }
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="유효성 검사 실패"
+     *     )
+     * )
+     */
+    public function signin(Request $request)
     {
         $request->validate([
             'email' => 'required|email',

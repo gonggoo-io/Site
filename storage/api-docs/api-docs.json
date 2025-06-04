@@ -49,8 +49,8 @@
                                 "type": "object"
                             },
                             "example": {
-                                "name": "홍길동",
-                                "email": "user@example.com",
+                                "name": "신희성",
+                                "email": "shinhuiseong07@gmail.com",
                                 "password": "password123",
                                 "password_confirmation": "password123"
                             }
@@ -80,12 +80,76 @@
                     }
                 }
             }
+        },
+        "/api/signin": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "로그인",
+                "description": "사용자 로그인을 처리합니다.",
+                "operationId": "7abc10222bca3fb4e34b3d6ef1018b93",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "example": {
+                                "email": "user@example.com",
+                                "password": "password123"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "로그인 성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "로그인이 완료되었습니다.",
+                                    "access_token": "1|abcdef123456...",
+                                    "token_type": "Bearer",
+                                    "user": {
+                                        "id": 1,
+                                        "name": "홍길동",
+                                        "email": "user@example.com",
+                                        "created_at": "2024-03-14T12:00:00.000000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "유효성 검사 실패"
+                    }
+                }
+            }
         }
     },
     "tags": [
         {
             "name": "Auth",
-            "description": "인증 관련 API"
+            "description": "인증"
         }
     ]
 }
