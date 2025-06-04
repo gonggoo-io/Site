@@ -29,23 +29,28 @@ class AuthController extends Controller
      *             @OA\Property(property="name", type="string", example="홍길동"),
      *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
      *             @OA\Property(property="password", type="string", format="password", example="password123"),
-     *             @OA\Property(property="password_confirmation", type="string", format="password", example="password123")
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="password123"),
+     *             example={
+     *                 "name": "홍길동",
+     *                 "email": "user@example.com",
+     *                 "password": "password123",
+     *                 "password_confirmation": "password123"
+     *             }
      *         )
      *     ),
      *     @OA\Response(
      *         response=201,
      *         description="회원가입 성공",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="회원가입이 완료되었습니다."),
-     *             @OA\Property(
-     *                 property="user",
-     *                 type="object",
-     *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="name", type="string", example="홍길동"),
-     *                 @OA\Property(property="email", type="string", example="user@example.com"),
-     *                 @OA\Property(property="created_at", type="string", format="date-time"),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time")
-     *             )
+     *             example={
+     *                 "message": "회원가입이 완료되었습니다.",
+     *                 "user": {
+     *                     "id": 1,
+     *                     "name": "신희성",
+     *                     "email": "shinhuiseong07@gmail.com",
+     *                     "create": "2025-06-04T05:52:56.533Z",
+     *                 }
+     *             }
      *         )
      *     ),
      *     @OA\Response(
@@ -97,4 +102,4 @@ class AuthController extends Controller
             'user' => $user
         ]);
     }
-} 
+}
