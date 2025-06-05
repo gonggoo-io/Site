@@ -72,7 +72,7 @@
         </div>
         <div class="footer">
             이 메일은 발신 전용이며, 회신하실 수 없습니다.<br>
-            © gongoo. All rights reserved.
+            © 2025 gongoo. All rights reserved.
         </div>
     </div>
 </body>
