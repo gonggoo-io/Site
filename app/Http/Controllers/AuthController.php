@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
@@ -24,11 +25,20 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
+        if (!Cache::get('email_verified_' . $request->email)) {
+            return back()->withErrors([
+                'email' => '이메일 인증을 완료해주세요.'
+            ]);
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'email_verified_at' => now(),
         ]);
+        
+        Cache::forget('email_verified_' . $request->email);
 
         Auth::login($user);
 
