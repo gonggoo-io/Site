@@ -12,6 +12,7 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $table = 'user';
     public $timestamps = false;
 
     /**
@@ -41,16 +42,11 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'password' => 'hashed',
-        'create' => 'datetime',
         'email_verified_at' => 'datetime',
     ];
 
     protected static function boot()
     {
         parent::boot();
-        
-        static::creating(function ($user) {
-            $user->create = now();
-        });
     }
 }

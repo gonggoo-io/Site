@@ -12,7 +12,7 @@ class EmailVerificationController extends Controller
     public function sendVerificationCode(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|unique:users,email'
+            'email' => 'required|email|unique:user,email'
         ]);
 
         $code = sprintf("%06d", mt_rand(1, 999999));

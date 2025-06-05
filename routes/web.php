@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\InsertController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailVerificationController;
 
@@ -23,5 +23,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', fn () => Inertia::render('Dashboard'))->name('dashboard');
 
     Route::get('/insert', fn () => Inertia::render('Insert/Insert'))->name('insert');
-    Route::post('/insert', [PostController::class, 'store']);
+    Route::post('/insert', [InsertController::class, 'store']);
 });

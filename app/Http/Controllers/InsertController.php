@@ -16,7 +16,10 @@ class InsertController extends Controller
             'total_price' => 'required|integer|min:0',
         ]);
 
-        Insert::create($request->all());
+        $data = $request->all();
+        $data['user_id'] = auth()->id();
+
+        Insert::create($data);
 
         return response()->json(['success' => true]);
     }
