@@ -63,7 +63,7 @@ const calculatePricePerPerson = (totalPrice, participantCount) => {
                     
                     <div class="flex justify-between">
                         <span class="text-gray-600">모집 마감 시간:</span>
-                        <span>{{ calculateTimeLeft(insert.created_at) }}</span>
+                        <span>{{ new Date(insert.deadline).toLocaleString() }}</span>
                     </div>
                 </div>
             </div>

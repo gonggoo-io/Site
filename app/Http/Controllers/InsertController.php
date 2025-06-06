@@ -18,6 +18,7 @@ class InsertController extends Controller
 
         $data = $request->all();
         $data['user_id'] = auth()->id();
+        $data['deadline'] = now()->setTimezone('Asia/Seoul')->addDays(7);
 
         Insert::create($data);
 
