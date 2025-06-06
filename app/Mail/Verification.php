@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class EmailVerificationCode extends Mailable
+class Verification extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -19,7 +19,7 @@ class EmailVerificationCode extends Mailable
 
     public function build()
     {
-        return $this->subject('이메일 인증번호')
-                    ->view('emails.verification-code');
+        return $this->subject('[공구] 이메일 인증을 위한 인증번호를 안내 드립니다.')
+                    ->view('emails.vc');
     }
-}
+} 

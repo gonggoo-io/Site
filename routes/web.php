@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\InsertController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\VerificationController;
 
 Route::get('/', fn () => Inertia::render('Home'));
 
@@ -14,8 +14,8 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
     
-    Route::post('/send-verification-code', [EmailVerificationController::class, 'sendVerificationCode']);
-    Route::post('/verify-code', [EmailVerificationController::class, 'verifyCode']);
+    Route::post('/send-verification-code', [VerificationController::class, 'sendVerificationCode']);
+    Route::post('/verify-code', [VerificationController::class, 'verifyCode']);
 });
 
 Route::middleware('auth')->group(function () {

@@ -34,9 +34,10 @@
         }
         .body {
             padding: 24px;
-            color: #38394B;
+            color: #000000;
             font-size: 15px;
             line-height: 1.6;
+            text-align: center;
         }
         .code-button {
             display: block;
@@ -63,17 +64,17 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="title">본인 인증을 완료해주세요</div>
+            <div class="title">[공구] 이메일 인증을 완료해주세요.</div>
         </div>
         <div class="body">
-            안녕하세요. <strong>gongoo (공구)</strong>에서 회원가입을 위한 본인 인증을 요청드렸어요.<br>
-            아래 인증 번호를 입력하여 인증을 완료해주세요.
+            아래 발급된 이메일 인증번호를 복사하거나 직접 입력하여 인증을 완료해주세요. <br>
+            개인정보 보호를 위해 인증번호는 5분 간 유효합니다. 
             <a href="#" class="code-button">{{ $code }}</a>
-        </div>
+        </div>  
         <div class="footer">
-            이 메일은 발신 전용이며, 회신하실 수 없습니다.<br>
+            본 메일은 발신 전용이며, 회신하실 수 없습니다.<br>
             © 2025 gongoo. All rights reserved.
         </div>
     </div>
 </body>
-</html>
+</html> 

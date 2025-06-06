@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
-use App\Mail\EmailVerificationCode;
+use App\Mail\Verification;
 
-class EmailVerificationController extends Controller
+class VerificationController extends Controller
 {
     public function sendVerificationCode(Request $request)
     {
@@ -19,7 +19,7 @@ class EmailVerificationController extends Controller
         
         Cache::put('email_verification_' . $request->email, $code, now()->addMinutes(5));
         
-        Mail::to($request->email)->send(new EmailVerificationCode($code));
+        Mail::to($request->email)->send(new Verification($code));
 
         return response()->json([
             'message' => '인증번호가 이메일로 전송되었습니다.',
@@ -58,4 +58,4 @@ class EmailVerificationController extends Controller
             'status' => 'verified'
         ]);
     }
-}
+} 
