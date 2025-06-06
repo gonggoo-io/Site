@@ -11,8 +11,8 @@ Route::get('/', fn () => Inertia::render('Home'));
 Route::middleware('guest')->group(function () {
     Route::get('/signup', [AuthController::class, 'showSignup'])->name('signup');
     Route::post('/signup', [AuthController::class, 'signup']);
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/signin', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/signin', [AuthController::class, 'login']);
     
     Route::post('/verification/send', [VerificationController::class, 'sendVerificationCode']);
     Route::post('/verification/code', [VerificationController::class, 'verifyCode']);

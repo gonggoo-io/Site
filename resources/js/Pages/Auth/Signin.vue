@@ -7,7 +7,7 @@ const form = useForm({
 })
 
 function submit() {
-  form.post('/login', {
+  form.post('/signin', {
     onSuccess: () => alert('로그인 성공')
   })
 }
