@@ -14,8 +14,8 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
     
-    Route::post('/send-verification-code', [VerificationController::class, 'sendVerificationCode']);
-    Route::post('/verify-code', [VerificationController::class, 'verifyCode']);
+    Route::post('/verification/send', [VerificationController::class, 'sendVerificationCode']);
+    Route::post('/verification/code', [VerificationController::class, 'verifyCode']);
 });
 
 Route::middleware('auth')->group(function () {

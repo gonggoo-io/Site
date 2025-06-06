@@ -9,7 +9,7 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/signup',
         '/login',
-        '/send-verification-code',
-        '/verify-code',
+        '/verification/send',
+        '/verification/code',
     ];
 }

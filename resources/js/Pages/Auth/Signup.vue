@@ -27,7 +27,7 @@ async function sendVerificationCode() {
   isCodeSending.value = true
   
   try {
-    await axios.post('/send-verification-code', {
+    await axios.post('/verification/send', {
       email: form.email
     })
     
@@ -50,7 +50,7 @@ async function verifyCode() {
   isCodeVerifying.value = true
   
   try {
-    await axios.post('/verify-code', {
+    await axios.post('/verification/code', {
       email: form.email,
       code: verificationCode.value
     })
