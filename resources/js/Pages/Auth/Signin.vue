@@ -3,7 +3,8 @@ import { useForm } from '@inertiajs/vue3'
 
 const form = useForm({
   email: '',
-  password: ''
+  password: '',
+  remember: true
 })
 
 function submit() {
@@ -26,6 +27,10 @@ function submit() {
         <label for="password">비밀번호</label>
         <input id="password" v-model="form.password" type="password" class="w-full border" />
         <div v-if="form.errors.password" class="text-red-500">{{ form.errors.password }}</div>
+      </div>
+      <div>
+        <label for="remember">로그인 유지</label>
+        <input id="remember" v-model="form.remember" type="checkbox" class="mr-2" />
       </div>
       <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">로그인</button>
     </form>
