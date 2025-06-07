@@ -15,6 +15,11 @@ class Insert extends BaseModel
         'user_id', 'item', 'link', 'count', 'price', 'created', 'deadline'
     ];   
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     protected static function booted()
     {
         static::addGlobalScope('not_expired', function ($query) {

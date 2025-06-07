@@ -22,7 +22,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', function () {
-        $inserts = Insert::orderBy('created_at', 'desc')->get();
+        $inserts = Insert::with('user')->orderBy('created_at', 'desc')->get();
         return Inertia::render('Dashboard', [
             'inserts' => $inserts
         ]);

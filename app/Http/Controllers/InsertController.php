@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class InsertController extends Controller
 {
+    public function index()
+    {
+        $inserts = Insert::with('user')->get();
+        return response()->json($inserts);
+    }
+
     public function store(Request $request)
     {
         $request->validate([

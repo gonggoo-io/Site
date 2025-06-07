@@ -8,6 +8,8 @@ const props = defineProps({
     }
 });
 
+console.log('Inserts data:', props.inserts);
+
 const calculateTimeLeft = (createdAt) => {
     const created = new Date(createdAt);
     const now = new Date();
@@ -75,6 +77,11 @@ const calculatePricePerPerson = (totalPrice, participantCount) => {
                     <div class="flex justify-between">
                         <span class="text-gray-600">1인당 금액:</span>
                         <span>{{ calculatePricePerPerson(insert.price, insert.count) }}원</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">작성자:</span>
+                        <span>{{ insert.user ? insert.user.name : '알 수 없음' }}</span>
                     </div>
                     
                     <div class="flex justify-between" v-if="calculateTimeUntilDeadline(insert.deadline)">
