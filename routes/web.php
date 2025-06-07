@@ -6,6 +6,7 @@ use App\Http\Controllers\InsertController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VerificationController;
 use App\Models\Insert;
+use App\Http\Controllers\BuyController;
 
 Route::get('/', fn () => Inertia::render('Home'));
 
@@ -22,7 +23,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', function () {
-        $inserts = Insert::with('user')->orderBy('created_at', 'desc')->get();
+        $inserts = Insert::with(['user', 'buys'])->orderBy('created_at', 'desc')->get();
         return Inertia::render('Dashboard', [
             'inserts' => $inserts
         ]);
@@ -32,4 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/insert', [InsertController::class, 'store']);
 
     Route::get('/inserts', [InsertController::class, 'index']);
+
+    Route::post('/buy', [BuyController::class, 'store'])->name('buy.store');
+    Route::delete('/buy', [BuyController::class, 'destroy'])->name('buy.destroy');
+    Route::get('/buy/{insertId}', [BuyController::class, 'show'])->name('buy.show');
 });

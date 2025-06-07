@@ -20,6 +20,11 @@ class Insert extends BaseModel
         return $this->belongsTo(User::class);
     }
 
+    public function buys()
+    {
+        return $this->hasMany(Buy::class, 'insert_id');
+    }
+
     protected static function booted()
     {
         static::addGlobalScope('not_expired', function ($query) {
