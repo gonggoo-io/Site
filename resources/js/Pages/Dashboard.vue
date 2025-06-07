@@ -59,8 +59,18 @@ const handleBuy = async () => {
     loading.value = true;
     try {
         if (!joined.value) {
-            await axios.post('/buy', { insert_id: selectedInsert.value.id });
-            selectedInsert.value.buys.push({ user_id: props.userId });
+            if (props.userId === selectedInsert.value.user_id) {
+                alert('자신이 등록한 공동구매에는 참여할 수 없습니다.');
+                return;
+            }
+            await axios.post('/buy', { 
+                insert_id: selectedInsert.value.id,
+                created_at: new Date().toISOString()
+            });
+            selectedInsert.value.buys.push({ 
+                user_id: props.userId,
+                created_at: new Date().toISOString()
+            });
             joined.value = true;
         } else {
             const buyCount = selectedInsert.value.buys.length;
@@ -181,7 +191,7 @@ const calculatePricePerPerson = (totalPrice, participantCount) => {
                     <button @click="copyLink" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">공유</button>
                     <template v-if="props.userId !== selectedInsert.user_id">
                         <button v-if="!joined" :disabled="!canBuy() || loading" @click="handleBuy" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:opacity-50">살래요</button>
-                        <button v-else :disabled="!canCancel() || loading" @click="handleBuy" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 disabled:opacity-50">취소할래요</button>
+                        <button v-else-if="joined" :disabled="!canCancel() || loading" @click="handleBuy" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 disabled:opacity-50">취소할래요</button>
                     </template>
                 </div>
             </div>

@@ -15,6 +15,10 @@ class BuyController extends Controller
         $insertId = $request->input('insert_id');
         $insert = Insert::withCount('buys')->findOrFail($insertId);
 
+        if ($insert->user_id === $userId) {
+            return response()->json(['message' => '자신이 등록한 공동구매에는 참여할 수 없습니다.'], 403);
+        }
+
         if (Buy::where('user_id', $userId)->where('insert_id', $insertId)->exists()) {
             return response()->json(['message' => '이미 참여하셨습니다.'], 409);
         }
@@ -24,6 +28,8 @@ class BuyController extends Controller
         $buy = Buy::create([
             'user_id' => $userId,
             'insert_id' => $insertId,
+            'created_at' => now()->setTimezone('Asia/Seoul'),
+            'updated_at' => now()->setTimezone('Asia/Seoul')
         ]);
         return response()->json(['success' => true, 'buy' => $buy]);
     }
