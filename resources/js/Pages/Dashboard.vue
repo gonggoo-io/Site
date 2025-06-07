@@ -19,6 +19,22 @@ const calculateTimeLeft = (createdAt) => {
     return `${days}일 ${hours}시간 ${minutes}분 전`;
 };
 
+const calculateTimeUntilDeadline = (deadline) => {
+    const deadlineDate = new Date(deadline);
+    const now = new Date();
+    const diff = deadlineDate - now;
+
+    if (diff <= 0) {
+        return '마감되었습니다:('; 
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    return `${days}일 ${hours}시간 ${minutes}분 후 마감`;
+};
+
 const calculatePricePerPerson = (totalPrice, participantCount) => {
     return Math.floor(totalPrice / participantCount).toLocaleString();
 };
@@ -61,9 +77,9 @@ const calculatePricePerPerson = (totalPrice, participantCount) => {
                         <span>{{ calculatePricePerPerson(insert.price, insert.count) }}원</span>
                     </div>
                     
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">모집 마감 시간:</span>
-                        <span>{{ new Date(insert.deadline).toLocaleString() }}</span>
+                    <div class="flex justify-between" v-if="calculateTimeUntilDeadline(insert.deadline)">
+                        <span class="text-gray-600">모집:</span>
+                        <span>{{ calculateTimeUntilDeadline(insert.deadline) }}</span>
                     </div>
                 </div>
             </div>
