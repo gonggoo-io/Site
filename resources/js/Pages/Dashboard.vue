@@ -35,7 +35,7 @@ const calculatePricePerPerson = (totalPrice, participantCount) => {
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div v-for="insert in inserts" :key="insert.id" 
                  class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-                <h2 class="text-xl font-semibold mb-4">{{ insert.item_name }}</h2>
+                <h2 class="text-xl font-semibold mb-4">{{ insert.item }}</h2>
                 
                 <div class="space-y-3">
                     <div class="flex justify-between">
@@ -48,17 +48,17 @@ const calculatePricePerPerson = (totalPrice, participantCount) => {
                     
                     <div class="flex justify-between">
                         <span class="text-gray-600">모집인원:</span>
-                        <span>{{ insert.participant_count }}명</span>
+                        <span>{{ insert.count }}명</span>
                     </div>
                     
                     <div class="flex justify-between">
                         <span class="text-gray-600">총 금액:</span>
-                        <span>{{ insert.total_price.toLocaleString() }}원</span>
+                        <span>{{ insert.price.toLocaleString() }}원</span>
                     </div>
                     
                     <div class="flex justify-between">
                         <span class="text-gray-600">1인당 금액:</span>
-                        <span>{{ calculatePricePerPerson(insert.total_price, insert.participant_count) }}원</span>
+                        <span>{{ calculatePricePerPerson(insert.price, insert.count) }}원</span>
                     </div>
                     
                     <div class="flex justify-between">

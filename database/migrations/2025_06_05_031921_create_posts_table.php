@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('insert', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('item_name');
+            $table->string('item');
             $table->string('link');
-            $table->integer('participant_count');
-            $table->integer('total_price');
+            $table->integer('count');
+            $table->integer('price');
             $table->timestamps();
+            $table->timestamp('deadline')->nullable();
+            $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
         });

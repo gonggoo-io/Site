@@ -10,10 +10,10 @@ class InsertController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'item_name' => 'required|string',
+            'item' => 'required|string',
             'link' => 'required|url',
-            'participant_count' => 'required|integer|min:1',
-            'total_price' => 'required|integer|min:0',
+            'count' => 'required|integer|min:1',
+            'price' => 'required|integer|min:0',
         ]);
 
         $data = $request->all();

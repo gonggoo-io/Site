@@ -2,10 +2,10 @@
     <div>
       <h1>글 등록</h1>
       <form @submit.prevent="submit">
-        <input v-model="form.item_name" placeholder="아이템명" required />
+        <input v-model="form.item" placeholder="아이템명" required />
         <input v-model="form.link" placeholder="링크" type="url" required />
-        <input v-model="form.participant_count" placeholder="모집 인원" type="number" required />
-        <input v-model="form.total_price" placeholder="총금액" type="number" required />
+        <input v-model="form.count" placeholder="모집 인원" type="number" required />
+        <input v-model="form.price" placeholder="총금액" type="number" required />
         <button type="submit">등록</button>
       </form>
     </div>
@@ -16,10 +16,10 @@
   import axios from 'axios'
   
   const form = ref({
-    item_name: '',
+    item: '',
     link: '',
-    participant_count: '',
-    total_price: ''
+    count: '',
+    price: ''
   })
   
   const submit = async () => {
