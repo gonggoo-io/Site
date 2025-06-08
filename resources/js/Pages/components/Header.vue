@@ -1,7 +1,7 @@
 <template>
   <header class="bg-white py-4">
-    <div class="container mx-auto px-4">
-      <div class="flex justify-between items-center">
+    <div class="w-full px-4">
+      <div class="max-w-[1440px] mx-auto flex justify-between items-center">
         <div class="flex items-center gap-2">
           <img src="/public/logo.png" alt="logo" class="w-8 h-8 rounded-md" />
           <span class="text-xl font-bold text-black">공구</span>
