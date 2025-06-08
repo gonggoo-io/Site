@@ -3,7 +3,7 @@
     <div class="w-full px-4">
       <div class="max-w-[1440px] mx-auto flex justify-between items-center">
         <div class="flex items-center gap-2">
-          <img src="/public/logo.png" alt="logo" class="w-8 h-8 rounded-md" />
+          <img src="/public/logo.svg" alt="logo" class="w-5 h-5" />
           <span class="text-xl font-bold text-black">공구</span>
         </div>
         <div class="flex gap-3">
