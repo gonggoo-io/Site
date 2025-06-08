@@ -10,7 +10,7 @@
           <button class="px-3.5 py-1.5 text-[14px] border border-gray-300 rounded-md hover:bg-gray-100 hover:text-gray-800 transition-colors">
             로그인
           </button>
-          <button class="px-3.5 py-1.5 text-[14px] border border-[#5A57EB] bg-[#5A57EB] text-white rounded-md hover:bg-[#4A47D9] hover:border-[#4A47D9] transition-colors">
+          <button class="px-3.5 py-1.5 text-[14px] border border-[#2F9266] bg-[#2F9266] text-white rounded-md hover:bg-[#247A4F] hover:border-[#247A4F] transition-colors">
             회원가입
           </button>
         </div>
