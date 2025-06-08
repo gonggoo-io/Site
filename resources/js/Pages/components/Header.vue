@@ -2,7 +2,7 @@
   <header class="bg-white py-4">
     <div class="w-full px-4">
       <div class="max-w-[1440px] mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-3">
           <img src="/public/logo.svg" alt="logo" class="w-5 h-5" />
           <span class="text-xl font-bold text-black">공구</span>
         </div>
