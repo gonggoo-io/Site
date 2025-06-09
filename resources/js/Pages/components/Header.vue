@@ -9,19 +9,36 @@
         <span class="text-xl font-bold text-[#2F9266]">공구</span>
       </Link>
 
-      <div class="flex gap-3">
-        <Link
-          href="/signin"
-          class="px-3.5 py-1.5 text-[14px] border border-gray-300 rounded-md hover:bg-gray-100 hover:text-gray-800 transition-colors"
-        >
-          로그인
-        </Link>
-        <Link
-          href="/signup"
-          class="px-3.5 py-1.5 text-[14px] border border-[#2F9266] bg-[#2F9266] text-white rounded-md hover:bg-[#247A4F] hover:border-[#247A4F] transition-colors"
-        >
-          회원가입
-        </Link>
+      <div class="flex gap-3 items-center">
+        <template v-if="auth?.user">
+          <div class="flex items-center gap-2">
+            <img src="/public/user.webp" alt="user" class="w-8 h-8 rounded-full" />
+            <span class="text-sm text-gray-700">{{ auth.user.name }}님</span>
+            <!-- <Link
+              href="/logout"
+              method="post"
+              as="button"
+              class="px-3.5 py-1.5 text-[14px] border border-gray-300 rounded-md hover:bg-gray-100 hover:text-gray-800 transition-colors"
+            >
+              로그아웃
+            </Link> -->
+          </div>
+        </template>
+
+        <template v-else>
+          <Link
+            href="/signin"
+            class="px-3.5 py-1.5 text-[14px] border border-gray-300 rounded-md hover:bg-gray-100 hover:text-gray-800 transition-colors"
+          >
+            로그인
+          </Link>
+          <Link
+            href="/signup"
+            class="px-3.5 py-1.5 text-[14px] border border-[#2F9266] bg-[#2F9266] text-white rounded-md hover:bg-[#247A4F] hover:border-[#247A4F] transition-colors"
+          >
+            회원가입
+          </Link>
+        </template>
       </div>
     </Container>
   </header>
@@ -31,6 +48,11 @@
 import Container from './Container.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+
 const page = usePage();
 const currentPath = computed(() => page.url);
+const auth = computed(() => page.props.auth);
+
+// 디버깅을 위한 콘솔 로그
+console.log('Auth state:', auth.value);
 </script>

@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+import Header from '../Pages/components/Header.vue';
 
 const props = defineProps({
     inserts: {
@@ -134,65 +135,68 @@ const calculatePricePerPerson = (totalPrice, participantCount) => {
 </script>
 
 <template>
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-8">공동구매 목록</h1>
-        
-        <div v-if="!inserts || inserts.length === 0" class="text-center text-gray-500 py-8">
-            등록된 공동구매가 없습니다.
-        </div>
-        
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div v-for="insert in inserts" :key="insert.id" 
-                 class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
-                 @click="openModal(insert)">
-                <h2 class="text-xl font-semibold mb-4">{{ insert.item }}</h2>
-                <div class="space-y-3">
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">링크:</span>
-                        <a :href="insert.link" target="_blank" 
-                           class="text-blue-600 hover:underline truncate max-w-[200px]"
-                           @click.stop>{{ insert.link }}</a>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">모집인원:</span>
-                        <span>{{ getParticipantCount(insert) }}/{{ insert.count }}명</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">총 금액:</span>
-                        <span>{{ insert.price.toLocaleString() }}원</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">1인당 금액:</span>
-                        <span>{{ calculatePricePerPerson(insert.price, getParticipantCount(insert)) }}원</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">작성자:</span>
-                        <span>{{ insert.user ? insert.user.name : '알 수 없음' }}</span>
-                    </div>
-                    <div class="flex justify-between" v-if="calculateTimeUntilDeadline(insert.deadline)">
-                        <span class="text-gray-600">모집:</span>
-                        <span>{{ calculateTimeUntilDeadline(insert.deadline) }}</span>
+    <div class="min-h-screen bg-white">
+        <Header />
+        <div class="container mx-auto px-4 py-8">
+            <h1 class="text-3xl font-bold mb-8">공동구매 목록</h1>
+            
+            <div v-if="!inserts || inserts.length === 0" class="text-center text-gray-500 py-8">
+                등록된 공동구매가 없습니다.
+            </div>
+            
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div v-for="insert in inserts" :key="insert.id" 
+                     class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                     @click="openModal(insert)">
+                    <h2 class="text-xl font-semibold mb-4">{{ insert.item }}</h2>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">링크:</span>
+                            <a :href="insert.link" target="_blank" 
+                               class="text-blue-600 hover:underline truncate max-w-[200px]"
+                               @click.stop>{{ insert.link }}</a>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">모집인원:</span>
+                            <span>{{ getParticipantCount(insert) }}/{{ insert.count }}명</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">총 금액:</span>
+                            <span>{{ insert.price.toLocaleString() }}원</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">1인당 금액:</span>
+                            <span>{{ calculatePricePerPerson(insert.price, getParticipantCount(insert)) }}원</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">작성자:</span>
+                            <span>{{ insert.user ? insert.user.name : '알 수 없음' }}</span>
+                        </div>
+                        <div class="flex justify-between" v-if="calculateTimeUntilDeadline(insert.deadline)">
+                            <span class="text-gray-600">모집:</span>
+                            <span>{{ calculateTimeUntilDeadline(insert.deadline) }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-            <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md relative">
-                <button @click="closeModal" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
-                <h2 class="text-2xl font-bold mb-4">{{ selectedInsert.item }}</h2>
-                <div class="mb-2 text-gray-700">{{ selectedInsert.user ? selectedInsert.user.name : '알 수 없음' }} | {{ calculateTimeUntilDeadline(selectedInsert.deadline) }}</div>
-                <div class="mb-2"><span class="font-semibold">링크:</span> <a :href="selectedInsert.link" target="_blank" class="text-blue-600 hover:underline">{{ selectedInsert.link }}</a></div>
-                <div class="mb-2"><span class="font-semibold">모집인원:</span> {{ getParticipantCount(selectedInsert) }}/{{ selectedInsert.count }}명</div>
-                <div class="mb-2"><span class="font-semibold">총 금액:</span> {{ selectedInsert.price.toLocaleString() }}원</div>
-                <div class="mb-2"><span class="font-semibold">1인당 금액:</span> {{ calculatePricePerPerson(selectedInsert.price, getParticipantCount(selectedInsert)) }}원</div>
-                <div class="mb-4"><span class="font-semibold">마감일:</span> {{ formatDateKST(selectedInsert.deadline) }}</div>
-                <div class="flex gap-2 mt-4">
-                    <button @click="copyLink" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">공유</button>
-                    <template v-if="props.userId !== selectedInsert.user_id">
-                        <button v-if="!joined" :disabled="!canBuy() || loading" @click="handleBuy" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:opacity-50">살래요</button>
-                        <button v-else-if="joined" :disabled="!canCancel() || loading" @click="handleBuy" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 disabled:opacity-50">취소할래요</button>
-                    </template>
+            <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+                <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md relative">
+                    <button @click="closeModal" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                    <h2 class="text-2xl font-bold mb-4">{{ selectedInsert.item }}</h2>
+                    <div class="mb-2 text-gray-700">{{ selectedInsert.user ? selectedInsert.user.name : '알 수 없음' }} | {{ calculateTimeUntilDeadline(selectedInsert.deadline) }}</div>
+                    <div class="mb-2"><span class="font-semibold">링크:</span> <a :href="selectedInsert.link" target="_blank" class="text-blue-600 hover:underline">{{ selectedInsert.link }}</a></div>
+                    <div class="mb-2"><span class="font-semibold">모집인원:</span> {{ getParticipantCount(selectedInsert) }}/{{ selectedInsert.count }}명</div>
+                    <div class="mb-2"><span class="font-semibold">총 금액:</span> {{ selectedInsert.price.toLocaleString() }}원</div>
+                    <div class="mb-2"><span class="font-semibold">1인당 금액:</span> {{ calculatePricePerPerson(selectedInsert.price, getParticipantCount(selectedInsert)) }}원</div>
+                    <div class="mb-4"><span class="font-semibold">마감일:</span> {{ formatDateKST(selectedInsert.deadline) }}</div>
+                    <div class="flex gap-2 mt-4">
+                        <button @click="copyLink" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">공유</button>
+                        <template v-if="props.userId !== selectedInsert.user_id">
+                            <button v-if="!joined" :disabled="!canBuy() || loading" @click="handleBuy" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:opacity-50">살래요</button>
+                            <button v-else-if="joined" :disabled="!canCancel() || loading" @click="handleBuy" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 disabled:opacity-50">취소할래요</button>
+                        </template>
+                    </div>
                 </div>
             </div>
         </div>
