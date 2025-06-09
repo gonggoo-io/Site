@@ -1,8 +1,8 @@
 <template>
-  <div class="min-h-screen bg-white">
+  <div class="min-h-screen bg-white flex flex-col">
     <Header />
     
-    <div class="min-h-[calc(100vh-128px)] flex items-center justify-center">
+    <main class="flex-grow flex items-center justify-center py-8">
       <div class="w-full max-w-md">
         <h2 class="text-3xl font-bold text-center mb-2">회원가입</h2>
         <p class="text-center text-gray-600 mb-6">
@@ -138,9 +138,11 @@
           <Link href="/signin" class="text-[#2F9266] hover:underline ml-2">이미 계정이 있으신가요?</Link>
         </p>
       </div>
-    </div>
+    </main>
 
-    <Footer />
+    <div class="mt-auto">
+      <Footer />
+    </div>
   </div>
 </template>
 
