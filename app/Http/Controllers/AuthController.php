@@ -9,12 +9,15 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use App\Http\Resources\UserResource;
 
 class AuthController extends Controller
 {
     public function showSignup()
     {
-        return Inertia::render('Auth/Signup');
+        return Inertia::render('Auth/Signup', [
+            'user' => auth()->check() ? new UserResource(auth()->user()) : null
+        ]);
     }
 
     public function signup(Request $request)
@@ -47,7 +50,9 @@ class AuthController extends Controller
 
     public function showLogin()
     {
-        return Inertia::render('Auth/Signin');
+        return Inertia::render('Auth/Signin', [
+            'user' => auth()->check() ? new UserResource(auth()->user()) : null
+        ]);
     }
 
     public function login(Request $request)

@@ -75,6 +75,13 @@ import Header from '../components/Header.vue';
 import Footer from '../components/Footer.vue';
 import { Link, useForm } from '@inertiajs/vue3';
 
+const props = defineProps({
+  user: {
+    type: Object,
+    default: () => null
+  }
+});
+
 const form = useForm({
   email: '',
   password: '',
@@ -84,7 +91,6 @@ const form = useForm({
 function submit() {
   form.post('/signin', {
     onSuccess: () => {
-      alert('로그인 성공');
     }
   });
 }

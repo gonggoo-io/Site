@@ -153,6 +153,13 @@ import { Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import axios from 'axios';
 
+const props = defineProps({
+  user: {
+    type: Object,
+    default: () => null
+  }
+});
+
 const form = useForm({
   name: '',
   email: '',
