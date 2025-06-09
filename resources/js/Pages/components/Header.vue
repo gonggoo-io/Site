@@ -3,7 +3,7 @@
     class="bg-white py-4 border-b transition-all duration-200"
     :class="{ 'border-b': currentPath !== '/' }"
   >
-    <Container class="flex items-center justify-between">
+    <Container :flex="true" class="flex items-center justify-between">
       <Link href="/" class="flex items-center gap-2 hover:opacity-80 transition">
         <img src="/public/logo.svg" alt="logo" class="w-5 h-5" />
         <span class="text-xl font-bold text-[#2F9266]">공구</span>

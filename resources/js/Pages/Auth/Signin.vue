@@ -7,7 +7,7 @@
       <div class="w-full max-w-md">
         <h2 class="text-3xl font-bold text-center mb-2">로그인</h2>
         <p class="text-center text-gray-600 mb-6">
-          공구를 시작해보아요.
+          공구로 회사 동료, 친구들과 더 저렴하게 구입해요.
         </p>
 
         <form @submit.prevent="handleLogin">
