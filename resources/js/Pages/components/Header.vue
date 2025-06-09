@@ -5,14 +5,14 @@
   >
     <Container :flex="true" class="flex items-center justify-between">
       <Link href="/" class="flex items-center gap-2 hover:opacity-80 transition">
-        <img src="/public/logo.svg" alt="logo" class="w-5 h-5" />
+        <img src="/public/images/logo.svg" alt="logo" class="w-5 h-5" />
         <span class="text-xl font-bold text-[#2F9266]">공구</span>
       </Link>
 
       <div class="flex gap-3 items-center">
         <template v-if="auth?.user">
           <div class="flex items-center gap-2">
-            <img src="/public/user.webp" alt="user" class="w-8 h-8 rounded-full" />
+            <img src="/public/images/user.jpg" alt="user" class="w-8 h-8 rounded-full" />
             <span class="text-sm text-gray-700">{{ auth.user.name }}님</span>
             <!-- <Link
               href="/logout"

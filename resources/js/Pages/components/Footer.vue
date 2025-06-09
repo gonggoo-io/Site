@@ -7,7 +7,7 @@
       </div>
       <div class="flex items-center">
         <a href="https://github.com/gonggoo-io/Site" target="_blank" class="hover:opacity-80 transition-opacity">
-          <img src="/public/github-logo.svg" alt="GitHub" class="w-8 h-8 filter grayscale opacity-60" />
+          <img src="/public/images/github-logo.svg" alt="GitHub" class="w-8 h-8 filter grayscale opacity-60" />
         </a>
       </div>
     </Container>
