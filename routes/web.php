@@ -10,6 +10,8 @@ use App\Http\Controllers\BuyController;
 
 Route::get('/', fn () => Inertia::render('Home'));
 
+Route::get('/privacy', fn () => Inertia::render('Privacy'))->name('privacy');
+
 Route::middleware('guest')->group(function () {
     Route::get('/signup', [AuthController::class, 'showSignup'])->name('signup');
     Route::post('/signup', [AuthController::class, 'signup']);

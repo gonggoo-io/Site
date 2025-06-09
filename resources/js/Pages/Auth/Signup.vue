@@ -1,217 +1,145 @@
-<script setup>
-import { useForm } from '@inertiajs/vue3'
-import { ref } from 'vue'
-import axios from 'axios'
-
-const form = useForm({
-  name: '',
-  email: '',
-  password: '',
-  password_confirmation: ''
-})
-
-const verificationCode = ref('')
-const isCodeSent = ref(false)
-const isEmailVerified = ref(false)
-const isCodeSending = ref(false)
-const isCodeVerifying = ref(false)
-const countdown = ref(0)
-const countdownInterval = ref(null)
-
-async function sendVerificationCode() {
-  if (!form.email) {
-    alert('이메일을 입력해주세요.')
-    return
-  }
-  
-  isCodeSending.value = true
-  
-  try {
-    await axios.post('/verification/send', {
-      email: form.email
-    })
-    
-    isCodeSent.value = true
-    startCountdown()
-    alert('인증번호가 이메일로 전송되었습니다.')
-  } catch (error) {
-    alert(error.response?.data?.message || '인증번호 전송에 실패했습니다.')
-  } finally {
-    isCodeSending.value = false
-  }
-}
-
-async function verifyCode() {
-  if (!verificationCode.value) {
-    alert('인증번호를 입력해주세요.')
-    return
-  }
-  
-  isCodeVerifying.value = true
-  
-  try {
-    await axios.post('/verification/code', {
-      email: form.email,
-      code: verificationCode.value
-    })
-    
-    isEmailVerified.value = true
-    clearInterval(countdownInterval.value)
-    alert('이메일 인증이 완료되었습니다!')
-  } catch (error) {
-    alert(error.response?.data?.message || '인증번호가 일치하지 않습니다.')
-  } finally {
-    isCodeVerifying.value = false
-  }
-}
-
-function startCountdown() {
-  countdown.value = 300
-  countdownInterval.value = setInterval(() => {
-    countdown.value--
-    if (countdown.value <= 0) {
-      clearInterval(countdownInterval.value)
-      isCodeSent.value = false
-    }
-  }, 1000)
-}
-
-function formatTime(seconds) {
-  const minutes = Math.floor(seconds / 60)
-  const remainingSeconds = seconds % 60
-  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
-}
-
-function submit() {
-  if (!isEmailVerified.value) {
-    alert('이메일 인증을 완료해주세요.')
-    return
-  }
-  
-  form.post('/signup', {
-    onSuccess: () => {
-      alert('회원가입이 완료되었습니다!')
-    }
-  })
-}
-</script>
-
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
-      <div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          회원가입
-        </h2>
-      </div>
-      <form class="mt-8 space-y-6" @submit.prevent="submit">
-        <div class="space-y-4">
-          <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">이름</label>
+  <div class="min-h-screen bg-white">
+    <Header />
+    
+    <div class="min-h-[calc(100vh-128px)] flex items-center justify-center">
+
+      <div class="w-full max-w-md">
+        <h2 class="text-3xl font-bold text-center mb-2">회원가입</h2>
+        <p class="text-center text-gray-600 mb-6">
+          공구로 회사 동료, 친구들과 더 저렴하게 구입해요.
+        </p>
+
+        <form @submit.prevent="handleSignup">
+          <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">이름</label>
             <input
               id="name"
-              v-model="form.name"
+              v-model="name"
               type="text"
-              required
-              class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="이름을 입력하세요"
+              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
             />
-          </div>
-          
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">이메일</label>
-            <div class="mt-1 flex space-x-2">
-              <input
-                id="email"
-                v-model="form.email"
-                type="email"
-                required
-                :disabled="isEmailVerified"
-                class="flex-1 appearance-none relative block px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm disabled:bg-gray-100"
-                placeholder="이메일을 입력하세요"
-              />
-              <button
-                type="button"
-                @click="sendVerificationCode"
-                :disabled="isCodeSending || isEmailVerified || !form.email"
-                class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <span v-if="isCodeSending">전송중...</span>
-                <span v-else-if="isEmailVerified">인증완료</span>
-                <span v-else>인증번호</span>
-              </button>
-            </div>
+            <p v-if="nameError" class="text-red-500 text-sm mt-1">이름을 입력해주세요.</p>
           </div>
 
-          <div v-if="isCodeSent && !isEmailVerified" class="space-y-2">
-            <label for="verification_code" class="block text-sm font-medium text-gray-700">
-              인증번호
-              <span v-if="countdown > 0" class="text-red-500 text-xs ml-2">
-                ({{ formatTime(countdown) }} 남음)
-              </span>
-            </label>
-            <div class="flex space-x-2">
-              <input
-                id="verification_code"
-                v-model="verificationCode"
-                type="text"
-                maxlength="6"
-                placeholder="6자리 인증번호"
-                class="flex-1 appearance-none relative block px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              />
-              <button
-                type="button"
-                @click="verifyCode"
-                :disabled="isCodeVerifying || !verificationCode"
-                class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
-              >
-                <span v-if="isCodeVerifying">확인중...</span>
-                <span v-else>확인</span>
-              </button>
-            </div>
+          <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">이메일</label>
+            <input
+              id="email"
+              v-model="email"
+              type="email"
+              placeholder="이메일을 입력하세요"
+              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+            />
+            <p v-if="emailError" class="text-red-500 text-sm mt-1">이메일을 입력해주세요.</p>
           </div>
 
-          <div v-if="isEmailVerified" class="rounded-md bg-green-50 p-4">
-            <div class="text-sm text-green-700">
-              ✓ 이메일 인증이 완료되었습니다!
-            </div>
-          </div>
-
-          <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">비밀번호</label>
+          <div class="mb-4">
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">비밀번호</label>
             <input
               id="password"
-              v-model="form.password"
+              v-model="password"
               type="password"
-              required
-              class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="비밀번호를 입력하세요"
+              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
             />
+            <p v-if="passwordError" class="text-red-500 text-sm mt-1">비밀번호를 입력해주세요.</p>
           </div>
-          
-          <div>
-            <label for="password_confirmation" class="block text-sm font-medium text-gray-700">비밀번호 확인</label>
+
+          <div class="mb-6">
+            <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">비밀번호 확인</label>
             <input
               id="password_confirmation"
-              v-model="form.password_confirmation"
+              v-model="password_confirmation"
               type="password"
-              required
-              class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="비밀번호를 다시 입력하세요"
+              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
             />
+            <p v-if="passwordConfirmationError" class="text-red-500 text-sm mt-1">비밀번호가 일치하지 않습니다.</p>
           </div>
-        </div>
 
-        <div>
+          <div class="mb-6">
+            <label class="flex items-center">
+              <input
+                type="checkbox"
+                v-model="privacyAgreement"
+                class="w-4 h-4 text-[#2F9266] border-gray-300 rounded focus:ring-[#2F9266]"
+              />
+              <span class="ml-2 text-sm text-gray-600">
+                개인정보 수집 및 이용에 동의합니다.
+                <Link href="/privacy" class="text-[#2F9266] hover:underline">자세히 보기</Link>
+              </span>
+            </label>
+            <p v-if="privacyError" class="text-red-500 text-sm mt-1">개인정보 수집 및 이용에 동의해주세요.</p>
+          </div>
+
           <button
             type="submit"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-            :disabled="form.processing || !isEmailVerified"
+            class="w-full bg-[#2F9266] text-white py-2 rounded-md hover:bg-[#247A4F] transition"
           >
             회원가입
           </button>
-        </div>
-      </form>
+        </form>
+
+        <p class="text-center text-sm text-gray-600 mt-6">
+          <Link href="/signin" class="text-[#2F9266] hover:underline ml-2">이미 계정이 있으신가요?</Link>
+        </p>
+      </div>
     </div>
+
+    <Footer />
   </div>
 </template>
+
+<script>
+import Header from '../components/Header.vue';
+import Footer from '../components/Footer.vue';
+import { Link } from '@inertiajs/vue3';
+
+export default {
+  name: 'SignupPage',
+  components: {
+    Header,
+    Footer,
+    Link
+  },
+  data() {
+    return {
+      name: '',
+      email: '',
+      password: '',
+      password_confirmation: '',
+      privacyAgreement: false,
+      nameError: false,
+      emailError: false,
+      passwordError: false,
+      passwordConfirmationError: false,
+      privacyError: false
+    };
+  },
+  methods: {
+    handleSignup() {
+      this.nameError = false;
+      this.emailError = false;
+      this.passwordError = false;
+      this.passwordConfirmationError = false;
+      this.privacyError = false;
+      this.nameError = !this.name.trim();
+      this.emailError = !this.email.trim();
+      this.passwordError = !this.password.trim();
+      this.passwordConfirmationError = this.password !== this.password_confirmation;
+      this.privacyError = !this.privacyAgreement;
+
+      if (!this.nameError && !this.emailError && !this.passwordError && 
+          !this.passwordConfirmationError && !this.privacyError) {
+        console.log('회원가입 시도:', {
+          name: this.name,
+          email: this.email,
+          password: this.password
+        });
+      }
+    }
+  }
+};
+</script>

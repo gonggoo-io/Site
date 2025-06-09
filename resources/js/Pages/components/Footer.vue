@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-[#f3f4f6] py-8 fixed bottom-0 left-0 right-0 w-full">
+  <footer :class="['bg-[#f3f4f6] py-8 w-full', { 'fixed bottom-0 left-0 right-0': shouldFixFooter }]">
     <Container>
       <div class="flex flex-col gap-1">
         <span class="text-xs text-gray-500">© 2025 gonggoo. All rights reserved.</span>
@@ -15,5 +15,19 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
 import Container from './Container.vue';
+
+const shouldFixFooter = ref(false);
+
+onMounted(() => {
+  const checkContentHeight = () => {
+    const contentHeight = document.documentElement.scrollHeight;
+    const windowHeight = window.innerHeight;
+    shouldFixFooter.value = contentHeight <= windowHeight;
+  };
+
+  checkContentHeight();
+  window.addEventListener('resize', checkContentHeight);
+});
 </script> 
