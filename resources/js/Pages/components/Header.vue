@@ -16,8 +16,10 @@
               @click="toggleDropdown" 
               class="flex items-center gap-2 hover:opacity-80 transition"
             >
-              <img src="/public/images/user.jpg" alt="user" class="w-8 h-8 rounded-full" />
-              <span class="text-sm text-gray-700">{{ auth.user.name }}님</span>
+              <div class="w-8 h-8 rounded-full bg-[#2F9266] flex items-center justify-center text-white font-medium leading-none">
+                <span class="flex items-center justify-center h-full">{{ auth.user.name.charAt(0) }}</span>
+              </div>
+              <span class="text-sm text-gray-700">{{ auth.user.name }}</span>
               <svg 
                 class="w-4 h-4 text-gray-500 transition-transform" 
                 :class="{ 'rotate-180': isDropdownOpen }"
@@ -28,6 +30,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
+
             <div 
               v-if="isDropdownOpen"
               class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
