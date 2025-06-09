@@ -25,13 +25,21 @@
 
           <div class="mb-4">
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">이메일</label>
-            <input
-              id="email"
-              v-model="email"
-              type="email"
-              placeholder="이메일을 입력하세요"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
-            />
+            <div class="flex gap-2">
+              <input
+                id="email"
+                v-model="email"
+                type="email"
+                placeholder="이메일을 입력하세요"
+                class="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+              />
+              <button
+                type="button"
+                class="px-4 py-2 bg-[#2F9266] text-white rounded-md hover:bg-[#247A4F] transition whitespace-nowrap"
+              >
+                인증
+              </button>
+            </div>
             <p v-if="emailError" class="text-red-500 text-sm mt-1">이메일을 입력해주세요.</p>
           </div>
 
