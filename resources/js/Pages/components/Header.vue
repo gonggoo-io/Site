@@ -1,6 +1,6 @@
 <template>
   <header
-    class="bg-white py-4 border-b transition-all duration-200"
+    class="bg-white/60 backdrop-blur-sm py-4 border-b transition-all duration-200 fixed top-0 left-0 right-0 z-50"
     :class="{ 'border-b': currentPath !== '/' }"
   >
     <Container :flex="true" class="flex items-center justify-between">
