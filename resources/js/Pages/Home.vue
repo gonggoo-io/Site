@@ -75,54 +75,65 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section ref="featuresSection" class="py-16 sm:py-24 md:py-32 bg-white">
-            <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12 md:gap-20">
-                    <div class="text-center" data-aos="fade-up" data-aos-delay="100">
-                        <div class="bg-blue-100 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mx-auto mb-6 sm:mb-8 transform hover:scale-110 transition-transform">
-                            <svg class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
+        <section class="py-12 sm:py-16 md:py-20 bg-white">
+            
+            <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
+                <div class="flex flex-col xl:flex-row items-center justify-center gap-10 xl:gap-14">
+                    <div class="flex items-center justify-center xl:justify-start flex-shrink-0">
+                        <div class="w-[130px] h-[130px] sm:w-[220px] sm:h-[220px] relative flex items-center justify-center">
+                            <img src="/public/images/map.png" alt="Email Icon" class="w-full h-full object-contain">
                         </div>
-                        <h3 class="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">함께 모여 더 저렴하게</h3>
-                        <p class="text-base sm:text-lg text-gray-600">많은 사람이 참여할수록 더 큰 할인을 받을 수 있습니다.</p>
                     </div>
-                    <div class="text-center" data-aos="fade-up" data-aos-delay="200">
-                        <div class="bg-blue-100 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mx-auto mb-6 sm:mb-8 transform hover:scale-110 transition-transform">
-                            <svg class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">안전한 거래</h3>
-                        <p class="text-base sm:text-lg text-gray-600">검증된 판매자와 안전한 결제 시스템을 제공합니다.</p>
-                    </div>
-                    <div class="text-center" data-aos="fade-up" data-aos-delay="300">
-                        <div class="bg-blue-100 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mx-auto mb-6 sm:mb-8 transform hover:scale-110 transition-transform">
-                            <svg class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">빠른 배송</h3>
-                        <p class="text-base sm:text-lg text-gray-600">목표 인원 달성 시 즉시 주문 처리 및 배송이 시작됩니다.</p>
+
+                    <div class="text-center xl:text-left flex flex-col justify-center max-w-2xl">
+                        <h2 class="text-2xl sm:text-3xl xl:text-4xl font-bold mb-6 text-gray-800 leading-tight">
+                            복잡한 주소 입력은 이제 그만!<br/>
+                            <span class="text-[#2F9266]">지도</span>에서 간편하게
+                        </h2>
+                        <p class="text-base sm:text-lg xl:text-xl text-gray-600 leading-relaxed">
+                            공구를 등록할 때마다 배송지를 일일이 주소로 입력하는 번거로움을 덜어드려요. 바쁜 여러분을 대신해서 지도에서 클릭 한 번으로 정확한 배송 위치를 설정할 수 있도록 직관적인 지도 기능을 제공합니다.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="py-16 sm:py-24 md:py-32 bg-gray-50">
-            <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-16" data-aos="fade-up">이미 많은 분들이 이용하고 있습니다</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
-                    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg transform hover:scale-105 transition-transform" data-aos="fade-up" data-aos-delay="100">
-                        <p class="text-lg sm:text-xl text-gray-600 mb-4 sm:mb-6">"같은 상품을 30% 더 저렴하게 구매할 수 있었어요. 정말 만족스러운 경험이었습니다."</p>
-                        <div class="font-bold text-base sm:text-lg">김○○ 님</div>
+        <section class="py-12 sm:py-16 md:py-20 bg-gray-50">
+            
+            <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
+                <div class="flex flex-col xl:flex-row items-center justify-center gap-12 xl:gap-20">
+                    <div class="text-center xl:text-left order-2 xl:order-1 flex flex-col justify-center max-w-2xl">
+                        <h2 class="text-2xl sm:text-3xl xl:text-4xl font-bold mb-6 text-gray-800 leading-tight">
+                            배송부터 완료까지<br/>
+                            놓지지 말고 확인하세요.
+                        </h2>
+                        <p class="text-base sm:text-lg xl:text-xl text-gray-600 leading-relaxed">
+                            매일 공구 참여 후 배송이 언제 오는지 궁금해서 계속 확인하는 번거로움을 덜어드려요. 공구 등록자가 배송 상태를 업데이트할 때마다 참여자들에게 실시간으로 알림을 보내드립니다. 배송 준비부터 배송 중, 배송 완료까지 각 단계별 상태를 푸시 알림으로 전달해드립니다.
+                        </p>
                     </div>
-                    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg transform hover:scale-105 transition-transform" data-aos="fade-up" data-aos-delay="200">
-                        <p class="text-lg sm:text-xl text-gray-600 mb-4 sm:mb-6">"안전하게 거래할 수 있어서 좋았어요. 다음에도 꼭 이용할 예정입니다."</p>
-                        <div class="font-bold text-base sm:text-lg">이○○ 님</div>
+
+                    <div class="flex items-center justify-center xl:justify-end order-1 xl:order-2 flex-shrink-0">
+                        <div class="w-[110px] h-[110px] sm:w-[210px] sm:h-[210px] relative flex items-center justify-center">
+                            <img src="/public/images/bell.png" alt="Pencil Icon" class="w-full h-full object-contain">
+                        </div>
                     </div>
                 </div>
             </div>
+        </section>
+        <section class="py-12 sm:py-16 md:py-20 bg-white">
+            
+            <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 flex items-center justify-center min-h-[50vh]">
+                    <div class="text-center xl:text-center flex flex-col justify-center max-w-2xl">
+                        <h2 class="text-2xl sm:text-3xl xl:text-4xl font-bold mb-6 text-gray-800 leading-tight">
+                            주변 사람들과 공동구매로 <span class="text-[#2F9266]">28%</span><span class="text-base text-gray-400 font-medium ml-1">5명 기준</span><br/>
+                            <span class="text-[#2F9266]">할인 받으며 구매해요.</span>
+                        </h2>
+                        <p class="text-base sm:text-lg xl:text-xl text-gray-600 leading-relaxed">
+                            5명이 함께 구매하면 평균 28%의 할인 혜택을 받으며<br>
+                            개인 구매 대비 상당한 비용 절약이 가능합니다.
+                        </p>
+                    </div>
+                </div>
         </section>
 
         <section class="py-16 sm:py-24 md:py-32 bg-white">
@@ -136,6 +147,7 @@ onUnmounted(() => {
                 </div>
             </div>
         </section>
+        
     </main>
     <Footer />
 </template>
