@@ -5,9 +5,6 @@
     <main class="flex-grow flex items-center justify-center py-8">
       <div class="w-full max-w-md">
         <h2 class="text-3xl font-bold text-center mb-2">회원가입</h2>
-        <p class="text-center text-gray-600 mb-6">
-          공구로 회사 동료, 친구들과 더 저렴하게 구입해요.
-        </p>
 
         <form @submit.prevent="submit">
           <div class="mb-4">

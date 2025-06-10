@@ -6,14 +6,19 @@ import Container from './components/Container.vue';
 import { onMounted, ref, onUnmounted } from 'vue';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { router } from '@inertiajs/vue3';
 
 const featuresSection = ref(null);
 const currentLocation = ref(0);
-const locations = ['🏢회사', '🏫학교', '🏠아파트'];
+const locations = ['🏢직장', '🏫학교', '🏠아파트'];
 let intervalId = null;
 
 const scrollToFeatures = () => {
     featuresSection.value?.scrollIntoView({ behavior: 'smooth' });
+};
+
+const goToSignup = () => {
+    router.visit('/signup');
 };
 
 onMounted(() => {
@@ -60,6 +65,12 @@ onUnmounted(() => {
                     <p class="text-lg sm:text-xl md:text-2xl mb-12 text-gray-600">
                         <span class="text-base sm:text-lg md:text-xl">더</span> <span class="text-lg sm:text-xl md:text-2xl">더</span> <span class="text-xl sm:text-2xl md:text-3xl">더</span> 많은 사람이 모일수록 더 저렴해져요.
                     </p>
+                    <button 
+                        @click="goToSignup"
+                        class="bg-[#2F9266] text-white px-8 sm:px-12 py-3 sm:py-4 rounded-full font-bold text-lg sm:text-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(47,146,102,0.3)] active:scale-[0.98] shadow-[0_4px_12px_rgba(47,146,102,0.2)]"
+                    >
+                        지금 시작하기
+                    </button>
                 </div>
             </div>
         </section>
