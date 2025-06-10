@@ -3,11 +3,14 @@ import { Head } from '@inertiajs/vue3';
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
 import Container from './components/Container.vue';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, onUnmounted } from 'vue';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 const featuresSection = ref(null);
+const currentLocation = ref(0);
+const locations = ['🏢회사', '🏫학교', '🏠아파트'];
+let intervalId = null;
 
 const scrollToFeatures = () => {
     featuresSection.value?.scrollIntoView({ behavior: 'smooth' });
@@ -19,6 +22,16 @@ onMounted(() => {
         once: false,
         mirror: true
     });
+
+    intervalId = setInterval(() => {
+        currentLocation.value = (currentLocation.value + 1) % locations.length;
+    }, 2000);
+});
+
+onUnmounted(() => {
+    if (intervalId) {
+        clearInterval(intervalId);
+    }
 });
 </script>
 
@@ -29,9 +42,14 @@ onMounted(() => {
         <section class="min-h-[95vh] bg-gradient-to-b from-white via-[#2F9266]/7 to-[#2F9266]/15 text-gray-800 flex items-center relative">
             <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center" data-aos="fade-up">
-                    <img src="/public/images/box.png" alt="box" class="w-32 sm:w-40 md:w-52 h-32 sm:h-40 md:h-52 mx-auto mb-6">
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium= mb-4">
-                        회사, 학교, 아파트…
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium">
+                        <span class="inline-block min-w-[120px] h-[1.2em] overflow-hidden">
+                            <transition name="slide" mode="out-in">
+                                <span :key="currentLocation" class="block">
+                                    {{ locations[currentLocation] }}
+                                </span>
+                            </transition>
+                        </span>
                     </h1>
                     <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-8">
                         주변의 공동구매를 쉽게 연결해드려요!
@@ -127,5 +145,20 @@ onMounted(() => {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+    transition: all 0.8s ease;
+}
+
+.slide-enter-from {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+.slide-leave-to {
+    transform: translateY(-100%);
+    opacity: 0;
 }
 </style>
