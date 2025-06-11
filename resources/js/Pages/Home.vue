@@ -16,6 +16,8 @@ const animatedDiscount = ref(0);
 const animatedPurchases = ref(0);
 const typingText = ref('');
 const isTyping = ref(false);
+const statsSection = ref(null);
+const hasAnimated = ref(false);
 
 const scrollToFeatures = () => {
     featuresSection.value?.scrollIntoView({ behavior: 'smooth' });
@@ -111,6 +113,22 @@ onMounted(() => {
 
     startCountingAnimation();
     startTypingAnimation();
+
+    // Setup Intersection Observer for stats section
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !hasAnimated.value) {
+                startPurchasesAnimation();
+                hasAnimated.value = true;
+            }
+        });
+    }, {
+        threshold: 0.5
+    });
+
+    if (statsSection.value) {
+        observer.observe(statsSection.value);
+    }
 });
 
 onUnmounted(() => {
