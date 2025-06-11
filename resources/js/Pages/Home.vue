@@ -14,23 +14,6 @@ const locations = ['🏢직장', '🏫학교', '🏠아파트'];
 let intervalId = null;
 const animatedDiscount = ref(0);
 const animatedPurchases = ref(0);
-const mapSection = ref(null);
-const activePin = ref(null);
-const pins = [
-    { id: 1, location: '서울', x: 50, y: 30 },
-    { id: 2, location: '부산', x: 60, y: 80 },
-    { id: 3, location: '인천', x: 45, y: 35 },
-    { id: 4, location: '대구', x: 55, y: 65 },
-    { id: 5, location: '광주', x: 40, y: 70 },
-    { id: 6, location: '대전', x: 48, y: 55 },
-    { id: 7, location: '울산', x: 65, y: 75 },
-    { id: 8, location: '세종', x: 45, y: 50 },
-    { id: 9, location: '경기', x: 48, y: 35 },
-    { id: 10, location: '강원', x: 55, y: 25 }
-];
-let pinInterval = null;
-const statsSection = ref(null);
-const hasAnimated = ref(false);
 const typingText = ref('');
 const isTyping = ref(false);
 
@@ -127,38 +110,12 @@ onMounted(() => {
     }, 2000);
 
     startCountingAnimation();
-
-    let currentPinIndex = 0;
-    pinInterval = setInterval(() => {
-        activePin.value = pins[currentPinIndex];
-        currentPinIndex = (currentPinIndex + 1) % pins.length;
-    }, 1000);
-
-    // Setup Intersection Observer for stats section
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !hasAnimated.value) {
-                startPurchasesAnimation();
-                hasAnimated.value = true;
-            }
-        });
-    }, {
-        threshold: 0.5
-    });
-
-    if (statsSection.value) {
-        observer.observe(statsSection.value);
-    }
-
     startTypingAnimation();
 });
 
 onUnmounted(() => {
     if (intervalId) {
         clearInterval(intervalId);
-    }
-    if (pinInterval) {
-        clearInterval(pinInterval);
     }
 });
 </script>
@@ -199,7 +156,6 @@ onUnmounted(() => {
         </section>
 
         <section class="py-12 sm:py-16 md:py-20 bg-white">
-            
             <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
                 <div class="flex flex-col xl:flex-row items-center justify-center gap-10 xl:gap-14">
                     <div class="flex items-center justify-center xl:justify-start flex-shrink-0">
@@ -222,10 +178,9 @@ onUnmounted(() => {
         </section>
 
         <section class="py-12 sm:py-16 md:py-20 bg-gray-50">
-            
             <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
                 <div class="flex flex-col xl:flex-row items-center justify-center gap-12 xl:gap-20">
-                    <div class="text-center xl:text-left order-2 xl:order-1 flex flex-col   justify-center max-w-2xl">
+                    <div class="text-center xl:text-left order-2 xl:order-1 flex flex-col justify-center max-w-2xl">
                         <h2 class="text-2xl sm:text-3xl xl:text-4xl font-semibold mb-6 text-gray-800 leading-tight">
                             배송부터 완료까지<br/>
                             놓지지 말고 확인하세요.
@@ -242,9 +197,9 @@ onUnmounted(() => {
                     </div>
                 </div>
             </div>
-        </section>  
-        
-        <section class="py-12 sm:py-16 md:py-20 bg-white">    
+        </section>
+
+        <section class="py-12 sm:py-16 md:py-20 bg-white">
             <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
                 <div class="flex flex-col xl:flex-row items-center justify-center gap-10 xl:gap-14">
                     <div class="flex items-center justify-center xl:justify-start flex-shrink-0">
@@ -255,7 +210,7 @@ onUnmounted(() => {
 
                     <div class="text-center xl:text-left flex flex-col justify-center max-w-2xl">
                         <h2 class="text-2xl sm:text-3xl xl:text-4xl font-semibold mb-6 text-gray-800 leading-tight">
-                                공동구매로 <span class="text-[#2F9266]">{{ animatedDiscount }}%</span><span class="text-base text-gray-400"> 5인 기준</span><br/>
+                            공동구매로 <span class="text-[#2F9266]">{{ animatedDiscount }}%</span><span class="text-base text-gray-400"> 5인 기준</span><br/>
                             <span>할인 받으며 구매해요.</span>
                         </h2>
                         <p class="text-base sm:text-lg xl:text-xl text-gray-600 leading-relaxed">
@@ -265,8 +220,8 @@ onUnmounted(() => {
                 </div>
             </div>
         </section>
+
         <section class="py-12 sm:py-16 md:py-20 bg-gray-50">
-            
             <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
                 <div class="flex flex-col xl:flex-row items-center justify-center gap-12 xl:gap-20">
                     <div class="text-center xl:text-center order-2 xl:order-1 flex flex-col justify-center max-w-2xl">
@@ -278,6 +233,7 @@ onUnmounted(() => {
                 </div>
             </div>
         </section>
+
         <section class="py-16 sm:py-24 md:py-32 bg-[#2F9266]" ref="statsSection">
             <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
@@ -285,13 +241,13 @@ onUnmounted(() => {
                     <h2 class="text-3xl sm:text-3xl font-medium mb-6 sm:mb-8 text-white">공구를 이용해 함께 더 저렴하게 물건을 구입해요.</h2>
                     <button 
                         @click="goToSignup"
-                        class="bg-white text-[#2F9266] px-8 sm:px-12 py-3 sm:py-4 rounded-full font-bold text-lg sm:text-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(255,255,255,0.3)] active:scale-[0.98] shadow-[0_4px_12px_rgba(255,255,255,0.2)]"
+                        class="bg-white text-[#2F9266] px-8 sm:px-12 py-3 sm:py-4 rounded-full font-semibold text-lg sm:text-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(255,255,255,0.3)] active:scale-[0.98] shadow-[0_4px_12px_rgba(255,255,255,0.2)]"
                     >
                         지금 시작하기
                     </button>
                 </div>
             </div>
-        </section>   
+        </section>
     </main>
     <Footer />
 </template>
@@ -354,7 +310,7 @@ onUnmounted(() => {
     left: 0;
     background-color: #2F9266;
     animation: underline 1s ease-in-out forwards;
-    animation-delay: 1.5s; /* 타이핑 애니메이션이 끝난 후 시작 */
+    animation-delay: 1.5s;
 }
 
 @keyframes underline {
