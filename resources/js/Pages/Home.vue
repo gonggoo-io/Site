@@ -12,6 +12,25 @@ const featuresSection = ref(null);
 const currentLocation = ref(0);
 const locations = ['🏢직장', '🏫학교', '🏠아파트'];
 let intervalId = null;
+const animatedDiscount = ref(0);
+const animatedPurchases = ref(0);
+const mapSection = ref(null);
+const activePin = ref(null);
+const pins = [
+    { id: 1, location: '서울', x: 50, y: 30 },
+    { id: 2, location: '부산', x: 60, y: 80 },
+    { id: 3, location: '인천', x: 45, y: 35 },
+    { id: 4, location: '대구', x: 55, y: 65 },
+    { id: 5, location: '광주', x: 40, y: 70 },
+    { id: 6, location: '대전', x: 48, y: 55 },
+    { id: 7, location: '울산', x: 65, y: 75 },
+    { id: 8, location: '세종', x: 45, y: 50 },
+    { id: 9, location: '경기', x: 48, y: 35 },
+    { id: 10, location: '강원', x: 55, y: 25 }
+];
+let pinInterval = null;
+const statsSection = ref(null);
+const hasAnimated = ref(false);
 
 const scrollToFeatures = () => {
     featuresSection.value?.scrollIntoView({ behavior: 'smooth' });
@@ -19,6 +38,57 @@ const scrollToFeatures = () => {
 
 const goToSignup = () => {
     router.visit('/signup');
+};
+
+const startCountingAnimation = () => {
+    const targetValue = 28;
+    const duration = 2000; // 2 seconds for animation
+    let startTime = null;
+
+    // Ease out expo function for smoother deceleration
+    const easeOutExpo = (x) => {
+        return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+    };
+
+    const animate = (timestamp) => {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        const easedProgress = easeOutExpo(progress);
+        const current = Math.floor(easedProgress * targetValue);
+        animatedDiscount.value = current;
+
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            animatedDiscount.value = targetValue; // Ensure final value is accurate
+        }
+    };
+    requestAnimationFrame(animate);
+};
+
+const startPurchasesAnimation = () => {
+    const targetValue = 3;
+    const duration = 2000;
+    let startTime = null;
+
+    const easeOutExpo = (x) => {
+        return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+    };
+
+    const animate = (timestamp) => {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        const easedProgress = easeOutExpo(progress);
+        const current = Math.floor(easedProgress * targetValue);
+        animatedPurchases.value = current;
+
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            animatedPurchases.value = targetValue;
+        }
+    };
+    requestAnimationFrame(animate);
 };
 
 onMounted(() => {
@@ -31,11 +101,40 @@ onMounted(() => {
     intervalId = setInterval(() => {
         currentLocation.value = (currentLocation.value + 1) % locations.length;
     }, 2000);
+
+    // Start the discount animation
+    startCountingAnimation();
+
+    // Start pin animation
+    let currentPinIndex = 0;
+    pinInterval = setInterval(() => {
+        activePin.value = pins[currentPinIndex];
+        currentPinIndex = (currentPinIndex + 1) % pins.length;
+    }, 1000);
+
+    // Setup Intersection Observer for stats section
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !hasAnimated.value) {
+                startPurchasesAnimation();
+                hasAnimated.value = true;
+            }
+        });
+    }, {
+        threshold: 0.5
+    });
+
+    if (statsSection.value) {
+        observer.observe(statsSection.value);
+    }
 });
 
 onUnmounted(() => {
     if (intervalId) {
         clearInterval(intervalId);
+    }
+    if (pinInterval) {
+        clearInterval(pinInterval);
     }
 });
 </script>
@@ -102,7 +201,7 @@ onUnmounted(() => {
             
             <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
                 <div class="flex flex-col xl:flex-row items-center justify-center gap-12 xl:gap-20">
-                    <div class="text-center xl:text-left order-2 xl:order-1 flex flex-col justify-center max-w-2xl">
+                    <div class="text-center xl:text-left order-2 xl:order-1 flex flex-col   justify-center max-w-2xl">
                         <h2 class="text-2xl sm:text-3xl xl:text-4xl font-bold mb-6 text-gray-800 leading-tight">
                             배송부터 완료까지<br/>
                             놓지지 말고 확인하세요.
@@ -120,29 +219,39 @@ onUnmounted(() => {
                 </div>
             </div>
         </section>
-        <section class="py-12 sm:py-16 md:py-20 bg-white">
+                <section class="py-12 sm:py-16 md:py-20 bg-white">
             
-            <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 flex items-center justify-center min-h-[50vh]">
-                    <div class="text-center xl:text-center flex flex-col justify-center max-w-2xl">
+            <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
+                <div class="flex flex-col xl:flex-row items-center justify-center gap-10 xl:gap-14">
+                    <div class="flex items-center justify-center xl:justify-start flex-shrink-0">
+                        <div class="w-[130px] h-[130px] sm:w-[200px] sm:h-[200px] relative flex items-center justify-center">
+                            <img src="/public/images/discount.png" alt="Email Icon" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+
+                    <div class="text-center xl:text-left flex flex-col justify-center max-w-2xl">
                         <h2 class="text-2xl sm:text-3xl xl:text-4xl font-bold mb-6 text-gray-800 leading-tight">
-                            주변 사람들과 공동구매로 <span class="text-[#2F9266]">28%</span><span class="text-base text-gray-400 font-medium ml-1">5명 기준</span><br/>
-                            <span class="text-[#2F9266]">할인 받으며 구매해요.</span>
+                                공동구매로 <span class="text-[#2F9266]">{{ animatedDiscount }}%</span><span class="text-base text-gray-400"> 5인 기준</span><br/>
+                            <span>할인 받으며 구매해요.</span>
                         </h2>
                         <p class="text-base sm:text-lg xl:text-xl text-gray-600 leading-relaxed">
-                            5명이 함께 구매하면 평균 28%의 할인 혜택을 받으며<br>
-                            개인 구매 대비 상당한 비용 절약이 가능합니다.
+                            혼자 구매할 때는 정가로 사야 했던 상품들이 이제 주변 사람들과 함께하면 대폭 할인된 가격으로 구매할 수 있어요. 5명이 함께 구매하면 평균 28%의 할인 혜택을 받을 수 있습니다. 가족, 친구, 동료, 이웃과 함께 원하는 상품의 공구를 만들어 같은 상품을 더 저렴하게 구매하는 스마트한 쇼핑을 경험해보세요.
                         </p>
                     </div>
                 </div>
+            </div>
         </section>
 
-        <section class="py-16 sm:py-24 md:py-32 bg-white">
+        <section class="py-16 sm:py-24 md:py-32 bg-[#2F9266]" ref="statsSection">
             <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center" data-aos="fade-up">
-                    <h2 class="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">지금 바로 시작하세요</h2>
-                    <p class="text-lg sm:text-xl md:text-2xl text-gray-600 mb-8 sm:mb-12">원하는 상품을 찾아보고, 함께 구매하세요.</p>
-                    <button class="bg-blue-600 text-white px-8 sm:px-12 py-3 sm:py-4 rounded-full font-bold text-lg sm:text-xl hover:bg-blue-700 transition-colors transform hover:scale-105">
-                        무료로 시작하기
+                <div class="text-center">
+                    <h2 class="text-3xl sm:text-3xl font-medium mb-2 text-white">지금까지 {{ animatedPurchases }}+개의 공구가 이루어졌고, 사용자의 만족도는 92.7% 입니다.</h2>
+                    <h2 class="text-3xl sm:text-3xl font-medium mb-6 sm:mb-8 text-white">공구를 이용해 함께 더 저렴하게 물건을 구입해요.</h2>
+                    <button 
+                        @click="goToSignup"
+                        class="bg-white text-[#2F9266] px-8 sm:px-12 py-3 sm:py-4 rounded-full font-bold text-lg sm:text-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(255,255,255,0.3)] active:scale-[0.98] shadow-[0_4px_12px_rgba(255,255,255,0.2)]"
+                    >
+                        지금 시작하기
                     </button>
                 </div>
             </div>
@@ -183,5 +292,16 @@ onUnmounted(() => {
 .slide-leave-to {
     transform: translateY(-100%);
     opacity: 0;
+}
+
+.pin-enter-active,
+.pin-leave-active {
+    transition: all 0.5s ease;
+}
+
+.pin-enter-from,
+.pin-leave-to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
 }
 </style>
