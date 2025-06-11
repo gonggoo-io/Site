@@ -20,6 +20,7 @@ const statsSection = ref(null);
 const hasAnimated = ref(false);
 const chatSection = ref(null);
 const hasTyped = ref(false);
+const shouldAnimate = ref(false);
 
 const scrollToFeatures = () => {
     featuresSection.value?.scrollIntoView({ behavior: 'smooth' });
@@ -95,6 +96,9 @@ const startTypingAnimation = () => {
             setTimeout(() => {
                 typingText.value += `<span class="text-3xl sm:text-4xl xl:text-5xl">${questionMark}</span>`;
                 isTyping.value = false;
+                setTimeout(() => {
+                    shouldAnimate.value = true;
+                }, 500);
             }, 150);
         }
     };
@@ -128,7 +132,10 @@ onMounted(() => {
     const chatObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
+                shouldAnimate.value = false;
                 startTypingAnimation();
+            } else {
+                shouldAnimate.value = false;
             }
         });
     }, {
@@ -258,22 +265,24 @@ onUnmounted(() => {
                     <div class="text-center xl:text-center order-2 xl:order-1 flex flex-col justify-center max-w-2xl">
                         <h2 class="text-2xl sm:text-3xl xl:text-4xl font-semibold mb-6 text-gray-800 leading-tight">
                             더 이상 채팅방에서<br/>
-                            <span class="text-[#2F9266]" v-html="typingText"></span><span v-if="isTyping" class="animate-pulse">|</span> 묻지 말고, <span class="underline-animation">🔗링크 공유만</span>
+                            <span class="text-[#2F9266]" v-html="typingText"></span><span v-if="isTyping" class="animate-pulse">|</span> 묻지 말고, <span class="underline-animation" :class="{ 'animate-underline': shouldAnimate }">🔗링크 공유만</span>
                         </h2>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="py-16 sm:py-24 md:py-32 bg-[#2F9266]" ref="statsSection">
+        <section class="py-12 sm:py-20 md:py-28 bg-[#2F9266]" ref="statsSection">
             <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
-                    <h2 class="text-3xl sm:text-3xl font-medium mb-6 sm:mb-8 text-white" data-aos="fade-up" data-aos-delay="200">공구를 이용해 함께 더 저렴하게 물건을 구입해요✌</h2>
+                    <h2 class="text-xl sm:text-2xl md:text-3xl font-medium mb-4 sm:mb-6 md:mb-8 text-white" data-aos="fade-right" data-aos-delay="200">
+                        공구를 이용해<br class="block sm:hidden" /> 함께 더 저렴하게 물건을 구입해요✌
+                    </h2>
                     <button 
                         @click="goToSignup"
-                        class="bg-white text-[#2F9266] px-8 sm:px-12 py-3 sm:py-4 rounded-full font-semibold text-lg sm:text-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(255,255,255,0.3)] active:scale-[0.98] shadow-[0_4px_12px_rgba(255,255,255,0.2)]"
-                        data-aos="fade-up"
-                        data-aos-delay="300"
+                        class="bg-white text-[#2F9266] px-6 sm:px-8 md:px-12 py-2.5 sm:py-3 md:py-4 rounded-full font-semibold text-base sm:text-lg md:text-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(255,255,255,0.3)] active:scale-[0.98] shadow-[0_4px_12px_rgba(255,255,255,0.2)]"
+                        data-aos="fade-left"
+                        data-aos-delay="600"
                     >
                         지금 시작하기
                     </button>
@@ -344,12 +353,15 @@ onUnmounted(() => {
     content: '';
     position: absolute;
     width: 0;
-    height: 2px;
-    bottom: -2px;
+    height: 4px;
+    bottom: -4px;
     left: 0;
     background-color: #2F9266;
+    border-radius: 2px;
+}
+
+.animate-underline::after {
     animation: underline 1s ease-in-out forwards;
-    animation-delay: 1.5s;
 }
 
 @keyframes underline {
@@ -361,7 +373,6 @@ onUnmounted(() => {
     }
 }
 
-/* Enhanced section animations */
 [data-aos="fade-right"] {
     transform: translateY(20px);
     opacity: 0;
@@ -388,7 +399,6 @@ onUnmounted(() => {
     opacity: 1;
 }
 
-/* Add subtle hover effect to images */
 .hover-scale {
     transition: transform 0.3s ease;
 }
