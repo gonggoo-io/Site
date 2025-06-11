@@ -18,6 +18,8 @@ const typingText = ref('');
 const isTyping = ref(false);
 const statsSection = ref(null);
 const hasAnimated = ref(false);
+const chatSection = ref(null);
+const hasTyped = ref(false);
 
 const scrollToFeatures = () => {
     featuresSection.value?.scrollIntoView({ behavior: 'smooth' });
@@ -112,14 +114,21 @@ onMounted(() => {
     }, 2000);
 
     startCountingAnimation();
-    startTypingAnimation();
 
-    // Setup Intersection Observer for stats section
-    const observer = new IntersectionObserver((entries) => {
+    const statsObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting && !hasAnimated.value) {
+            if (entry.isIntersecting) {
                 startPurchasesAnimation();
-                hasAnimated.value = true;
+            }
+        });
+    }, {
+        threshold: 0.5
+    });
+
+    const chatObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                startTypingAnimation();
             }
         });
     }, {
@@ -127,7 +136,11 @@ onMounted(() => {
     });
 
     if (statsSection.value) {
-        observer.observe(statsSection.value);
+        statsObserver.observe(statsSection.value);
+    }
+
+    if (chatSection.value) {
+        chatObserver.observe(chatSection.value);
     }
 });
 
@@ -145,16 +158,16 @@ onUnmounted(() => {
         <section class="min-h-[95vh] bg-gradient-to-b from-white via-[#2F9266]/7 to-[#2F9266]/15 text-gray-800 flex items-center relative">
             <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center" data-aos="fade-up">
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium" style="font-family: 'Gyeonggi_Title_Medium', sans-serif;">
                         <span class="inline-block min-w-[120px] h-[1.2em] overflow-hidden">
                             <transition name="slide" mode="out-in">
-                                <span :key="currentLocation" class="block">
+                                <span :key="currentLocation" class="block" style="font-family: 'Gyeonggi_Title_Medium', sans-serif;">
                                     {{ locations[currentLocation] }}
                                 </span>
                             </transition>
                         </span>
                     </h1>
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-8">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-8" style="font-family: 'Gyeonggi_Title_Medium', sans-serif;">
                         주변의 공동구매를 쉽게 연결해드려요!
                     </h1>
                     <p class="text-lg sm:text-xl md:text-2xl text-gray-600">
@@ -176,13 +189,13 @@ onUnmounted(() => {
         <section class="py-12 sm:py-16 md:py-20 bg-white">
             <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
                 <div class="flex flex-col xl:flex-row items-center justify-center gap-10 xl:gap-14">
-                    <div class="flex items-center justify-center xl:justify-start flex-shrink-0">
+                    <div class="flex items-center justify-center xl:justify-start flex-shrink-0 hover-scale" data-aos="fade-right">
                         <div class="w-[130px] h-[130px] sm:w-[220px] sm:h-[220px] relative flex items-center justify-center">
                             <img src="/public/images/map.png" alt="Email Icon" class="w-full h-full object-contain">
                         </div>
                     </div>
 
-                    <div class="text-center xl:text-left flex flex-col justify-center max-w-2xl">
+                    <div class="text-center xl:text-left flex flex-col justify-center max-w-2xl" data-aos="fade-left">
                         <h2 class="text-2xl sm:text-3xl xl:text-4xl font-semibold mb-6 text-gray-800 leading-tight">
                             복잡한 주소 입력은 이제 그만!<br/>
                             <span class="text-[#2F9266]">지도</span>에서 간편하게
@@ -198,7 +211,7 @@ onUnmounted(() => {
         <section class="py-12 sm:py-16 md:py-20 bg-gray-50">
             <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
                 <div class="flex flex-col xl:flex-row items-center justify-center gap-12 xl:gap-20">
-                    <div class="text-center xl:text-left order-2 xl:order-1 flex flex-col justify-center max-w-2xl">
+                    <div class="text-center xl:text-left order-2 xl:order-1 flex flex-col justify-center max-w-2xl" data-aos="fade-right">
                         <h2 class="text-2xl sm:text-3xl xl:text-4xl font-semibold mb-6 text-gray-800 leading-tight">
                             배송부터 완료까지<br/>
                             놓지지 말고 확인하세요.
@@ -208,7 +221,7 @@ onUnmounted(() => {
                         </p>
                     </div>
 
-                    <div class="flex items-center justify-center xl:justify-end order-1 xl:order-2 flex-shrink-0">
+                    <div class="flex items-center justify-center xl:justify-end order-1 xl:order-2 flex-shrink-0" data-aos="fade-left">
                         <div class="w-[110px] h-[110px] sm:w-[210px] sm:h-[210px] relative flex items-center justify-center">
                             <img src="/public/images/bell.png" alt="Pencil Icon" class="w-full h-full object-contain">
                         </div>
@@ -220,13 +233,13 @@ onUnmounted(() => {
         <section class="py-12 sm:py-16 md:py-20 bg-white">
             <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
                 <div class="flex flex-col xl:flex-row items-center justify-center gap-10 xl:gap-14">
-                    <div class="flex items-center justify-center xl:justify-start flex-shrink-0">
+                    <div class="flex items-center justify-center xl:justify-start flex-shrink-0" data-aos="fade-right">
                         <div class="w-[130px] h-[130px] sm:w-[200px] sm:h-[200px] relative flex items-center justify-center">
                             <img src="/public/images/discount.png" alt="Email Icon" class="w-full h-full object-contain">
                         </div>
                     </div>
 
-                    <div class="text-center xl:text-left flex flex-col justify-center max-w-2xl">
+                    <div class="text-center xl:text-left flex flex-col justify-center max-w-2xl" data-aos="fade-left">
                         <h2 class="text-2xl sm:text-3xl xl:text-4xl font-semibold mb-6 text-gray-800 leading-tight">
                             공동구매로 <span class="text-[#2F9266]">{{ animatedDiscount }}%</span><span class="text-base text-gray-400"> 5인 기준</span><br/>
                             <span>할인 받으며 구매해요.</span>
@@ -239,7 +252,7 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section class="py-12 sm:py-16 md:py-20 bg-gray-50">
+        <section class="py-12 sm:py-16 md:py-20 bg-gray-50" ref="chatSection">
             <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
                 <div class="flex flex-col xl:flex-row items-center justify-center gap-12 xl:gap-20">
                     <div class="text-center xl:text-center order-2 xl:order-1 flex flex-col justify-center max-w-2xl">
@@ -255,11 +268,12 @@ onUnmounted(() => {
         <section class="py-16 sm:py-24 md:py-32 bg-[#2F9266]" ref="statsSection">
             <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
-                    <h2 class="text-3xl sm:text-3xl font-medium mb-2 text-white">지금까지 {{ animatedPurchases }}+개의 공구가 이루어졌고, 사용자의 만족도는 92.7%에요.</h2>
-                    <h2 class="text-3xl sm:text-3xl font-medium mb-6 sm:mb-8 text-white">공구를 이용해 함께 더 저렴하게 물건을 구입해요.</h2>
+                    <h2 class="text-3xl sm:text-3xl font-medium mb-6 sm:mb-8 text-white" data-aos="fade-up" data-aos-delay="200">공구를 이용해 함께 더 저렴하게 물건을 구입해요✌</h2>
                     <button 
                         @click="goToSignup"
                         class="bg-white text-[#2F9266] px-8 sm:px-12 py-3 sm:py-4 rounded-full font-semibold text-lg sm:text-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(255,255,255,0.3)] active:scale-[0.98] shadow-[0_4px_12px_rgba(255,255,255,0.2)]"
+                        data-aos="fade-up"
+                        data-aos-delay="300"
                     >
                         지금 시작하기
                     </button>
@@ -271,6 +285,13 @@ onUnmounted(() => {
 </template>
 
 <style>
+@font-face {
+    font-family: 'Gyeonggi_Title_Medium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2410-3@1.0/Title_Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -338,5 +359,41 @@ onUnmounted(() => {
     to {
         width: 100%;
     }
+}
+
+/* Enhanced section animations */
+[data-aos="fade-right"] {
+    transform: translateY(20px);
+    opacity: 0;
+    transition-property: transform, opacity;
+    transition-duration: 0.8s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-aos="fade-right"].aos-animate {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+[data-aos="fade-left"] {
+    transform: translateY(20px);
+    opacity: 0;
+    transition-property: transform, opacity;
+    transition-duration: 0.8s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-aos="fade-left"].aos-animate {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Add subtle hover effect to images */
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.02);
 }
 </style>
