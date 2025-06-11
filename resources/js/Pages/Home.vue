@@ -31,6 +31,8 @@ const pins = [
 let pinInterval = null;
 const statsSection = ref(null);
 const hasAnimated = ref(false);
+const typingText = ref('');
+const isTyping = ref(false);
 
 const scrollToFeatures = () => {
     featuresSection.value?.scrollIntoView({ behavior: 'smooth' });
@@ -42,10 +44,9 @@ const goToSignup = () => {
 
 const startCountingAnimation = () => {
     const targetValue = 28;
-    const duration = 2000; // 2 seconds for animation
+    const duration = 2000;
     let startTime = null;
 
-    // Ease out expo function for smoother deceleration
     const easeOutExpo = (x) => {
         return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
     };
@@ -60,7 +61,7 @@ const startCountingAnimation = () => {
         if (progress < 1) {
             requestAnimationFrame(animate);
         } else {
-            animatedDiscount.value = targetValue; // Ensure final value is accurate
+            animatedDiscount.value = targetValue;
         }
     };
     requestAnimationFrame(animate);
@@ -91,6 +92,25 @@ const startPurchasesAnimation = () => {
     requestAnimationFrame(animate);
 };
 
+const startTypingAnimation = () => {
+    const text = "같이 살래?";
+    let currentIndex = 0;
+    isTyping.value = true;
+    typingText.value = '';
+
+    const type = () => {
+        if (currentIndex < text.length) {
+            typingText.value += text[currentIndex];
+            currentIndex++;
+            setTimeout(type, 150);
+        } else {
+            isTyping.value = false;
+        }
+    };
+
+    type();
+};
+
 onMounted(() => {
     AOS.init({
         duration: 1000,
@@ -102,10 +122,8 @@ onMounted(() => {
         currentLocation.value = (currentLocation.value + 1) % locations.length;
     }, 2000);
 
-    // Start the discount animation
     startCountingAnimation();
 
-    // Start pin animation
     let currentPinIndex = 0;
     pinInterval = setInterval(() => {
         activePin.value = pins[currentPinIndex];
@@ -127,6 +145,8 @@ onMounted(() => {
     if (statsSection.value) {
         observer.observe(statsSection.value);
     }
+
+    startTypingAnimation();
 });
 
 onUnmounted(() => {
@@ -218,9 +238,9 @@ onUnmounted(() => {
                     </div>
                 </div>
             </div>
-        </section>
-                <section class="py-12 sm:py-16 md:py-20 bg-white">
-            
+        </section>  
+        
+        <section class="py-12 sm:py-16 md:py-20 bg-white">    
             <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
                 <div class="flex flex-col xl:flex-row items-center justify-center gap-10 xl:gap-14">
                     <div class="flex items-center justify-center xl:justify-start flex-shrink-0">
@@ -241,7 +261,19 @@ onUnmounted(() => {
                 </div>
             </div>
         </section>
-
+        <section class="py-12 sm:py-16 md:py-20 bg-gray-50">
+            
+            <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
+                <div class="flex flex-col xl:flex-row items-center justify-center gap-12 xl:gap-20">
+                    <div class="text-center xl:text-center order-2 xl:order-1 flex flex-col justify-center max-w-2xl">
+                        <h2 class="text-2xl sm:text-3xl xl:text-4xl font-semibold mb-6 text-gray-800 leading-tight">
+                            더 이상 채팅방에서<br/>
+                            <span class="text-[#2F9266]">{{ typingText }}</span><span v-if="isTyping" class="animate-pulse">|</span> 묻지 말고, <span class="underline-animation">링크 공유만</span>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </section>
         <section class="py-16 sm:py-24 md:py-32 bg-[#2F9266]" ref="statsSection">
             <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
@@ -255,8 +287,7 @@ onUnmounted(() => {
                     </button>
                 </div>
             </div>
-        </section>
-        
+        </section>   
     </main>
     <Footer />
 </template>
@@ -303,5 +334,31 @@ onUnmounted(() => {
 .pin-leave-to {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.5);
+}
+
+.underline-animation {
+    position: relative;
+    display: inline-block;
+}
+
+.underline-animation::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #2F9266;
+    animation: underline 1s ease-in-out forwards;
+    animation-delay: 1.5s; /* 타이핑 애니메이션이 끝난 후 시작 */
+}
+
+@keyframes underline {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
 }
 </style>
