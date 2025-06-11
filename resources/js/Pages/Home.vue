@@ -93,7 +93,8 @@ const startPurchasesAnimation = () => {
 };
 
 const startTypingAnimation = () => {
-    const text = "같이 살래?";
+    const text = "🤔같이 살래";
+    const questionMark = "?";
     let currentIndex = 0;
     isTyping.value = true;
     typingText.value = '';
@@ -104,7 +105,10 @@ const startTypingAnimation = () => {
             currentIndex++;
             setTimeout(type, 150);
         } else {
-            isTyping.value = false;
+            setTimeout(() => {
+                typingText.value += `<span class="text-3xl sm:text-4xl xl:text-5xl">${questionMark}</span>`;
+                isTyping.value = false;
+            }, 150);
         }
     };
 
@@ -186,7 +190,7 @@ onUnmounted(() => {
                     </p>
                     <button 
                         @click="goToSignup"
-                        class="bg-[#2F9266] text-white px-8 sm:px-12 py-3 sm:py-4 rounded-full font-bold text-lg sm:text-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(47,146,102,0.3)] active:scale-[0.98] shadow-[0_4px_12px_rgba(47,146,102,0.2)]"
+                        class="bg-[#2F9266] text-white px-8 sm:px-12 py-3 sm:py-4 rounded-full font-semibold text-lg sm:text-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(47,146,102,0.3)] active:scale-[0.98] shadow-[0_4px_12px_rgba(47,146,102,0.2)]"
                     >
                         지금 시작하기
                     </button>
@@ -205,7 +209,7 @@ onUnmounted(() => {
                     </div>
 
                     <div class="text-center xl:text-left flex flex-col justify-center max-w-2xl">
-                        <h2 class="text-2xl sm:text-3xl xl:text-4xl font-bold mb-6 text-gray-800 leading-tight">
+                        <h2 class="text-2xl sm:text-3xl xl:text-4xl font-semibold mb-6 text-gray-800 leading-tight">
                             복잡한 주소 입력은 이제 그만!<br/>
                             <span class="text-[#2F9266]">지도</span>에서 간편하게
                         </h2>
@@ -222,7 +226,7 @@ onUnmounted(() => {
             <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
                 <div class="flex flex-col xl:flex-row items-center justify-center gap-12 xl:gap-20">
                     <div class="text-center xl:text-left order-2 xl:order-1 flex flex-col   justify-center max-w-2xl">
-                        <h2 class="text-2xl sm:text-3xl xl:text-4xl font-bold mb-6 text-gray-800 leading-tight">
+                        <h2 class="text-2xl sm:text-3xl xl:text-4xl font-semibold mb-6 text-gray-800 leading-tight">
                             배송부터 완료까지<br/>
                             놓지지 말고 확인하세요.
                         </h2>
@@ -250,7 +254,7 @@ onUnmounted(() => {
                     </div>
 
                     <div class="text-center xl:text-left flex flex-col justify-center max-w-2xl">
-                        <h2 class="text-2xl sm:text-3xl xl:text-4xl font-bold mb-6 text-gray-800 leading-tight">
+                        <h2 class="text-2xl sm:text-3xl xl:text-4xl font-semibold mb-6 text-gray-800 leading-tight">
                                 공동구매로 <span class="text-[#2F9266]">{{ animatedDiscount }}%</span><span class="text-base text-gray-400"> 5인 기준</span><br/>
                             <span>할인 받으며 구매해요.</span>
                         </h2>
@@ -268,7 +272,7 @@ onUnmounted(() => {
                     <div class="text-center xl:text-center order-2 xl:order-1 flex flex-col justify-center max-w-2xl">
                         <h2 class="text-2xl sm:text-3xl xl:text-4xl font-semibold mb-6 text-gray-800 leading-tight">
                             더 이상 채팅방에서<br/>
-                            <span class="text-[#2F9266]">{{ typingText }}</span><span v-if="isTyping" class="animate-pulse">|</span> 묻지 말고, <span class="underline-animation">링크 공유만</span>
+                            <span class="text-[#2F9266]" v-html="typingText"></span><span v-if="isTyping" class="animate-pulse">|</span> 묻지 말고, <span class="underline-animation">🔗링크 공유만</span>
                         </h2>
                     </div>
                 </div>
@@ -277,7 +281,7 @@ onUnmounted(() => {
         <section class="py-16 sm:py-24 md:py-32 bg-[#2F9266]" ref="statsSection">
             <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
-                    <h2 class="text-3xl sm:text-3xl font-medium mb-2 text-white">지금까지 {{ animatedPurchases }}+개의 공구가 이루어졌고, 사용자의 만족도는 92.7% 입니다.</h2>
+                    <h2 class="text-3xl sm:text-3xl font-medium mb-2 text-white">지금까지 {{ animatedPurchases }}+개의 공구가 이루어졌고, 사용자의 만족도는 92.7%에요.</h2>
                     <h2 class="text-3xl sm:text-3xl font-medium mb-6 sm:mb-8 text-white">공구를 이용해 함께 더 저렴하게 물건을 구입해요.</h2>
                     <button 
                         @click="goToSignup"
