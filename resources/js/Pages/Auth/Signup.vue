@@ -2,25 +2,25 @@
   <div class="min-h-screen bg-white flex flex-col">
     <Header />
     
-    <main class="flex-grow flex items-center justify-center py-8">
-      <div class="w-full max-w-md">
-        <h2 class="text-3xl font-bold text-center mb-2">회원가입</h2>
+    <main class="flex-grow flex items-center justify-center py-4 sm:py-8 px-4 sm:px-6 lg:px-8">
+      <div class="w-full max-w-md mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6">회원가입</h2>
 
-        <form @submit.prevent="submit">
-          <div class="mb-4">
+        <form @submit.prevent="submit" class="space-y-4 sm:space-y-6">
+          <div>
             <label for="name" class="block text-sm font-medium text-gray-700 mb-1">이름</label>
             <input
               id="name"
               v-model="form.name"
               type="text"
               placeholder="이름을 입력하세요"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
               :class="{ 'border-red-500': form.errors.name }"
             />
             <p v-if="form.errors.name" class="text-red-500 text-sm mt-1">{{ form.errors.name }}</p>
           </div>
 
-          <div class="mb-4">
+          <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">이메일</label>
             <div class="flex space-x-2">
               <input
@@ -29,14 +29,14 @@
                 type="email"
                 placeholder="이메일을 입력하세요"
                 :disabled="isEmailVerified"
-                class="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266] disabled:bg-gray-100"
+                class="flex-1 px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266] disabled:bg-gray-100"
                 :class="{ 'border-red-500': form.errors.email }"
               />
               <button
                 type="button"
                 @click="sendVerificationCode"
                 :disabled="isCodeSending || isEmailVerified || !form.email"
-                class="px-4 py-2 bg-[#2F9266] text-white text-sm rounded-md hover:bg-[#247A4F] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                class="px-3 sm:px-4 py-2 bg-[#2F9266] text-white text-sm sm:text-base rounded-md hover:bg-[#247A4F] transition disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
               >
                 <span v-if="isCodeSending">전송중...</span>
                 <span v-else-if="isEmailVerified">인증완료</span>
@@ -46,7 +46,7 @@
             <p v-if="form.errors.email" class="text-red-500 text-sm mt-1">{{ form.errors.email }}</p>
           </div>
 
-          <div v-if="isCodeSent && !isEmailVerified" class="mb-4">
+          <div v-if="isCodeSent && !isEmailVerified">
             <label for="verification_code" class="block text-sm font-medium text-gray-700 mb-1">
               인증번호
               <span v-if="countdown > 0" class="text-red-500 text-xs ml-2">
@@ -60,13 +60,13 @@
                 type="text"
                 maxlength="6"
                 placeholder="6자리 인증번호"
-                class="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+                class="flex-1 px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
               />
               <button
                 type="button"
                 @click="verifyCode"
                 :disabled="isCodeVerifying || !verificationCode"
-                class="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition disabled:opacity-50"
+                class="px-3 sm:px-4 py-2 bg-green-600 text-white text-sm sm:text-base rounded-md hover:bg-green-700 transition disabled:opacity-50 whitespace-nowrap"
               >
                 <span v-if="isCodeVerifying">확인중...</span>
                 <span v-else>확인</span>
@@ -74,39 +74,39 @@
             </div>
           </div>
 
-          <div v-if="isEmailVerified" class="mb-4 rounded-md bg-green-50 p-3">
+          <div v-if="isEmailVerified" class="rounded-md bg-green-50 p-3">
             <div class="text-sm text-green-700">
               ✓ 이메일 인증이 완료되었습니다!
             </div>
           </div>
 
-          <div class="mb-4">
+          <div>
             <label for="password" class="block text-sm font-medium text-gray-700 mb-1">비밀번호</label>
             <input
               id="password"
               v-model="form.password"
               type="password"
               placeholder="비밀번호를 입력하세요"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
               :class="{ 'border-red-500': form.errors.password }"
             />
             <p v-if="form.errors.password" class="text-red-500 text-sm mt-1">{{ form.errors.password }}</p>
           </div>
 
-          <div class="mb-6">
+          <div>
             <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">비밀번호 확인</label>
             <input
               id="password_confirmation"
               v-model="form.password_confirmation"
               type="password"
               placeholder="비밀번호를 다시 입력하세요"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
               :class="{ 'border-red-500': form.errors.password_confirmation }"
             />
             <p v-if="form.errors.password_confirmation" class="text-red-500 text-sm mt-1">{{ form.errors.password_confirmation }}</p>
           </div>
 
-          <div class="mb-6">
+          <div>
             <label class="flex items-center">
               <input
                 type="checkbox"
@@ -123,7 +123,7 @@
 
           <button
             type="submit"
-            class="w-full bg-[#2F9266] text-white py-2 rounded-md hover:bg-[#247A4F] transition disabled:opacity-50"
+            class="w-full bg-[#2F9266] text-white py-2 px-4 text-sm sm:text-base rounded-md hover:bg-[#247A4F] transition focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:ring-offset-2 disabled:opacity-50"
             :disabled="form.processing || !isEmailVerified"
           >
             <span v-if="form.processing">처리중...</span>
@@ -257,3 +257,11 @@ function submit() {
   });
 }
 </script>
+
+<style scoped>
+@media (max-width: 640px) {
+  .min-h-screen {
+    min-height: 100vh;
+  }
+}
+</style>

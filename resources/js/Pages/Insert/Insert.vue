@@ -2,17 +2,17 @@
   <div class="min-h-screen bg-white flex flex-col">
     <Header />
     
-    <main class="flex-grow flex items-center justify-center py-8">
-      <div class="w-full max-w-md">
-        <h2 class="text-3xl font-bold text-center mb-2">글 등록</h2>
+    <main class="flex-grow flex items-center justify-center py-4 sm:py-8 px-4 sm:px-6 lg:px-8">
+      <div class="w-full max-w-md mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6">공구 등록</h2>
 
-        <form @submit.prevent="submit">
-          <div class="mb-4">
+        <form @submit.prevent="submit" class="space-y-4 sm:space-y-6">
+          <div>
             <label for="category" class="block text-sm font-medium text-gray-700 mb-1">카테고리</label>
             <select
               id="category"
               v-model="form.category"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
               required
             >
               <option value="">카테고리를 선택하세요</option>
@@ -26,58 +26,58 @@
             </select>
           </div>
 
-          <div class="mb-4">
+          <div>
             <label for="item" class="block text-sm font-medium text-gray-700 mb-1">아이템명</label>
             <input
               id="item"
               v-model="form.item"
               type="text"
               placeholder="아이템명을 입력하세요"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
               required
             />
           </div>
 
-          <div class="mb-4">
+          <div>
             <label for="link" class="block text-sm font-medium text-gray-700 mb-1">링크</label>
             <input
               id="link"
               v-model="form.link"
               type="text"
               placeholder="https://"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
               required
               @input="handleLinkInput"
             />
           </div>
 
-          <div class="mb-4">
+          <div>
             <label for="count" class="block text-sm font-medium text-gray-700 mb-1">모집 인원</label>
             <input
               id="count"
               v-model="form.count"
               type="number"
               placeholder="모집 인원을 입력하세요"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               required
             />
           </div>
 
-          <div class="mb-6">
+          <div>
             <label for="price" class="block text-sm font-medium text-gray-700 mb-1">총금액</label>
             <input
               id="price"
               v-model="form.price"
               type="number"
               placeholder="총금액을 입력하세요"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               required
             />
           </div>
 
           <button
             type="submit"
-            class="w-full bg-[#2F9266] text-white py-2 rounded-md hover:bg-[#247A4F] transition"
+            class="w-full bg-[#2F9266] text-white py-2 px-4 text-sm sm:text-base rounded-md hover:bg-[#247A4F] transition focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:ring-offset-2"
           >
             등록하기
           </button>
@@ -122,6 +122,14 @@ const submit = async () => {
   } catch (e) {
     alert('헉... 등록에 실패했어요.')
   }
-} 
+}
 </script>
+
+<style scoped>
+@media (max-width: 640px) {
+  .min-h-screen {
+    min-height: 100vh;
+  }
+}
+</style>
   

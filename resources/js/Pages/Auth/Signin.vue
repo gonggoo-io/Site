@@ -2,51 +2,52 @@
   <div class="min-h-screen bg-white flex flex-col">
     <Header />
     
-    <main class="flex-grow flex items-center justify-center py-8">
-      <div class="w-full max-w-md">
-        <h2 class="text-3xl font-bold text-center mb-2">로그인</h2>
-        <form @submit.prevent="submit">
-          <div class="mb-4">
+    <main class="flex-grow flex items-center justify-center py-4 sm:py-8 px-4 sm:px-6 lg:px-8">
+      <div class="w-full max-w-md mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6">로그인</h2>
+
+        <form @submit.prevent="submit" class="space-y-4 sm:space-y-6">
+          <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">이메일</label>
             <input
               id="email"
               v-model="form.email"
               type="email"
               placeholder="이메일을 입력하세요"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
-              :class="{ 'border-red-500': form.errors.email }"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+              required
             />
-            <p v-if="form.errors.email" class="text-red-500 text-sm mt-1">{{ form.errors.email }}</p>
           </div>
 
-          <div class="mb-4">
+          <div>
             <label for="password" class="block text-sm font-medium text-gray-700 mb-1">비밀번호</label>
             <input
               id="password"
               v-model="form.password"
               type="password"
               placeholder="비밀번호를 입력하세요"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
-              :class="{ 'border-red-500': form.errors.password }"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+              required
             />
-            <p v-if="form.errors.password" class="text-red-500 text-sm mt-1">{{ form.errors.password }}</p>
           </div>
 
-          <div class="mb-6">
+          <div class="flex items-center justify-between">
             <label class="flex items-center">
               <input
-                id="remember"
-                v-model="form.remember"
                 type="checkbox"
-                class="w-4 h-4 text-[#2F9266] border-gray-300 rounded focus:ring-[#2F9266] mr-2"
+                v-model="form.remember"
+                class="w-4 h-4 text-[#2F9266] border-gray-300 rounded focus:ring-[#2F9266]"
               />
-              <span class="text-sm text-gray-600">로그인 유지</span>
+              <span class="ml-2 text-sm text-gray-600">로그인 상태 유지</span>
             </label>
+            <Link href="/forgot-password" class="text-sm text-[#2F9266] hover:underline">
+              비밀번호를 잊으셨나요?
+            </Link>
           </div>
 
           <button
             type="submit"
-            class="w-full bg-[#2F9266] text-white py-2 rounded-md hover:bg-[#247A4F] transition disabled:opacity-50"
+            class="w-full bg-[#2F9266] text-white py-2 px-4 text-sm sm:text-base rounded-md hover:bg-[#247A4F] transition focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:ring-offset-2"
             :disabled="form.processing"
           >
             <span v-if="form.processing">로그인 중...</span>
@@ -55,7 +56,8 @@
         </form>
 
         <p class="text-center text-sm text-gray-600 mt-6">
-          <Link href="/signup" class="text-[#2F9266] hover:underline ml-2">아직 회원가입 하지 않았다면?</Link>
+          계정이 없으신가요?
+          <Link href="/signup" class="text-[#2F9266] hover:underline ml-2">회원가입</Link>
         </p>
       </div>
     </main>
@@ -71,23 +73,25 @@ import Header from '../components/Header.vue';
 import Footer from '../components/Footer.vue';
 import { Link, useForm } from '@inertiajs/vue3';
 
-const props = defineProps({
-  user: {
-    type: Object,
-    default: () => null
-  }
-});
-
 const form = useForm({
   email: '',
   password: '',
-  remember: true
+  remember: false
 });
 
-function submit() {
+const submit = () => {
   form.post('/signin', {
     onSuccess: () => {
+      alert('로그인되었습니다!');
     }
   });
-}
+};
 </script>
+
+<style scoped>
+@media (max-width: 640px) {
+  .min-h-screen {
+    min-height: 100vh;
+  }
+}
+</style>
