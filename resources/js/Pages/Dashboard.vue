@@ -3,8 +3,8 @@
       <Header />
   
       <Container>
-        <h1 class="text-5xl font-bold mt-32">공구가 시작되었어요📦</h1>
-  
+        <h1 class="text-5xl font-bold mt-32">근처에서 새로운 공구가</h1>
+        <h1 class="text-5xl font-bold mt-2">시작되었어요📦</h1>
         <div class="mt-8">
           <div class="flex flex-wrap gap-4">
             <div class="flex-1 min-w-[200px]">
@@ -16,7 +16,6 @@
               </div>
             </div>
   
-            <!-- 드롭다운 버튼들 -->
             <div class="relative" ref="categoryRef">
               <button @click="toggleCategory" class="button-base">
                 <img src="/public/images/category.svg" alt="category" class="w-5 h-5" />
@@ -67,8 +66,8 @@
           </div>
         </div>
   
-        <div class="mt-12 grid-container">
-          <div class="card" v-for="n in 5" :key="n">
+        <div class="mt-12 grid grid-cols-5 gap-4">
+          <div class="bg-gray-100 h-[180px] rounded-lg overflow-hidden" v-for="n in 5" :key="n">
           </div>
         </div>
       </Container>
@@ -163,17 +162,6 @@
   
   .dropdown-item {
     @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md mx-1;
-  }
-  
-  .card {
-    @apply rounded-lg overflow-hidden;
-    background-color: #f3f4f6;
-    height: 180px;
-  }
-  
-  .grid-container {
-    @apply grid gap-4;
-    grid-template-columns: repeat(5, 1fr);
   }
   </style>
   
