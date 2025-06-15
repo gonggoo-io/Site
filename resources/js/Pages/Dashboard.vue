@@ -7,7 +7,7 @@
         <h1 class="text-5xl font-bold mt-2">새로운 공구가 시작되었어요📦</h1>
         <div class="mt-8">
           <div class="flex flex-wrap gap-4">
-            <div class="flex-1 min-w-[200px]">
+            <div class="w-full sm:flex-1 sm:min-w-[200px]">
               <div class="relative">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2">
                   <img src="/public/images/search.svg" alt="search" class="w-6 h-6" />
@@ -16,7 +16,7 @@
               </div>
             </div>
   
-            <div class="relative" ref="categoryRef">
+            <div class="relative w-full sm:w-auto" ref="categoryRef">
               <button @click="toggleCategory" class="button-base">
                 <img src="/public/images/category.svg" alt="category" class="w-5 h-5" />
                 <span>{{ selectedCategory || '카테고리' }}</span>
@@ -33,7 +33,7 @@
               </div>
             </div>
   
-            <div class="relative" ref="participantsRef">
+            <div class="relative w-full sm:w-auto" ref="participantsRef">
               <button @click="toggleParticipants" class="button-base">
                 <img src="/public/images/participants.svg" alt="participants" class="w-5 h-5" />
                 <span>{{ selectedParticipants || '최대 인원' }}</span>
@@ -50,7 +50,7 @@
               </div>
             </div>
   
-            <div class="relative" ref="sortRef">
+            <div class="relative w-full sm:w-auto" ref="sortRef">
               <button @click="toggleSort" class="button-base">
                 <img src="/public/images/sort.svg" alt="sort" class="w-5 h-5" />
                 <span>{{ selectedSort || '정렬' }}</span>
@@ -66,7 +66,7 @@
           </div>
         </div>
   
-        <div class="mt-12 grid grid-cols-5 gap-4">
+        <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-8">
           <div v-for="n in 5" :key="n">
             <div class="bg-gray-100 h-[180px] rounded-2xl overflow-hidden">
             </div>
@@ -83,6 +83,10 @@
                 1/12 · 3일 후 마감
             </div>
           </div>
+        </div>
+
+        <div class="text-center mt-10 mb-10  sm:hidden">
+          <a href="#" @click.prevent="scrollToTop" class="text-gray-500 hover:underline">상단으로 올라가기</a>
         </div>
       </Container>
   
@@ -159,6 +163,10 @@
     showCategory.value = false
     showParticipants.value = false
   }
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
   </script>
   
   <style scoped>
@@ -171,7 +179,7 @@
   }
   
   .dropdown-menu {
-    @apply absolute z-10 w-48 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg;
+    @apply absolute z-10 w-full sm:w-48 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg;
   }
   
   .dropdown-item {
