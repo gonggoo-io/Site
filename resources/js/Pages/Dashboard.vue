@@ -3,8 +3,8 @@
       <Header />
   
       <Container>
-        <h1 class="text-5xl font-bold mt-32">siniseong님 근처에서</h1>
-        <h1 class="text-5xl font-bold mt-2">새로운 공구가 시작되었어요📦</h1>
+        <h1 class="text-3xl sm:text-5xl font-bold mt-32">siniseong님 근처에서</h1>
+        <h1 class="text-3xl sm:text-5xl font-bold mt-2 whitespace-nowrap">새로운 공구가 시작되었어요📦</h1>
         <div class="mt-8">
           <div class="flex flex-wrap gap-4">
             <div class="w-full sm:flex-1 sm:min-w-[200px]">
@@ -74,7 +74,7 @@
                 <span>14,000원</span>
             </div>
             <div class="text-left text-base text-gray-500">
-                <span>[농심] 새우깡 400g</span>
+                <span>석부장 최애 탕비실 사무실 간식 박스과자세트 16p</span>
             </div>
             <div class="text-left text-sm mt-1 text-gray-500 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 mr-1">
@@ -86,7 +86,7 @@
         </div>
 
         <div class="text-center mt-10 mb-10  sm:hidden">
-          <a href="#" @click.prevent="scrollToTop" class="text-gray-500 hover:underline">상단으로 올라가기</a>
+          <a href="#" @click.prevent="scrollToTop" class="text-gray-500 hover:underline">▲ 상단으로 이동 또는 맨 위로 (TOP)</a>
         </div>
       </Container>
   
