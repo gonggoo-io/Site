@@ -6,10 +6,34 @@
         <Container>
           <h1 class="text-3xl sm:text-5xl font-bold mt-32">siniseong님 근처에서</h1>
           <h1 class="text-3xl sm:text-5xl font-bold mt-2 whitespace-nowrap">새로운 공구가 시작되었어요📦</h1>
-          <div class="mt-7 w-32 border-b-8 border-gray-800"></div>
+          <div class="mt-7 flex items-center justify-between">
+            <div class="w-32 border-b-8 border-gray-800"></div>
+            <div class="relative" ref="sortRef">
+              <button 
+                @click="toggleSort" 
+                class="button-base"
+              >
+                <span>{{ selectedSort }}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                </svg>
+              </button>
+              <div v-if="showSort" class="dropdown-menu">
+                <a 
+                  v-for="option in sortOptions" 
+                  :key="option.value"
+                  href="#" 
+                  @click.prevent="selectSort(option.label)"
+                  class="dropdown-item"
+                >
+                  {{ option.label }}
+                </a>
+              </div>
+            </div>
+          </div>
           <div>
           </div>
-          <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-8">
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-8">
             <div v-for="n in 10" :key="n">
               <div class="bg-gray-100 h-[180px] rounded-2xl overflow-hidden">
               </div>
@@ -58,15 +82,18 @@
     showCategory.value = false
   }
   
+  const sortOptions = ref([
+    { label: '최신순', value: 'latest' },
+    { label: '낮은 가격순', value: 'price_asc' },
+    { label: '높은 가격순', value: 'price_desc' }
+  ])
+  
   const selectSort = (sort) => {
     selectedSort.value = sort
     showSort.value = false
   }
   
   const handleClickOutside = (event) => {
-    if (categoryRef.value && !categoryRef.value.contains(event.target)) {
-      showCategory.value = false
-    }
     if (sortRef.value && !sortRef.value.contains(event.target)) {
       showSort.value = false
     }
@@ -87,7 +114,6 @@
   
   const toggleSort = () => {
     showSort.value = !showSort.value
-    showCategory.value = false
   }
 
   const scrollToTop = () => {
@@ -101,7 +127,7 @@
   }
   
   .button-base {
-    @apply flex items-center gap-2 px-5 h-12 border-2 border-gray-200 rounded-xl bg-gray-50/50 hover:border-[#2F9266] hover:bg-white transition-all duration-200 shadow-sm;
+    @apply flex items-center gap-2 px-5 h-10 border border-gray-200 rounded-lg bg-white transition-all duration-200 shadow-sm;
   }
   
   .sort-button {
@@ -119,11 +145,11 @@
   }
   
   .dropdown-menu {
-    @apply absolute z-10 w-56 mt-2 bg-white border-2 border-gray-200 rounded-xl shadow-lg overflow-hidden;
+    @apply absolute z-10 w-56 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden;
   }
   
   .dropdown-item {
-    @apply block px-5 py-3 text-sm text-gray-700 hover:bg-[#2F9266]/5 hover:text-[#2F9266] transition-colors duration-200;
+    @apply block px-5 py-3 text-sm text-gray-700 transition-colors duration-200;
   }
   </style>
   
