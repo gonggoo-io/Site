@@ -22,6 +22,12 @@ Route::middleware('guest')->group(function () {
     Route::post('/verification/code', [VerificationController::class, 'verifyCode']);
 });
 
+Route::get('/inserts', [InsertController::class, 'index']);
+
+Route::get('/product/{id}', function ($id) {
+    return Inertia::render('Product');
+})->name('product');
+
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', function () {
@@ -33,8 +39,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/insert', fn () => Inertia::render('Insert/Insert'))->name('insert');
     Route::post('/insert', [InsertController::class, 'store']);
-
-    Route::get('/inserts', [InsertController::class, 'index']);
 
     Route::post('/buy', [BuyController::class, 'store'])->name('buy.store');
     Route::delete('/buy', [BuyController::class, 'destroy'])->name('buy.destroy');

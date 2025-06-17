@@ -5,7 +5,7 @@
       <main class="flex-grow">
         <Container>
           <h1 class="text-3xl sm:text-5xl font-bold mt-32">siniseong님 근처에서</h1>
-          <h1 class="text-3xl sm:text-5xl font-bold mt-2 whitespace-nowrap">새로운 공구가 시작되었어요📦</h1>
+          <h1 class="text-3xl sm:text-5xl font-bold mt-2 whitespace-nowrap">새로운 공구가 시작되었어요.</h1>
           <div class="mt-7 flex items-center justify-between">
             <div class="w-32 border-b-8 border-gray-800"></div>
             <div class="relative" ref="sortRef">
@@ -34,7 +34,7 @@
           <div>
           </div>
           <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-8">
-            <div v-for="n in 10" :key="n">
+            <div v-for="n in 10" :key="n" class="cursor-pointer" @click="goToProduct(n)">
               <div class="bg-gray-100 h-[180px] rounded-2xl overflow-hidden">
               </div>
               <div class="text-left text-xl font-semibold text-[#333333] mt-2">
@@ -64,6 +64,7 @@
   
   <script setup>
   import { ref, onMounted, onUnmounted } from 'vue'
+  import { router } from '@inertiajs/vue3'
   import Container from '../Pages/components/Container.vue'
   import Header from '../Pages/components/Header.vue'
   import Footer from '../Pages/components/Footer.vue'
@@ -118,6 +119,10 @@
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const goToProduct = (productId) => {
+    router.visit(`/product/${productId}`)
   }
   </script>
   

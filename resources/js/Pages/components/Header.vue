@@ -34,7 +34,6 @@
             <div 
               v-if="isDropdownOpen"
               class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
-              v-click-outside="closeDropdown"
             >
               <Link
                 href="/logout"

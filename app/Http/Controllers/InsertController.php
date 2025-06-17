@@ -13,6 +13,12 @@ class InsertController extends Controller
         return response()->json($inserts);
     }
 
+    public function show($id)
+    {
+        $insert = Insert::with(['user', 'buys'])->findOrFail($id);
+        return response()->json($insert);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
