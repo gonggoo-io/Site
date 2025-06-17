@@ -66,9 +66,9 @@
                   <button 
                     ref="copyButtonRef"
                     class="w-1/2 border-2 border-[#2F9266] bg-white text-[#2F9266] py-4 rounded-xl font-semibold hover:bg-[#f0f0f0] transition-colors"
-                    @click="copyLink"
+                    @click="shareLink"
                   >
-                    친구에게 공구를 요청해요
+                    친구에게 공구 공유하기
                   </button>
                 </div>
               </div>
@@ -91,6 +91,8 @@
   let marker = null
   
   const copyButtonRef = ref(null);
+  
+  const productTitle = '석부장 최애 탕비실 사무실 간식 박스과자세트 16p';
   
   const initKakaoMap = () => {
     if (typeof kakao === 'undefined') {
@@ -152,16 +154,16 @@
     })
   }
   
-  const copyLink = () => {
-    const link = window.location.href;
-    navigator.clipboard.writeText(link).then(() => {
-      copyButtonRef.value.textContent = '링크가 복사되었어요.';
-      setTimeout(() => {
-        copyButtonRef.value.textContent = '함께 공구해요';
-      }, 2000);
-    }).catch(err => {
-      console.error('링크 복사 실패:', err);
-    });
+  const shareLink = async () => {
+    try {
+      await navigator.share({
+        title: '친구가 공구를 요청했어요.',
+        text: `${productTitle} 공구를 친구가 요청했어요.`,
+        url: window.location.href,
+      });
+    } catch (err) {
+      console.error('공유 실패:', err);
+    }
   };
   
   onMounted(async () => {
