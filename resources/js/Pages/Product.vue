@@ -59,9 +59,18 @@
                   </div>
                 </div>
   
-                <button class="w-full bg-[#2F9266] text-white py-4 rounded-xl font-semibold hover:bg-[#267a54] transition-colors">
-                  참여하기
-                </button>
+                <div class="flex gap-4">
+                  <button class="w-1/2 bg-[#2F9266] text-white py-4 rounded-xl font-semibold hover:bg-[#267a54] transition-colors">
+                    공구 참여하기
+                  </button>
+                  <button 
+                    ref="copyButtonRef"
+                    class="w-1/2 border-2 border-[#2F9266] bg-white text-[#2F9266] py-4 rounded-xl font-semibold hover:bg-[#f0f0f0] transition-colors"
+                    @click="copyLink"
+                  >
+                    친구에게 공구를 요청해요
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -73,13 +82,15 @@
   </template>
   
   <script setup>
-  import { onMounted, onUnmounted } from 'vue'
+  import { onMounted, onUnmounted, ref } from 'vue'
   import Container from './components/Container.vue'
   import Header from './components/Header.vue'
   import Footer from './components/Footer.vue'
   
   let map = null
   let marker = null
+  
+  const copyButtonRef = ref(null);
   
   const initKakaoMap = () => {
     if (typeof kakao === 'undefined') {
@@ -97,19 +108,16 @@
     }
   
     map = new kakao.maps.Map(container, options)
+    const markerImage = new kakao.maps.MarkerImage(
+      '/images/delivery-driver.png',
+      new kakao.maps.Size(50, 54)
+    );
+
     marker = new kakao.maps.Marker({
       position: position,
-      map: map
-    })
-  
-    const infowindow = new kakao.maps.InfoWindow({
-      content: `
-        <div class="p-2 text-center">
-          <div class="font-semibold text-gray-800">부산광역시 부산진구 중앙대로 623</div>
-          <div class="text-sm text-gray-600">배송 받을 위치</div>
-        </div>
-      `
-    })
+      map: map,
+      image: markerImage
+    });
   
     infowindow.open(map, marker)
     
@@ -144,6 +152,18 @@
     })
   }
   
+  const copyLink = () => {
+    const link = window.location.href;
+    navigator.clipboard.writeText(link).then(() => {
+      copyButtonRef.value.textContent = '링크가 복사되었어요.';
+      setTimeout(() => {
+        copyButtonRef.value.textContent = '함께 공구해요';
+      }, 2000);
+    }).catch(err => {
+      console.error('링크 복사 실패:', err);
+    });
+  };
+  
   onMounted(async () => {
     try {
       await loadKakaoMapScript()
@@ -156,9 +176,6 @@
   onUnmounted(() => {
     if (map) {
       map = null
-    }
-    if (marker) {
-      marker = null
     }
   })
   </script>
