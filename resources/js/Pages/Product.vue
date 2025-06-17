@@ -23,7 +23,6 @@
                   </svg>
                   <span>1/12 · 3일 후 마감</span>
                 </div>
-  
                 <div class="border-t border-gray-200 pt-6">
                   <h2 class="text-xl font-semibold mb-4">상품 설명</h2>
                   <p class="text-gray-600">
@@ -35,7 +34,7 @@
   
                 <div class="border-t border-gray-200 pt-6">
                   <h2 class="text-xl font-semibold mb-4">상품 링크</h2>
-                  <div class="bg-gray-100 rounded-lg p-4 border border-gray-200">
+                  <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <a href="https://www.coupang.com/vp/products/123456789" target="_blank" class="text-gray-600 hover:underline break-all">
                       https://www.coupang.com/vp/products/123456789
                     </a>
@@ -43,18 +42,20 @@
                 </div>
   
                 <div class="border-t border-gray-200 pt-6">
-                  <h2 class="text-xl font-semibold mb-4">공구 배송 위치</h2>
+                  <h2 class="text-xl font-semibold mb-4">공구 물품 배송 위치</h2>
                   <div class="space-y-4">
-                    <div class="flex items-center gap-2 text-gray-700">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 text-red-500">
-                        <path fill-rule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd" />
-                      </svg>
-                      <span class="font-medium">강남역 2번 출구</span>
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden">
+                      <div 
+                        id="kakao-map" 
+                        class="w-full h-64 bg-white"
+                        style="min-height: 256px;"
+                      ></div>
+                      <div class="p-4">
+                        <div class="text-gray-700">
+                          <span class="font-medium text-lg">부산광역시 부산진구 중앙대로 623</span>
+                        </div>
+                      </div>
                     </div>
-                    <div 
-                      id="kakao-map" 
-                      class="w-full h-64 rounded-lg border border-gray-200"
-                    ></div>
                   </div>
                 </div>
   
@@ -88,11 +89,11 @@
   
     const container = document.getElementById('kakao-map')
     if (!container) return
-    const position = new kakao.maps.LatLng(37.4979462, 127.0276368)
+    const position = new kakao.maps.LatLng(35.1595454, 129.0477508)
     
     const options = {
       center: position,
-      level: 3
+      level: 2
     }
   
     map = new kakao.maps.Map(container, options)
@@ -104,15 +105,22 @@
     const infowindow = new kakao.maps.InfoWindow({
       content: `
         <div class="p-2 text-center">
-          <div class="font-semibold text-gray-800">강남역 2번 출구</div>
+          <div class="font-semibold text-gray-800">부산광역시 부산진구 중앙대로 623</div>
           <div class="text-sm text-gray-600">배송 받을 위치</div>
         </div>
       `
     })
   
     infowindow.open(map, marker)
+    
+    setTimeout(() => {
+      if (map) {
+        map.relayout()
+      }
+    }, 100)
+    
     kakao.maps.event.addListener(marker, 'click', () => {
-      const kakaoMapUrl = `https://map.kakao.com/link/to/강남역,${position.getLat()},${position.getLng()}`
+      const kakaoMapUrl = `https://map.kakao.com/link/to/부산진구 중앙대로 623,${position.getLat()},${position.getLng()}`
       window.open(kakaoMapUrl, '_blank')
     })
   }
