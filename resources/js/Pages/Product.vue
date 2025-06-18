@@ -6,9 +6,24 @@
           <div class="mt-32">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div class="relative">
-                <div class="bg-gray-100 h-[400px] rounded-2xl overflow-hidden">
+                <div class="bg-gray-100 h-[540px] rounded-2xl overflow-hidden">
+                  <img 
+                    v-if="ogImage" 
+                    :src="ogImage" 
+                    :alt="productTitle"
+                    class="w-full h-full object-cover"
+                    @error="handleImageError"
+                  />
+                  <div v-else-if="isLoadingImage" class="flex items-center justify-center h-full">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2F9266]"></div>
+                  </div>
+                  <div v-else class="flex items-center justify-center h-full text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                    </svg>
+                  </div>
                 </div>
-                <p class="text-base text-gray-500 mt-2">※ 구매 링크 미리보기 이미지입니다.</p>
+                <p class="text-base text-gray-500 mt-4 text-center">※ 구매 링크 미리보기 이미지입니다.</p>
               </div>
               <div class="space-y-6">
                 <div>
@@ -38,8 +53,8 @@
                 <div class="border-t border-gray-200 pt-6">
                   <h2 class="text-2xl font-semibold mb-4">구매 링크</h2>
                   <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <a href="https://www.coupang.com/vp/products/123456789" target="_blank" class="text-gray-600 hover:underline break-all">
-                      https://www.coupang.com/vp/products/123456789
+                    <a href="https://item.gmarket.co.kr/Item?goodsCode=3026275566" target="_blank" class="text-gray-600 hover:underline break-all">
+                        https://item.gmarket.co.kr/Item?goodsCode=3026275566
                     </a>
                   </div>
                 </div>
@@ -95,8 +110,108 @@
   let marker = null
   
   const copyButtonRef = ref(null);
+  const ogImage = ref(null);
+  const isLoadingImage = ref(false);
   
   const productTitle = '석부장 최애 탕비실 사무실 간식 박스과자세트 16p';
+  const purchaseUrl = 'https://item.gmarket.co.kr/Item?goodsCode=3026275566';
+  
+  const fetchOGImage = async () => {
+    isLoadingImage.value = true;
+    try {
+      let htmlContent = null;
+      
+      try {
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(purchaseUrl)}`;
+        const response = await fetch(proxyUrl);
+        if (response.ok) {
+          htmlContent = await response.text();
+        }
+      } catch (error) {
+        console.log('첫 번째 프록시 실패, 두 번째 시도...');
+      }
+      
+      if (!htmlContent) {
+        try {
+          const proxyUrl2 = `https://cors-anywhere.herokuapp.com/${purchaseUrl}`;
+          const response2 = await fetch(proxyUrl2);
+          if (response2.ok) {
+            htmlContent = await response2.text();
+          }
+        } catch (error) {
+          console.log('두 번째 프록시도 실패');
+        }
+      }
+      
+      if (htmlContent) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+        let imageUrl = null;
+        
+        const ogImageMeta = doc.querySelector('meta[property="og:image"]');
+        if (ogImageMeta && ogImageMeta.getAttribute('content')) {
+          imageUrl = ogImageMeta.getAttribute('content');
+          console.log('Found og:image:', imageUrl);
+        }
+        
+        if (!imageUrl) {
+          const twitterImageMeta = doc.querySelector('meta[property="twitter:image"]');
+          if (twitterImageMeta && twitterImageMeta.getAttribute('content')) {
+            imageUrl = twitterImageMeta.getAttribute('content');
+            console.log('Found twitter:image:', imageUrl);
+          }
+        }
+        
+        if (!imageUrl) {
+          const images = doc.querySelectorAll('img');
+          for (let img of images) {
+            const src = img.src || img.getAttribute('data-src');
+            if (src && (src.includes('product') || src.includes('item') || src.includes('goods') || src.includes('image'))) {
+              imageUrl = src;
+              console.log('Found product image:', imageUrl);
+              break;
+            }
+          }
+        }
+        
+        if (!imageUrl) {
+          const firstImg = doc.querySelector('img');
+          if (firstImg) {
+            imageUrl = firstImg.src || firstImg.getAttribute('data-src');
+            console.log('Found first image:', imageUrl);
+          }
+        }
+        
+        if (imageUrl) {
+          if (imageUrl.startsWith('//')) {
+            imageUrl = `https:${imageUrl}`;
+          } else if (imageUrl.startsWith('/')) {
+            imageUrl = `https://item.gmarket.co.kr${imageUrl}`;
+          } else if (!imageUrl.startsWith('http')) {
+            imageUrl = `https://item.gmarket.co.kr/${imageUrl}`;
+          }
+          
+          console.log('Final image URL:', imageUrl);
+          ogImage.value = imageUrl;
+        } else {
+          console.log('No image found in HTML');
+          ogImage.value = 'https://via.placeholder.com/400x400/2F9266/FFFFFF?text=상품+이미지';
+        }
+      } else {
+        console.log('HTML content could not be fetched');
+        ogImage.value = 'https://via.placeholder.com/400x400/2F9266/FFFFFF?text=상품+이미지';
+      }
+    } catch (error) {
+      console.error('OG 이미지 가져오기 실패:', error);
+      ogImage.value = 'https://via.placeholder.com/400x400/2F9266/FFFFFF?text=상품+이미지';
+    } finally {
+      isLoadingImage.value = false;
+    }
+  };
+  
+  const handleImageError = () => {
+    ogImage.value = null;
+  };
   
   const initKakaoMap = () => {
     if (typeof kakao === 'undefined') {
@@ -124,8 +239,6 @@
       map: map,
       image: markerImage
     });
-  
-    infowindow.open(map, marker)
     
     setTimeout(() => {
       if (map) {
@@ -174,6 +287,7 @@
     try {
       await loadKakaoMapScript()
       initKakaoMap()
+      fetchOGImage()
     } catch (error) {
       console.error(error)
     }
