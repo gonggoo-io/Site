@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="{{ asset('build/assets/app.js') }}" as="script">
+    <link rel="preload" href="{{ asset('build/assets/app.css') }}" as="style">
+    
     <style>
       @font-face {
         font-family: 'Pretendard-Regular';

@@ -10,4 +10,22 @@ export default defineConfig({
         }),
         vue(),
     ],
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: ['vue', '@inertiajs/vue3'],
+                },
+            },
+        },
+        chunkSizeWarningLimit: 1000,
+    },
+    optimizeDeps: {
+        include: ['vue', '@inertiajs/vue3'],
+    },
+    server: {
+        hmr: {
+            host: 'localhost',
+        },
+    },
 });
