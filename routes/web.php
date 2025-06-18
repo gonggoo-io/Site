@@ -5,6 +5,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\InsertController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\MetaController;
 use App\Models\Insert;
 use App\Http\Controllers\BuyController;
 
@@ -44,3 +45,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/buy', [BuyController::class, 'destroy'])->name('buy.destroy');
     Route::get('/buy/{insertId}', [BuyController::class, 'show'])->name('buy.show');
 });
+
+// 메타데이터 API
+Route::post('/api/meta', [MetaController::class, 'fetchMeta'])->name('meta.fetch');
