@@ -7,11 +7,11 @@ import { onMounted, onUnmounted, watch } from 'vue'
 const props = defineProps({
   title: {
     type: String,
-    required: false
+    required: true
   },
   description: {
     type: String,
-    required: false
+    required: true
   },
   image: {
     type: String,

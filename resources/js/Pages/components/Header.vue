@@ -4,10 +4,20 @@
     :class="{ 'border-b': currentPath !== '/' }"
   >
     <Container :flex="true" class="flex items-center justify-between">
-      <Link href="/" class="flex items-center gap-2 hover:opacity-80 transition">
-        <img src="/public/images/logo.svg" alt="logo" class="w-5 h-5" />
-        <span class="text-xl font-bold text-[#2F9266]">공구</span>
-      </Link>
+      <div class="flex items-center gap-10">
+        <Link href="/" class="flex items-center gap-2 hover:opacity-80 transition">
+          <img src="/public/images/logo.svg" alt="logo" class="w-5 h-5" />
+          <span class="text-xl font-bold text-[#2F9266]">공구</span>
+        </Link>
+        <template v-if="auth?.user">
+          <Link
+            href="/insert"
+            class="text-base text-gray-900 hover:text-[#2F9266] font-normal transition-colors"
+          >
+            새로운 공구 만들기
+          </Link>
+        </template>
+      </div>
 
       <div class="flex gap-3 items-center">
         <template v-if="auth?.user">

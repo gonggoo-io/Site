@@ -124,6 +124,10 @@
   const goToProduct = (productId) => {
     router.visit(`/product/${productId}`)
   }
+
+  const goToInsert = () => {
+    router.visit('/insert')
+  }
   </script>
   
   <style scoped>
