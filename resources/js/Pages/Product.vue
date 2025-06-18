@@ -5,15 +5,18 @@
         <Container>
           <div class="mt-32">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div class="bg-gray-100 h-[400px] rounded-2xl overflow-hidden">
+              <div class="relative">
+                <div class="bg-gray-100 h-[400px] rounded-2xl overflow-hidden">
+                </div>
+                <p class="text-base text-gray-500 mt-2">※ 구매 링크 미리보기 이미지입니다.</p>
               </div>
               <div class="space-y-6">
                 <div>
                   <h1 class="text-3xl font-bold text-gray-900">석부장 최애 탕비실 사무실 간식 박스과자세트 16p</h1>
                   <div class="flex items-center gap-2 mt-4">
-                    <p class="text-2xl font-semibold text-gray-900">1인 14,000원</p>
+                    <p class="text-2xl font-semibold text-gray-900">1인 <span class="text-[#2F9266] font-bold">14,000원</span></p>
                     <span class="text-gray-400">·</span>
-                    <p class="text-2xl font-semibold text-gray-900">총 74,000원</p>
+                    <p class="text-2xl font-semibold text-gray-900">합계 74,000원</p>
                   </div>
                 </div>
   
@@ -24,7 +27,7 @@
                   <span>1/12 · 3일 후 마감</span>
                 </div>
                 <div class="border-t border-gray-200 pt-6">
-                  <h2 class="text-2xl font-semibold mb-4">상품 설명</h2>
+                  <h2 class="text-2xl font-semibold mb-4">물품 설명</h2>
                   <p class="text-gray-600">
                     사무실에서 즐기는 다양한 과자 세트입니다. 16가지의 다양한 과자가 포함되어 있어 
                     모두가 좋아하는 맛을 찾을 수 있습니다. 탕비실이나 사무실에서 공유하기 좋은 
@@ -33,7 +36,7 @@
                 </div>
   
                 <div class="border-t border-gray-200 pt-6">
-                  <h2 class="text-2xl font-semibold mb-4">상품 링크</h2>
+                  <h2 class="text-2xl font-semibold mb-4">구매 링크</h2>
                   <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <a href="https://www.coupang.com/vp/products/123456789" target="_blank" class="text-gray-600 hover:underline break-all">
                       https://www.coupang.com/vp/products/123456789
@@ -42,7 +45,8 @@
                 </div>
   
                 <div class="border-t border-gray-200 pt-6">
-                  <h2 class="text-2xl font-semibold mb-4">공구 물품 배송 위치</h2>
+                  <h2 class="text-2xl font-semibold mb-1">물품 배송 위치</h2>
+                  <span class="block text-base font-medium mb-4 text-gray-500">마커를 클릭하면 카카오맵으로 이동해요.</span>
                   <div class="space-y-4">
                     <div class="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden">
                       <div 
@@ -77,7 +81,7 @@
         </Container>
       </main>
   
-      <Footer class="mt-12" />
+      <Footer class="mt-12"/>
     </div>
   </template>
   
