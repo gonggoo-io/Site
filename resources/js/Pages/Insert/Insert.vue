@@ -6,77 +6,54 @@
       <div class="w-full max-w-md mx-auto">
         <h2 class="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6">공구 등록</h2>
 
-        <form @submit.prevent="submit" class="space-y-4 sm:space-y-6">
-          <div>
-            <label for="category" class="block text-sm font-medium text-gray-700 mb-1">카테고리</label>
-            <select
-              id="category"
-              v-model="form.category"
-              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
-              required
-            >
-              <option value="">카테고리를 선택하세요</option>
-              <option value="식품">식품</option>
-              <option value="생활용품">생활용품</option>
-              <option value="화장품">화장품</option>
-              <option value="주방용품">주방용품</option>
-              <option value="문구/사무용품">문구/사무용품</option>
-              <option value="운동/피트니스용품">운동/피트니스용품</option>
-              <option value="기타">기타</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="item" class="block text-sm font-medium text-gray-700 mb-1">아이템명</label>
-            <input
-              id="item"
-              v-model="form.item"
-              type="text"
-              placeholder="아이템명을 입력하세요"
-              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
-              required
-            />
-          </div>
-
+        <form @submit.prevent="fetchMetadata" class="space-y-4 sm:space-y-6">
           <div>
             <label for="link" class="block text-sm font-medium text-gray-700 mb-1">링크</label>
-            <input
-              id="link"
-              v-model="form.link"
-              type="text"
-              placeholder="https://"
-              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
-              required
-              @input="handleLinkInput"
-            />
+            <div class="flex gap-2">
+              <input
+                id="link"
+                v-model="form.link"
+                type="text"
+                placeholder="https://"
+                class="flex-1 px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+                required
+                @input="handleLinkInput"
+              />
+              <button
+                type="submit"
+                :disabled="isLoading"
+                class="px-4 py-2 bg-[#2F9266] text-white rounded-md hover:bg-[#247A4F] transition focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:ring-offset-2 disabled:opacity-50"
+              >
+                <div v-if="isLoading" class="flex items-center">
+                  <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                </div>
+                <span v-else>확인</span>
+              </button>
+            </div>
           </div>
 
-          <div>
-            <label for="count" class="block text-sm font-medium text-gray-700 mb-1">모집 인원</label>
-            <input
-              id="count"
-              v-model="form.count"
-              type="number"
-              placeholder="모집 인원을 입력하세요"
-              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              required
-            />
-          </div>
-
-          <div>
-            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">총금액</label>
-            <input
-              id="price"
-              v-model="form.price"
-              type="number"
-              placeholder="총금액을 입력하세요"
-              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              required
-            />
+          <div v-if="ogData.title || ogData.description || ogData.image" class="mt-6 p-4 border rounded-lg bg-gray-50">
+            <h3 class="text-lg font-semibold mb-3">가져온 정보</h3>
+            <div class="space-y-2">
+              <div v-if="ogData.title">
+                <label class="block text-sm font-medium text-gray-700">제목</label>
+                <p class="text-sm text-gray-900">{{ ogData.title }}</p>
+              </div>
+              <div v-if="ogData.description">
+                <label class="block text-sm font-medium text-gray-700">설명</label>
+                <p class="text-sm text-gray-900">{{ ogData.description }}</p>
+              </div>
+              <div v-if="ogData.image">
+                <label class="block text-sm font-medium text-gray-700">이미지 URL</label>
+                <p class="text-sm text-gray-900 break-all">{{ ogData.image }}</p>
+              </div>
+            </div>
           </div>
 
           <button
-            type="submit"
+            v-if="ogData.title || ogData.description || ogData.image"
+            type="button"
+            @click="submit"
             class="w-full bg-[#2F9266] text-white py-2 px-4 text-sm sm:text-base rounded-md hover:bg-[#247A4F] transition focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:ring-offset-2"
           >
             등록하기
@@ -98,12 +75,16 @@ import { ref } from 'vue'
 import axios from 'axios'
 
 const form = ref({
-  category: '',
-  item: '',
-  link: '',
-  count: '',
-  price: ''
+  link: ''
 })
+
+const ogData = ref({
+  title: '',
+  description: '',
+  image: ''
+})
+
+const isLoading = ref(false)
 
 const handleLinkInput = (event) => {
   let value = event.target.value;
@@ -111,11 +92,39 @@ const handleLinkInput = (event) => {
   form.value.link = value;
 }
 
+const fetchMetadata = async () => {
+  if (!form.value.link) return;
+  
+  isLoading.value = true;
+  try {
+    const response = await axios.post('/api/meta', {
+      url: `https://${form.value.link}`
+    });
+    
+    const metaData = response.data.data || response.data;
+    
+    ogData.value = {
+      title: metaData.title || '',
+      description: metaData.description || '',
+      image: metaData.image || ''
+    };
+    
+    console.log('OG Image URL:', metaData.image);
+  } catch (error) {
+    console.error('메타데이터 가져오기 실패:', error);
+    alert('링크 정보를 가져오는데 실패했습니다.');
+  } finally {
+    isLoading.value = false;
+  }
+}
+
 const submit = async () => {
   try {
     const formData = {
-      ...form.value,
-      link: `https://${form.value.link}`
+      link: `https://${form.value.link}`,
+      title: ogData.value.title,
+      description: ogData.value.description,
+      image: ogData.value.image
     }
     await axios.post('/insert', formData)
     alert('등록이 완료되었습니다.')
@@ -132,4 +141,3 @@ const submit = async () => {
   }
 }
 </style>
-  

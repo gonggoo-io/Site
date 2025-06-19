@@ -22,10 +22,10 @@ class InsertController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'item' => 'required|string',
             'link' => 'required|url',
-            'count' => 'required|integer|min:1',
-            'price' => 'required|integer|min:0',
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'image' => 'required|string',
         ]);
 
         $data = $request->all();

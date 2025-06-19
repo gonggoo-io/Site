@@ -3,199 +3,136 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
-use DOMDocument;
-use DOMXPath;
+use Illuminate\Support\Facades\Log;
 
 class MetaController extends Controller
 {
-    public function fetchMeta(Request $request): JsonResponse
+    public function fetchMeta(Request $request)
     {
-        $request->validate([
-            'url' => 'required|url'
-        ]);
-
-        $url = $request->input('url');
-
         try {
+            $request->validate([
+                'url' => 'required|url'
+            ]);
+
+            $url = $request->input('url');
             $response = Http::timeout(10)->get($url);
             
             if (!$response->successful()) {
                 return response()->json([
-                    'success' => false,
-                    'message' => 'URL에 접근할 수 없습니다.'
+                    'error' => 'URL에 접근할 수 없습니다.',
+                    'status' => $response->status()
                 ], 400);
             }
 
             $html = $response->body();
-            $dom = new DOMDocument();
-            @$dom->loadHTML($html, LIBXML_NOERROR);
-            $xpath = new DOMXPath($dom);
-
-            // G마켓 상품 페이지인지 확인
-            if (str_contains($url, 'gmarket.co.kr')) {
-                return $this->extractGmarketData($xpath, $html, $url);
-            }
-
-            // 일반적인 메타데이터 추출
-            return $this->extractGeneralMeta($xpath);
+            $metaData = $this->extractMetaData($html, $url);
+            
+            return response()->json([
+                'data' => $metaData
+            ]);
 
         } catch (\Exception $e) {
+            Log::error('메타데이터 가져오기 실패: ' . $e->getMessage(), [
+                'url' => $request->input('url'),
+                'error' => $e->getMessage()
+            ]);
+            
             return response()->json([
-                'success' => false,
-                'message' => '메타데이터를 가져오는데 실패했습니다: ' . $e->getMessage()
+                'error' => '메타데이터를 가져오는데 실패했습니다.',
+                'message' => $e->getMessage()
             ], 500);
         }
     }
 
-    private function extractGmarketData(DOMXPath $xpath, string $html, string $url): JsonResponse
+    private function extractMetaData($html, $baseUrl)
     {
-        // G마켓 상품 이미지 추출 시도
-        $imageUrl = null;
+        $metaData = [
+            'title' => '',
+            'description' => '',
+            'image' => ''
+        ];
+
+        if (preg_match('/<meta[^>]*property=["\']og:title["\'][^>]*content=["\']([^"\']*)["\']/', $html, $matches)) {
+            $metaData['title'] = trim($matches[1]);
+        } elseif (preg_match('/<title[^>]*>([^<]*)<\/title>/', $html, $matches)) {
+            $metaData['title'] = trim($matches[1]);
+        }
+
+        if (preg_match('/<meta[^>]*property=["\']og:description["\'][^>]*content=["\']([^"\']*)["\']/', $html, $matches)) {
+            $metaData['description'] = trim($matches[1]);
+        } elseif (preg_match('/<meta[^>]*name=["\']description["\'][^>]*content=["\']([^"\']*)["\']/', $html, $matches)) {
+            $metaData['description'] = trim($matches[1]);
+        }
+        if (preg_match('/<meta[^>]*property=["\']og:image["\'][^>]*content=["\']([^"\']*)["\']/', $html, $matches)) {
+            $imageUrl = trim($matches[1]);
+            $metaData['image'] = $this->resolveRelativeUrl($imageUrl, $baseUrl);
+        } elseif (preg_match('/<img[^>]*src=["\']([^"\']*)["\']/', $html, $matches)) {
+            $imageUrl = trim($matches[1]);
+            $metaData['image'] = $this->resolveRelativeUrl($imageUrl, $baseUrl);
+        }
+
+        return $metaData;
+    }
+
+    private function resolveRelativeUrl($url, $baseUrl)
+    {
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
+            return $url;
+        }
         
-        // 방법 1: 상품 코드 추출 후 이미지 URL 생성
-        if (preg_match('/goodsCode=(\d+)/', $url, $matches)) {
-            $goodsCode = $matches[1];
-            // G마켓 상품 이미지 URL 패턴들 시도
-            $imagePatterns = [
-                "https://gdimg.gmarket.co.kr/{$goodsCode}/goodsimg/2024/01/01/0.jpg",
-                "https://gdimg.gmarket.co.kr/{$goodsCode}/goodsimg/2023/12/01/0.jpg",
-                "https://gdimg.gmarket.co.kr/{$goodsCode}/goodsimg/2023/11/01/0.jpg",
-                "https://gdimg.gmarket.co.kr/{$goodsCode}/goodsimg/2023/10/01/0.jpg",
-                "https://gdimg.gmarket.co.kr/{$goodsCode}/goodsimg/2023/09/01/0.jpg",
-                "https://gdimg.gmarket.co.kr/{$goodsCode}/goodsimg/2023/08/01/0.jpg",
-                "https://gdimg.gmarket.co.kr/{$goodsCode}/goodsimg/2023/07/01/0.jpg",
-                "https://gdimg.gmarket.co.kr/{$goodsCode}/goodsimg/2023/06/01/0.jpg",
-                "https://gdimg.gmarket.co.kr/{$goodsCode}/goodsimg/2023/05/01/0.jpg",
-                "https://gdimg.gmarket.co.kr/{$goodsCode}/goodsimg/2023/04/01/0.jpg",
-                "https://gdimg.gmarket.co.kr/{$goodsCode}/goodsimg/2023/03/01/0.jpg",
-                "https://gdimg.gmarket.co.kr/{$goodsCode}/goodsimg/2023/02/01/0.jpg",
-                "https://gdimg.gmarket.co.kr/{$goodsCode}/goodsimg/2023/01/01/0.jpg",
+        if (strpos($url, '//') === 0) {
+            $parsedBase = parse_url($baseUrl);
+            return $parsedBase['scheme'] . ':' . $url;
+        }
+
+        if (strpos($url, '/') === 0) {
+            $parsedBase = parse_url($baseUrl);
+            return $parsedBase['scheme'] . '://' . $parsedBase['host'] . $url;
+        }
+
+        return rtrim($baseUrl, '/') . '/' . ltrim($url, '/');
+    }
+
+    public function fetchOgMeta(Request $request)
+    {
+        $url = $request->input('url');
+        try {
+            $response = \Illuminate\Support\Facades\Http::timeout(5)->withHeaders([
+                'accept-encoding' => 'gzip, deflate, br',
+                'accept-language' => 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+                'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            ])->get($url);
+
+            if (!$response->successful()) {
+                return response()->json(['error' => 'URL에 접근할 수 없습니다.'], 400);
+            }
+
+            $html = $response->body();
+
+            $og = [
+                'title' => '',
+                'description' => '',
+                'image' => '',
+                'url' => ''
             ];
-            
-            // 각 패턴을 시도해서 유효한 이미지 찾기
-            foreach ($imagePatterns as $pattern) {
-                try {
-                    $imageResponse = Http::timeout(5)->head($pattern);
-                    if ($imageResponse->successful()) {
-                        $imageUrl = $pattern;
-                        break;
-                    }
-                } catch (\Exception $e) {
-                    continue;
-                }
+
+            if (preg_match('/<meta[^>]+property=["\']og:title["\'][^>]+content=["\']([^"\']+)["\']/i', $html, $m)) {
+                $og['title'] = $m[1];
             }
-        }
-        
-        // 방법 2: HTML에서 이미지 찾기 (더 구체적인 선택자)
-        if (!$imageUrl) {
-            $imageSelectors = [
-                "//img[contains(@class, 'item_img')]",
-                "//img[contains(@class, 'goods_img')]",
-                "//img[contains(@class, 'product_img')]",
-                "//img[contains(@class, 'main_img')]",
-                "//img[contains(@id, 'item_img')]",
-                "//img[contains(@id, 'goods_img')]",
-                "//img[contains(@alt, '상품이미지')]",
-                "//img[contains(@alt, '상품')]",
-                "//div[contains(@class, 'item_img')]//img",
-                "//div[contains(@class, 'goods_img')]//img",
-                "//div[contains(@class, 'product_img')]//img",
-            ];
-            
-            foreach ($imageSelectors as $selector) {
-                $imageNodes = $xpath->query($selector);
-                if ($imageNodes->length > 0) {
-                    $src = $imageNodes->item(0)->getAttribute('src');
-                    if ($src && !str_contains($src, 'data:image')) {
-                        $imageUrl = $src;
-                        break;
-                    }
-                }
+            if (preg_match('/<meta[^>]+property=["\']og:description["\'][^>]+content=["\']([^"\']+)["\']/i', $html, $m)) {
+                $og['description'] = $m[1];
             }
-        }
-        
-        // 방법 3: JavaScript 변수에서 이미지 URL 추출
-        if (!$imageUrl) {
-            $jsPatterns = [
-                '/"imageUrl"\s*:\s*"([^"]+)"/',
-                '/"imgUrl"\s*:\s*"([^"]+)"/',
-                '/"goodsImg"\s*:\s*"([^"]+)"/',
-                '/"mainImg"\s*:\s*"([^"]+)"/',
-                '/imageUrl\s*=\s*["\']([^"\']+)["\']/',
-                '/imgUrl\s*=\s*["\']([^"\']+)["\']/',
-            ];
-            
-            foreach ($jsPatterns as $pattern) {
-                if (preg_match($pattern, $html, $matches)) {
-                    $imageUrl = $matches[1];
-                    break;
-                }
+            if (preg_match('/<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']/i', $html, $m)) {
+                $og['image'] = $m[1];
             }
-        }
-        
-        // 방법 4: og:image 메타 태그 확인
-        if (!$imageUrl) {
-            $ogImage = $this->getMetaContent($xpath, 'og:image');
-            if ($ogImage) {
-                $imageUrl = $ogImage;
+            if (preg_match('/<meta[^>]+property=["\']og:url["\'][^>]+content=["\']([^"\']+)["\']/i', $html, $m)) {
+                $og['url'] = $m[1];
             }
+
+            return response()->json(['data' => $og]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => '메타데이터를 가져오는데 실패했습니다.', 'message' => $e->getMessage()], 500);
         }
-
-        // 제목 추출
-        $title = $this->getMetaContent($xpath, 'og:title') ?: $this->getTitle($xpath);
-        
-        // 설명 추출
-        $description = $this->getMetaContent($xpath, 'og:description') ?: $this->getMetaContent($xpath, 'description');
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'title' => $title,
-                'description' => $description,
-                'image' => $imageUrl
-            ]
-        ]);
-    }
-
-    private function extractGeneralMeta(DOMXPath $xpath): JsonResponse
-    {
-        // Open Graph 메타데이터 추출
-        $ogImage = $this->getMetaContent($xpath, 'og:image');
-        $ogTitle = $this->getMetaContent($xpath, 'og:title');
-        $ogDescription = $this->getMetaContent($xpath, 'og:description');
-
-        // 일반 메타데이터 추출 (Open Graph가 없는 경우)
-        $title = $ogTitle ?: $this->getTitle($xpath);
-        $description = $ogDescription ?: $this->getMetaContent($xpath, 'description');
-        $image = $ogImage ?: $this->getFirstImage($xpath);
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'title' => $title,
-                'description' => $description,
-                'image' => $image
-            ]
-        ]);
-    }
-
-    private function getMetaContent(DOMXPath $xpath, string $property): ?string
-    {
-        $nodes = $xpath->query("//meta[@property='{$property}' or @name='{$property}']");
-        return $nodes->length > 0 ? $nodes->item(0)->getAttribute('content') : null;
-    }
-
-    private function getTitle(DOMXPath $xpath): ?string
-    {
-        $nodes = $xpath->query('//title');
-        return $nodes->length > 0 ? $nodes->item(0)->textContent : null;
-    }
-
-    private function getFirstImage(DOMXPath $xpath): ?string
-    {
-        $nodes = $xpath->query('//img[@src]');
-        return $nodes->length > 0 ? $nodes->item(0)->getAttribute('src') : null;
     }
 } 
