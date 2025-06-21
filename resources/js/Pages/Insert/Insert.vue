@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-white flex flex-col">
     <Header />
     
-    <main class="flex-grow flex items-center justify-center py-4 sm:py-8 px-4 sm:px-6 lg:px-8">
+    <main class="flex-grow flex justify-center pt-20 sm:pt-32 px-4 sm:px-6 lg:px-8">
       <div class="w-full max-w-md mx-auto">
         <h2 class="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6">공구 등록</h2>
 
@@ -31,21 +31,18 @@
             </div>
           </div>
 
-          <div v-if="ogData.title || ogData.description || ogData.image" class="mt-6 p-4 border rounded-lg bg-gray-50">
-            <h3 class="text-lg font-semibold mb-3">가져온 정보</h3>
-            <div class="space-y-2">
-              <div v-if="ogData.title">
-                <label class="block text-sm font-medium text-gray-700">제목</label>
-                <p class="text-sm text-gray-900">{{ ogData.title }}</p>
-              </div>
-              <div v-if="ogData.description">
-                <label class="block text-sm font-medium text-gray-700">설명</label>
-                <p class="text-sm text-gray-900">{{ ogData.description }}</p>
-              </div>
-              <div v-if="ogData.image">
-                <label class="block text-sm font-medium text-gray-700">이미지 URL</label>
-                <p class="text-sm text-gray-900 break-all">{{ ogData.image }}</p>
-              </div>
+          <div v-if="ogData.title || ogData.description || ogData.image" class="space-y-4">
+            <div v-if="ogData.title">
+              <label for="ogTitle" class="block text-sm font-medium text-gray-700">제목</label>
+              <input id="ogTitle" v-model="ogData.title" type="text" class="mt-1 w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]" />
+            </div>
+            <div v-if="ogData.description">
+              <label for="ogDescription" class="block text-sm font-medium text-gray-700">설명</label>
+              <textarea id="ogDescription" v-model="ogData.description" rows="3" class="mt-1 w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"></textarea>
+            </div>
+            <div v-if="ogData.image">
+              <label for="ogImage" class="block text-sm font-medium text-gray-700">이미지 URL</label>
+              <input id="ogImage" v-model="ogData.image" type="text" class="mt-1 w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]" />
             </div>
           </div>
 
