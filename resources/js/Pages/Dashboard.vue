@@ -34,7 +34,7 @@
           <div>
           </div>
           <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-8">
-            <div v-for="n in 10" :key="n" class="cursor-pointer" @click="goToProduct(n)">
+            <div v-for="n in 10" :key="n" class="cursor-pointer" @click="goToContent(n)">
               <div class="bg-gray-100 h-[180px] rounded-2xl overflow-hidden">
               </div>
               <div class="text-left text-xl font-semibold text-[#333333] mt-2">
@@ -121,8 +121,8 @@
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const goToProduct = (productId) => {
-    router.visit(`/product/${productId}`)
+  const goToContent = (contentId) => {
+    router.visit(`/content/${contentId}`)
   }
 
   const goToInsert = () => {

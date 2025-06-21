@@ -7,14 +7,14 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="relative">
               <div class="bg-gray-100 h-[400px] rounded-2xl overflow-hidden flex items-center justify-center">
-                <OpenGraph :image="productImage" />
+                <OpenGraph :image="contentImage" />
               </div>
               <p class="text-base text-gray-500 mt-2">※ 구매 링크 미리보기 이미지입니다.</p>
             </div>
 
             <div class="space-y-6">
               <div>
-                <h1 class="text-3xl font-bold text-gray-900">{{ productTitle }}</h1>
+                <h1 class="text-3xl font-bold text-gray-900">{{ contentTitle }}</h1>
                 <div class="flex items-center gap-2 mt-4">
                   <p class="text-2xl font-semibold text-gray-900">
                     1인 <span class="text-[#2F9266] font-bold">14,000원</span>
@@ -55,7 +55,7 @@
                 <div class="space-y-4">
                   <div class="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden">
                     <div 
-                      id="kakao-map" 
+                      id="kakao-map"  
                       class="w-full h-64 bg-white"
                       style="min-height: 256px;"
                     ></div>
@@ -102,12 +102,11 @@ let marker = null
 
 const copyButtonRef = ref(null)
 
-const productTitle = '석부장 최애 탕비실 사무실 간식 박스과자세트 16p'
-const productImage = 'https://via.placeholder.com/400x300.png?text=OG+Image'  // ✅ 예시 이미지 URL
+const contentTitle = '석부장 최애 탕비실 사무실 간식 박스과자세트 16p'
+const contentImage = 'https://via.placeholder.com/400x300.png?text=OG+Image'
 
 const initKakaoMap = () => {
   if (typeof kakao === 'undefined') {
-    console.error('카카오 맵 API가 로드 실패..')
     return
   }
 
@@ -165,11 +164,10 @@ const shareLink = async () => {
   try {
     await navigator.share({
       title: '친구가 공구를 요청했어요.',
-      text: `${productTitle} 공구를 친구가 요청했어요.`,
+      text: `${contentTitle} 공구를 친구가 요청했어요.`,
       url: window.location.href,
     });
   } catch (err) {
-    console.error('공유 실패:', err);
   }
 }
 
@@ -178,11 +176,10 @@ onMounted(async () => {
     await loadKakaoMapScript()
     initKakaoMap()
   } catch (error) {
-    console.error(error)
   }
 })
 
 onUnmounted(() => {
   if (map) map = null
 })
-</script>
+</script> 

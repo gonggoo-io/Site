@@ -25,9 +25,9 @@ Route::middleware('guest')->group(function () {
 
 Route::get('/inserts', [InsertController::class, 'index']);
 
-Route::get('/product/{id}', function ($id) {
-    return Inertia::render('Product');
-})->name('product');
+Route::get('/content/{id}', function ($id) {
+    return Inertia::render('Content');
+})->name('content');
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -46,5 +46,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/buy/{insertId}', [BuyController::class, 'show'])->name('buy.show');
 });
 
-// 메타데이터 API
 Route::post('/api/meta', [MetaController::class, 'fetchMeta'])->name('meta.fetch');
