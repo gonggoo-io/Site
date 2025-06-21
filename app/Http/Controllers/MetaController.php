@@ -16,11 +16,10 @@ class MetaController extends Controller
             ]);
 
             $url = $request->input('url');
-            $response = Http::timeout(10)->get($url);
+            $response = Http::timeout(10)->withoutVerifying()->get($url);
             
             if (!$response->successful()) {
                 return response()->json([
-                    'error' => 'URL에 접근할 수 없습니다.',
                     'status' => $response->status()
                 ], 400);
             }

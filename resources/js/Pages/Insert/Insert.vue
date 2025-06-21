@@ -17,7 +17,6 @@
                 placeholder="https://"
                 class="flex-1 px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
                 required
-                @input="handleLinkInput"
               />
               <button
                 type="submit"
@@ -71,11 +70,19 @@
 <script setup>
 import Header from '../components/Header.vue';
 import Footer from '../components/Footer.vue';
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import axios from 'axios'
 
 const form = ref({
   link: ''
+})
+
+const fullLink = computed(() => {
+  if (!form.value.link) return ''
+  if (form.value.link.startsWith('http://') || form.value.link.startsWith('https://')) {
+    return form.value.link
+  }
+  return `https://${form.value.link}`
 })
 
 const ogData = ref({
@@ -86,19 +93,13 @@ const ogData = ref({
 
 const isLoading = ref(false)
 
-const handleLinkInput = (event) => {
-  let value = event.target.value;
-  value = value.replace(/^https?:\/\//, '');
-  form.value.link = value;
-}
-
 const fetchMetadata = async () => {
   if (!form.value.link) return;
   
   isLoading.value = true;
   try {
     const response = await axios.post('/api/meta', {
-      url: `https://${form.value.link}`
+      url: fullLink.value
     });
     
     const metaData = response.data.data || response.data;
@@ -121,7 +122,7 @@ const fetchMetadata = async () => {
 const submit = async () => {
   try {
     const formData = {
-      link: `https://${form.value.link}`,
+      link: fullLink.value,
       title: ogData.value.title,
       description: ogData.value.description,
       image: ogData.value.image
