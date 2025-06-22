@@ -11,7 +11,7 @@
         </Link>
         <template v-if="auth?.user">
           <Link
-            href="/insert"
+            href="/auto-insert"
             class="text-base text-gray-900 hover:text-[#2F9266] font-normal transition-colors"
           >
             새로운 공구 만들기
