@@ -4,7 +4,7 @@
     
     <div class="py-12">
       <Container>
-        <h1 class="text-3xl font-bold mb-8">개인정보 처리방침</h1>
+        <h1 class="text-3xl font-bold mb-8 mt-16">개인정보 처리방침</h1>
         
         <div class="space-y-8">
           <section>
