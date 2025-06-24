@@ -2,9 +2,13 @@
   <div class="min-h-screen bg-white flex flex-col">
     <Header />
     
-    <main class="flex-grow flex items-center justify-center py-4 sm:py-8 px-4 sm:px-6 lg:px-8">
+    <main class="flex-grow flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div class="w-full max-w-md mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6">회원가입</h2>
+        <h2 class="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6 nexon-gothic mt-14 flex justify-center items-center">
+          <img src="/public/images/logo.svg" alt="gonggoo logo" class="h-6 w-6 mr-4 mt-1" />
+          gonggoo
+        </h2>
+        <p class="text-center text-sm sm:text-base text-gray-700 -mt-2 sm:-mt-4 mb-6">공구에 방문하신걸 환영해요👋</p>
 
         <form @submit.prevent="submit" class="space-y-4 sm:space-y-6">
           <div>
@@ -126,7 +130,7 @@
             class="w-full bg-[#2F9266] text-white py-2 px-4 text-sm sm:text-base rounded-md hover:bg-[#247A4F] transition focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:ring-offset-2 disabled:opacity-50"
             :disabled="form.processing || !isEmailVerified"
           >
-            <span v-if="form.processing">처리중...</span>
+            <span v-if="form.processing">회원가입 중...</span>
             <span v-else>회원가입</span>
           </button>
         </form>
@@ -138,14 +142,13 @@
     </main>
 
     <div class="mt-auto">
-      <Footer />
+      <p class="text-center text-sm text-gray-500 py-4 mb-2">© 2025 gonggoo. All rights reserved.</p>
     </div>
   </div>
 </template>
 
 <script setup>
 import Header from '../components/Header.vue';
-import Footer from '../components/Footer.vue';
 import { Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import axios from 'axios';

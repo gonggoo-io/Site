@@ -83,30 +83,18 @@
       <div v-if="isMobileMenuOpen" ref="mobileMenuContainer" class="absolute top-full right-4 mt-2 w-56 md:hidden origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none py-1">
         <div class="py-1">
           <template v-if="auth?.user">
-            <Link href="/insert" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-3" @click="toggleMobileMenu">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487z" />
-              </svg>
+            <Link href="/insert" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
               공구 등록하기
             </Link>
-            <Link href="/logout" method="post" as="button" class="w-full text-left text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-3" @click="toggleMobileMenu">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
-              </svg>
+            <Link href="/logout" method="post" as="button" class="w-full text-left text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
               로그아웃
             </Link>
           </template>
           <template v-else>
-            <Link href="/signin" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-3" @click="toggleMobileMenu">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0-3-3m0 0 3-3m-3 3H9" />
-              </svg>
+            <Link href="/signin" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
               로그인
             </Link>
-            <Link href="/signup" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-3" @click="toggleMobileMenu">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0 0 11.667 0l3.181-3.183m-4.991-2.695v-2.695A8.25 8.25 0 0 0 10.5 3.251V3.25" />
-              </svg>
+            <Link href="/signup" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
               회원가입
             </Link>
           </template>
@@ -177,15 +165,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-@font-face {
-    font-family: 'NEXON Lv1 Gothic OTF';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON%20Lv1%20Gothic%20OTF.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-.nexon-gothic {
-  font-family: 'NEXON Lv1 Gothic OTF', sans-serif;
-}
 .rotate-180 {
   transform: rotate(180deg);
 }
