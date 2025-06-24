@@ -62,7 +62,7 @@
   const fetchLocationName = async (lat, lng) => {
     try {
       const keywordRes = await fetch(
-        `https://dapi.kakao.com/v2/local/search/keyword.json?y=${lat}&x=${lng}&radius=50`,
+        `https://dapi.kakao.com/v2/local/search/keyword.json?y=${lat}&x=${lng}&radius=200`,
         {
           headers: { Authorization: `KakaoAK ${KAKAO_API_KEY}` },
         }
@@ -126,13 +126,19 @@
         (pos) => {
           fetchLocationName(pos.coords.latitude, pos.coords.longitude);
         },
-        () => {
+        (error) => {
+          console.error(`Geolocation error (code ${error.code}): ${error.message}`);
           locationName.value = '내 위치';
           locationLoading.value = false;
         },
-        { timeout: 5000 }
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        }
       );
     } else {
+      console.error('Geolocation is not supported by this browser.');
       locationName.value = '내 위치';
       locationLoading.value = false;
     }
