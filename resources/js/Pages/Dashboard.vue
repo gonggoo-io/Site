@@ -8,7 +8,10 @@
           <h1 class="text-3xl sm:text-[2.5rem] font-semibold mt-4 whitespace-nowrap">근처에서 새로운 공구가 시작되었어요👏</h1>
           <div class="text-base mt-4 text-gray-500">지금 6+개의 공구가 등록되어있고, 런칭 이후 10+개의 공구가 성사되었어요. {{ userName }}님도 공구를 성사시켜봐요!</div>
           <div class="mt-7 flex items-center justify-between">
-            <div class="text-black text-2xl font-bold mt-8 mb-1">아뮤즈 근처 공구</div>
+            <div class="text-black text-2xl font-bold mt-8 mb-1">
+              <template v-if="locationLoading">위치 확인 중...</template>
+              <template v-else>{{ locationName }} 근처 공구</template>
+            </div>
           </div>
           <div>
           </div>
@@ -51,6 +54,51 @@
   const page = usePage();
   const userName = page.props.auth?.user?.name || '';
   
+  const locationName = ref('');
+  const locationLoading = ref(true);
+  
+  const KAKAO_API_KEY = import.meta.env.VITE_SITE_KAKAO_API_KEY;
+  
+  const fetchLocationName = async (lat, lng) => {
+    try {
+      const addrRes = await fetch(
+        `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${lng}&y=${lat}`,
+        {
+          headers: { Authorization: `KakaoAK ${KAKAO_API_KEY}` }
+        }
+      );
+      const addrData = await addrRes.json();
+      let address = '';
+      if (addrData.documents && addrData.documents.length > 0) {
+        const road = addrData.documents[0].road_address?.address_name;
+        const jibun = addrData.documents[0].address?.address_name;
+        address = road || jibun || '';
+      }
+      let placeName = '';
+      const poiRes = await fetch(
+        `https://dapi.kakao.com/v2/local/search/keyword.json?x=${lng}&y=${lat}&radius=10`,
+        {
+          headers: { Authorization: `KakaoAK ${KAKAO_API_KEY}` }
+        }
+      );
+      const poiData = await poiRes.json();
+      if (poiData.documents && poiData.documents.length > 0) {
+        placeName = poiData.documents[0].place_name;
+      }
+      if (placeName && address) {
+        locationName.value = `${placeName} (${address})`;
+      } else if (address) {
+        locationName.value = address;
+      } else {
+        locationName.value = '내 위치';
+      }
+    } catch (e) {
+      locationName.value = '내 위치';
+    } finally {
+      locationLoading.value = false;
+    }
+  };
+  
   const showCategory = ref(false)
   const showSort = ref(false)
   const categoryRef = ref(null)
@@ -82,8 +130,27 @@
     }
   }
   
+  const showLines = ref([false, false, false]);
   onMounted(() => {
+    setTimeout(() => { showLines.value[0] = true }, 300);
+    setTimeout(() => { showLines.value[1] = true }, 1200);
+    setTimeout(() => { showLines.value[2] = true }, 2100);
     document.addEventListener('click', handleClickOutside)
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          fetchLocationName(pos.coords.latitude, pos.coords.longitude);
+        },
+        () => {
+          locationName.value = '내 위치';
+          locationLoading.value = false;
+        },
+        { timeout: 5000 }
+      );
+    } else {
+      locationName.value = '내 위치';
+      locationLoading.value = false;
+    }
   })
   
   onUnmounted(() => {
@@ -141,6 +208,21 @@
   
   .dropdown-item {
     @apply block px-5 py-3 text-sm text-gray-700 transition-colors duration-200;
+  }
+  
+  .fade-up-enter-active {
+    transition: all 1.1s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .fade-up-leave-active {
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .fade-up-enter-from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  .fade-up-enter-to {
+    opacity: 1;
+    transform: translateY(0);
   }
   </style>
   
