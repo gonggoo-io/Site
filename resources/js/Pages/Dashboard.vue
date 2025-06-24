@@ -4,32 +4,11 @@
   
       <main class="flex-grow">
         <Container>
-          <h1 class="text-3xl sm:text-5xl font-bold mt-32">siniseong님 근처에서</h1>
-          <h1 class="text-3xl sm:text-5xl font-bold mt-2 whitespace-nowrap">새로운 공구가 시작되었어요.</h1>
+          <h1 class="text-3xl sm:text-[2.5rem] font-semibold mt-44">siniseong님</h1>
+          <h1 class="text-3xl sm:text-[2.5rem] font-semibold mt-4 whitespace-nowrap">근처에서 새로운 공구가 시작되었어요👏</h1>
+          <div class="text-base mt-4 text-gray-500">지금 6+개의 공구가 등록되어있고, 런칭 이후 10+개의 공구가 성사되었어요. siniseong님도 공구를 성사시켜봐요!</div>
           <div class="mt-7 flex items-center justify-between">
-            <div class="w-32 border-b-8 border-gray-800"></div>
-            <div class="relative" ref="sortRef">
-              <button 
-                @click="toggleSort" 
-                class="button-base"
-              >
-                <span>{{ selectedSort }}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-                </svg>
-              </button>
-              <div v-if="showSort" class="dropdown-menu">
-                <a 
-                  v-for="option in sortOptions" 
-                  :key="option.value"
-                  href="#" 
-                  @click.prevent="selectSort(option.label)"
-                  class="dropdown-item"
-                >
-                  {{ option.label }}
-                </a>
-              </div>
-            </div>
+            <div class="text-black text-2xl font-bold mt-8 mb-1">아뮤즈 근처 공구</div>
           </div>
           <div>
           </div>

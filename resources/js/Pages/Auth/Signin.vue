@@ -59,6 +59,10 @@
           계정이 없으신가요?
           <Link href="/signup" class="text-[#2F9266] hover:underline ml-2">회원가입</Link>
         </p>
+
+        <div v-if="message" :class="['mt-4', 'p-3', 'rounded-md', messageType === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700']">
+          {{ message }}
+        </div>
       </div>
     </main>
 
@@ -72,6 +76,7 @@
 import Header from '../components/Header.vue';
 import Footer from '../components/Footer.vue';
 import { Link, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 const form = useForm({
   email: '',
@@ -79,10 +84,25 @@ const form = useForm({
   remember: false
 });
 
+const message = ref("");
+const messageType = ref(""); // 'success' or 'error'
+
+function showMessage(msg, type = "success") {
+  message.value = msg;
+  messageType.value = type;
+  setTimeout(() => {
+    message.value = "";
+    messageType.value = "";
+  }, 4000);
+}
+
 const submit = () => {
   form.post('/signin', {
     onSuccess: () => {
-      alert('로그인되었습니다!');
+      showMessage('로그인되었습니다!', 'success');
+    },
+    onError: () => {
+      showMessage('로그인에 실패했습니다. 이메일 또는 비밀번호를 확인하세요.', 'error');
     }
   });
 };
