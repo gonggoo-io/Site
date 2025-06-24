@@ -4,9 +4,9 @@
   
       <main class="flex-grow">
         <Container>
-          <h1 class="text-3xl sm:text-[2.5rem] font-semibold mt-44">siniseong님</h1>
+          <h1 class="text-3xl sm:text-[2.5rem] font-semibold mt-44">{{ userName }}님</h1>
           <h1 class="text-3xl sm:text-[2.5rem] font-semibold mt-4 whitespace-nowrap">근처에서 새로운 공구가 시작되었어요👏</h1>
-          <div class="text-base mt-4 text-gray-500">지금 6+개의 공구가 등록되어있고, 런칭 이후 10+개의 공구가 성사되었어요. siniseong님도 공구를 성사시켜봐요!</div>
+          <div class="text-base mt-4 text-gray-500">지금 6+개의 공구가 등록되어있고, 런칭 이후 10+개의 공구가 성사되었어요. {{ userName }}님도 공구를 성사시켜봐요!</div>
           <div class="mt-7 flex items-center justify-between">
             <div class="text-black text-2xl font-bold mt-8 mb-1">아뮤즈 근처 공구</div>
           </div>
@@ -43,10 +43,13 @@
   
   <script setup>
   import { ref, onMounted, onUnmounted } from 'vue'
-  import { router } from '@inertiajs/vue3'
+  import { router, usePage } from '@inertiajs/vue3'
   import Container from '../Pages/components/Container.vue'
   import Header from '../Pages/components/Header.vue'
   import Footer from '../Pages/components/Footer.vue'
+  
+  const page = usePage();
+  const userName = page.props.auth?.user?.name || '';
   
   const showCategory = ref(false)
   const showSort = ref(false)
