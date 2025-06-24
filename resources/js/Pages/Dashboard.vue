@@ -10,7 +10,7 @@
           <div class="mt-7 flex items-center justify-between">
             <div class="text-black text-2xl font-bold mt-8 mb-1">
               <template v-if="locationLoading">위치 확인 중...</template>
-              <template v-else>{{ locationName }} 근처 공구</template>
+              <template v-else>{{ locationName }} 근처에서 진행되고 있는 공구</template>
             </div>
           </div>
           <div>
@@ -178,51 +178,4 @@
     router.visit('/insert')
   }
   </script>
-  
-  <style scoped>
-  .input-base {
-    @apply w-full h-12 pl-12 pr-4 border-2 border-gray-200 rounded-xl bg-gray-50/50 focus:outline-none focus:border-[#2F9266] focus:bg-white hover:border-[#2F9266] transition-all duration-200 [&::-webkit-search-cancel-button]:cursor-pointer shadow-sm;
-  }
-  
-  .button-base {
-    @apply flex items-center gap-2 px-5 h-10 border border-gray-200 rounded-lg bg-white transition-all duration-200 shadow-sm;
-  }
-  
-  .sort-button {
-    @apply relative px-4 h-10 rounded-lg text-gray-600 transition-all duration-200;
-  }
-  
-  .active-sort {
-    @apply text-white;
-  }
-  
-  .active-sort::before {
-    content: '';
-    @apply absolute inset-0 bg-[#2F9266] rounded-lg shadow-sm;
-    z-index: 0;
-  }
-  
-  .dropdown-menu {
-    @apply absolute z-10 w-56 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden;
-  }
-  
-  .dropdown-item {
-    @apply block px-5 py-3 text-sm text-gray-700 transition-colors duration-200;
-  }
-  
-  .fade-up-enter-active {
-    transition: all 1.1s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  .fade-up-leave-active {
-    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  .fade-up-enter-from {
-    opacity: 0;
-    transform: translateY(60px);
-  }
-  .fade-up-enter-to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  </style>
   
