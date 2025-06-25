@@ -92,7 +92,12 @@ const platforms = [
 
 const goToNext = () => {
   if (selectedPlatform.value) {
-    router.visit('/insert');
+    const insertPlatforms = ['coupang', 'gmarket', 'auction', 'etc'];
+    if (insertPlatforms.includes(selectedPlatform.value)) {
+      router.visit('/insert');
+    } else {
+      router.visit('/auto-insert');
+    }
   }
 };
 </script>
