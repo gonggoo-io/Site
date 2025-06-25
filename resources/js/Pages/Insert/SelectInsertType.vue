@@ -18,16 +18,16 @@
           </transition>
         </div>
         <div class="w-full md:w-[50%] flex flex-col items-start">
-          <div class="w-full max-w-md mx-auto overflow-y-auto" style="max-height: calc(100vh - 200px);">
+          <div class="w-full max-w-md mx-auto">
             <p class="px-4 text-2xl text-black font-semibold pt-4">아래 항목 중 1개를 선택해주세요.</p>
             <p class="px-4 text-base text-gray-500">선택을 완료했으면 '다음' 버튼을 클릭해주세요.</p>
-            <div class="flex flex-col gap-4 px-2 py-4">
+            <div class="flex flex-col gap-4 px-2 py-4 overflow-y-auto max-h-[calc(100vh-380px)]">
               <div
                 v-for="(platform, idx) in platforms"
                 :key="platform.value"
                 @click="selectPlatform(platform.value)"
                 :class="[
-                  'flex items-start gap-3 p-5 rounded-xl bg-white cursor-pointer border border-gray-100',
+                  'flex items-start gap-3 p-5 rounded-xl bg-white cursor-pointer border border-gray-300',
                   selectedPlatform === platform.value ? 'ring-2 ring-[#2F9266]' : '',
                 ]"
               >
@@ -61,6 +61,9 @@
         </div>
       </main>
     </Container>
+    <div class="mt-auto">
+      <p class="text-center text-sm text-gray-500 py-4 mb-2">© 2025 gonggoo. All rights reserved.</p>
+    </div>
   </div>
 </template>
 
