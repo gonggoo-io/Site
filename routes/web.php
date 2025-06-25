@@ -45,6 +45,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/buy', [BuyController::class, 'store'])->name('buy.store');
     Route::delete('/buy', [BuyController::class, 'destroy'])->name('buy.destroy');
     Route::get('/buy/{insertId}', [BuyController::class, 'show'])->name('buy.show');
+
+    Route::get('/select-insert-type', function () {
+        return Inertia::render('Insert/SelectInsertType');
+    })->middleware(['auth']);
 });
 
 Route::post('/api/meta', [MetaController::class, 'fetchMeta'])->name('meta.fetch');

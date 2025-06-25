@@ -6,7 +6,7 @@
         <div class="mt-32">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="relative">
-              <div class="bg-gray-100 h-[400px] rounded-2xl overflow-hidden flex items-center justify-center">
+              <div class="bg-gray-100 h-[260px] md:h-[400px] rounded-2xl overflow-hidden flex items-center justify-center">
                 <OpenGraph :image="contentImage" />
               </div>
               <p class="text-base text-gray-500 mt-2">※ 구매 링크 미리보기 이미지입니다.</p>
