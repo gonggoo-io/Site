@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/insert', fn () => Inertia::render('Insert/Insert'))->name('insert');
     Route::get('/auto-insert', fn () => Inertia::render('Insert/AutoInsert'))->name('auto-insert');
     Route::get('/insert-details', fn () => Inertia::render('Insert/InsertDetail'))->name('insert.details');
+    Route::get('/insert-deposit', fn () => Inertia::render('Insert/InsertDeposit'))->name('insert.deposit');
     Route::post('/insert', [InsertController::class, 'store']);
 
     Route::post('/buy', [BuyController::class, 'store'])->name('buy.store');

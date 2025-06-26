@@ -6,12 +6,12 @@
           <div class="w-full md:w-[50%] flex items-center justify-center mb-12 md:mb-40">
             <transition name="slide-fade">
               <div class="flex flex-col items-center" key="question">
-                <img src="/public/images/insert-search.png" alt="section choice" class="w-60 hidden md:block" />
+                <img src="/public/images/insert-deposit.png" alt="section choice" class="w-60 hidden md:block mb-7 mt-20" />
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-800 animate-fadein text-center">
-                  물품 정보 > <span class="text-[#2F9266]">세부 정보</span> > 입금 정보
+                  물품 정보 > 세부 정보 ><span class="text-[#2F9266]">입금 정보</span>
                 </h1>
-                <div class="w-full text-center text-gray-500 mt-1 mb-[-2] text-base md:text-lg">
-                  공구에 참여하는 분들을 위해 세부 내용을 작성해요.
+                <div class="w-full text-center te   xt-gray-500 mt-1 mb-[-2] text-base md:text-lg">
+                  공구가 완료되면 송금하기 위해 계좌 정보가 필요해요.
                 </div>
               </div>
             </transition>
@@ -19,51 +19,46 @@
           <div class="w-full md:w-[50%] flex flex-col items-start">
             <div class="w-full max-w-md mx-auto scrollable-area overflow-y-auto" style="max-height: calc(100vh - 200px);">
               <div class="sticky top-0 z-10 bg-white pt-4 pb-2">
-                <p class="px-4 text-2xl text-black font-semibold">세부 정보 (모집 인원, 배송 위치, 1인당 가져가는 개수)에 대해서 알려주세요.</p>
+                <p class="px-4 text-2xl text-black font-semibold">입금 계좌 정보를 입력해주세요.</p>
                 <p class="px-4 text-base text-gray-500 mb-6">입력을 완료했으면 '다음' 버튼을 클릭해주세요.</p>
               </div>
               <form @submit.prevent="goToNext" class="px-4 space-y-6">
                 <div class="form-group">
-                  <label for="peopleCount" class="block text-sm font-semibold text-gray-700 mb-2">
-                    모집 인원 <span class="text-red-500">*</span>
+                  <label for="bank" class="block text-sm font-semibold text-gray-700 mb-2">
+                    통장 은행 <span class="text-red-500">*</span>
                   </label>
-                  <div class="relative">
-                    <input
-                      id="peopleCount"
-                      v-model="form.peopleCount"
-                      type="number"
-                      min="1"
-                      step="1"
-                      placeholder="예: 10"
-                      class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
-                      required
-                    />
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                      <span class="text-gray-500 font-medium">명</span>
-                    </div>
-                  </div>
+                  <select
+                    id="bank"
+                    v-model="form.bank"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                    required
+                  >
+                    <option value="" disabled>은행을 선택하세요</option>
+                    <option value="토스뱅크">토스뱅크</option>
+                    <option value="카카오뱅크">카카오뱅크</option>
+                    <option value="국민은행">국민은행</option>
+                    <option value="신한은행">신한은행</option>
+                    <option value="우리은행">우리은행</option>
+                    <option value="하나은행">하나은행</option>
+                    <option value="농협은행">농협은행</option>
+                    <option value="기업은행">기업은행</option>
+                    <option value="SC제일은행">SC제일은행</option>
+                    <option value="씨티은행">씨티은행</option>
+                  </select>
                 </div>
                 <div class="form-group">
-                  <label for="perPersonCount" class="block text-sm font-semibold text-gray-700 mb-2">
-                    1인당 가져가는 개수 <span class="text-red-500">*</span>
+                  <label for="accountNumber" class="block text-sm font-semibold text-gray-700 mb-2">
+                    계좌번호 <span class="text-red-500">*</span>
                   </label>
-                  <div class="relative">
-                    <input
-                      id="perPersonCount"
-                      v-model="form.perPersonCount"
-                      type="number"
-                      min="1"
-                      step="1"
-                      placeholder="예: 1"
-                      class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
-                      required
-                    />
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                      <span class="text-gray-500 font-medium">개</span>
-                    </div>
-                  </div>
+                  <input
+                    id="accountNumber"
+                    v-model="form.accountNumber"
+                    type="text"
+                    placeholder="예: 12345678901234"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                    required
+                  />
                 </div>
-                <KakaoMap v-model:address="form.address" input-class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white" />
                 <div class="pt-4 pb-6">
                   <button
                     type="submit"
@@ -71,7 +66,7 @@
                     :disabled="!isFormValid"
                   >
                     <span class="flex items-center justify-center gap-2">
-                      다음 단계로 (2/3)
+                      완료
                     </span>
                   </button>
                 </div>
@@ -91,26 +86,20 @@
   import Header from '../components/Header.vue';
   import Container from '../components/Container.vue';
   import { router } from '@inertiajs/vue3';
-  import KakaoMap from './KakaoMap.vue';
   
   const form = ref({
-    peopleCount: '',
-    perPersonCount: '',
-    address: ''
+    bank: '',
+    accountNumber: ''
   });
   
   const isFormValid = computed(() => {
-    return form.value.peopleCount > 0 && form.value.perPersonCount > 0 && form.value.address;
+    return form.value.bank && form.value.accountNumber.trim().length > 0;
   });
   
   const goToNext = () => {
     if (isFormValid.value) {
-      router.get('/insert-deposit');
+      router.visit('/dashboard');
     }
-  };
-  
-  const goBack = () => {
-    window.history.back();
   };
   </script>
   
@@ -141,8 +130,6 @@
   
   .form-group:nth-child(1) { animation-delay: 0.1s; }
   .form-group:nth-child(2) { animation-delay: 0.2s; }
-  .form-group:nth-child(3) { animation-delay: 0.3s; }
-  .form-group:nth-child(4) { animation-delay: 0.4s; }
   
   @keyframes slideInUp {
     from {
