@@ -198,7 +198,7 @@ onUnmounted(() => {
                 <div class="flex flex-col xl:flex-row items-center justify-center gap-10 xl:gap-14">
                     <div class="flex items-center justify-center xl:justify-start flex-shrink-0 hover-scale" data-aos="fade-right">
                         <div class="w-[130px] h-[130px] sm:w-[220px] sm:h-[220px] relative flex items-center justify-center">
-                            <img src="/public/images/map.png" alt="Email Icon" class="w-full h-full object-contain">
+                            <img src="/public/images/main-map.png" alt="Email Icon" class="w-full h-full object-contain">
                         </div>
                     </div>
 
@@ -230,7 +230,7 @@ onUnmounted(() => {
 
                     <div class="flex items-center justify-center xl:justify-end order-1 xl:order-2 flex-shrink-0" data-aos="fade-left">
                         <div class="w-[110px] h-[110px] sm:w-[210px] sm:h-[210px] relative flex items-center justify-center">
-                            <img src="/public/images/bell.png" alt="Pencil Icon" class="w-full h-full object-contain">
+                            <img src="/public/images/main-bell.png" alt="Pencil Icon" class="w-full h-full object-contain">
                         </div>
                     </div>
                 </div>
@@ -242,7 +242,7 @@ onUnmounted(() => {
                 <div class="flex flex-col xl:flex-row items-center justify-center gap-10 xl:gap-14">
                     <div class="flex items-center justify-center xl:justify-start flex-shrink-0" data-aos="fade-right">
                         <div class="w-[130px] h-[130px] sm:w-[200px] sm:h-[200px] relative flex items-center justify-center">
-                            <img src="/public/images/discount.png" alt="Email Icon" class="w-full h-full object-contain">
+                            <img src="/public/images/main-discount.png" alt="Email Icon" class="w-full h-full object-contain">
                         </div>
                     </div>
 
