@@ -11,7 +11,7 @@
                 <span class="text-[#2F9266]">물품 정보</span> > 세부 정보 > 입금 정보
               </h1>
               <div class="w-full text-center text-gray-500 mt-1 mb-[-2] text-base md:text-lg">
-                링크를 입력하면 자동으로 정보를 불러옵니다.
+                링크를 입력하면 자동으로 정보를 불러와요.
               </div>
               <p class="px-4 text-base text-gray-500 flex items-center gap-2">
                 <button

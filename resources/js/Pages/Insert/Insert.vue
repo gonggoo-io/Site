@@ -52,7 +52,7 @@
                 <textarea
                   id="description"
                   v-model="form.description"
-                  placeholder="물품에 대한 자세한 설명을 입력해주세요. (옵션)"
+                  placeholder="물품에 대한 자세한 설명을 입력해주세요."
                   rows="4"
                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white resize-none"
                 ></textarea>
