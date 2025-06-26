@@ -8,7 +8,7 @@
             <div class="flex flex-col items-center" key="question">
               <img src="/public/images/insert-paper.png" alt="section choice" class="w-60 mb-6 hidden md:block" />
               <h1 class="text-2xl md:text-3xl font-bold text-gray-800 animate-fadein text-center">
-                물품 정보 > 세부 정보 > 입금 정보
+                <span class="text-[#2F9266]">물품 정보</span> > 세부 정보 > 입금 정보
               </h1>
               <div class="w-full text-center text-gray-500 mt-1 mb-[-2] text-base md:text-lg">
                 쿠팡, G마켓, 옥션에서 구입하지 않는다면?
