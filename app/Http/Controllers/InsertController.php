@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Insert;
+use App\Http\Resources\InsertResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -11,13 +12,13 @@ class InsertController extends Controller
     public function index()
     {
         $inserts = Insert::with('user')->get();
-        return response()->json($inserts);
+        return InsertResource::collection($inserts);
     }
 
     public function show($id)
     {
         $insert = Insert::with(['user', 'buys'])->findOrFail($id);
-        return response()->json($insert);
+        return new InsertResource($insert);
     }
 
     public function store(Request $request)
@@ -57,7 +58,7 @@ class InsertController extends Controller
 
             return response()->json([
                 'success' => true,
-                'insert' => $insert
+                'insert' => new InsertResource($insert)
             ]);
         } catch (\Exception $e) {
             Log::error('Error creating insert:', [
