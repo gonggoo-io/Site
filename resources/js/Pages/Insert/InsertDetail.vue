@@ -22,7 +22,7 @@
                 <p class="px-4 text-2xl text-black font-semibold">세부 정보 (모집 인원, 배송 위치, 1인당 가져가는 개수)에 대해서 알려주세요.</p>
                 <p class="px-4 text-base text-gray-500 mb-6">입력을 완료했으면 '다음' 버튼을 클릭해주세요.</p>
               </div>
-              <form @submit.prevent="goToNext" class="px-4 space-y-6">
+              <form class="px-4 space-y-6">
                 <div class="form-group">
                   <label for="peopleCount" class="block text-sm font-semibold text-gray-700 mb-2">
                     모집 인원 <span class="text-red-500">*</span>
@@ -66,7 +66,8 @@
                 <KakaoMap v-model:address="form.address" input-class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white" />
                 <div class="pt-4 pb-6">
                   <button
-                    type="submit"
+                    type="button"
+                    @click="goToNext"
                     class="w-full bg-gradient-to-r from-[#2F9266] to-[#34A373] text-white py-3 px-6 rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     :disabled="!isFormValid"
                   >
