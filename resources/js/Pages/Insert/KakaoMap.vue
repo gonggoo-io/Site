@@ -48,6 +48,8 @@ let map = null;
 let marker = null;
 let geocoder = null;
 
+const KAKAO_MAP_KEY = import.meta.env.VITE_KAKAO_MAP_KEY;
+
 function loadKakaoMapScript() {
   return new Promise((resolve) => {
     if (window.kakao && window.kakao.maps) {
@@ -56,7 +58,7 @@ function loadKakaoMapScript() {
     }
     const script = document.createElement('script');
     script.src =
-      '//dapi.kakao.com/v2/maps/sdk.js?appkey=b7fa5f4e55762ebaa26fbc9c642b7378&libraries=services&autoload=false';
+      `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&libraries=services&autoload=false`;
     script.onload = () => {
       window.kakao.maps.load(resolve);
     };
