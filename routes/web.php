@@ -26,7 +26,10 @@ Route::middleware('guest')->group(function () {
 Route::get('/inserts', [InsertController::class, 'index']);
 
 Route::get('/content/{id}', function ($id) {
-    return Inertia::render('Content');
+    $insert = \App\Models\Insert::with(['user', 'buys'])->findOrFail($id);
+    return Inertia::render('Content', [
+        'insert' => $insert
+    ]);
 })->name('content');
 
 Route::middleware('auth')->group(function () {
