@@ -63,10 +63,12 @@
                   <button
                     type="submit"
                     class="w-full bg-gradient-to-r from-[#2F9266] to-[#34A373] text-white py-3 px-6 rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                    :disabled="!isFormValid"
+                    :disabled="!isFormValid || isSubmitting"
+                    @click="goToNext"
                   >
                     <span class="flex items-center justify-center gap-2">
-                      완료
+                      <div v-if="isSubmitting" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      <span v-else>완료</span>
                     </span>
                   </button>
                 </div>
@@ -82,23 +84,88 @@
   </template>
   
   <script setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted } from 'vue';
   import Header from '../components/Header.vue';
   import Container from '../components/Container.vue';
   import { router } from '@inertiajs/vue3';
+  import axios from 'axios';
   
   const form = ref({
     bank: '',
     accountNumber: ''
   });
   
+  const insertData = ref(null);
+  const isSubmitting = ref(false);
+  
+  onMounted(() => {
+    const storedData = sessionStorage.getItem('insertData');
+    if (storedData) {
+      insertData.value = JSON.parse(storedData);
+    } else {
+      router.visit('/auto-insert');
+    }
+  });
+  
   const isFormValid = computed(() => {
     return form.value.bank && form.value.accountNumber.trim().length > 0;
   });
   
-  const goToNext = () => {
-    if (isFormValid.value) {
-      router.visit('/dashboard');
+  const goToNext = async () => {
+    if (isFormValid.value && !isSubmitting.value) {
+      isSubmitting.value = true;
+      
+      try {
+        const finalData = {
+          ...insertData.value,
+          bank: form.value.bank,
+          account_number: form.value.accountNumber,
+        };
+        
+        console.log('전송할 데이터:', finalData);
+        
+        const response = await axios.post('/insert', finalData);
+        
+        console.log('서버 응답:', response.data);
+        
+        if (response.data.success) {
+          sessionStorage.removeItem('insertData');
+          router.visit('/dashboard');
+        } else {
+          alert(`저장에 실패했습니다: ${response.data.error || '알 수 없는 오류'}`);
+        }
+      } catch (error) {
+        console.error('저장 실패:', error);
+        
+        if (error.response) {
+          console.error('서버 응답 상태:', error.response.status);
+          console.error('서버 응답 데이터:', error.response.data);
+          
+          let errorMessage = '저장에 실패했습니다.';
+          
+          if (error.response.status === 401) {
+            errorMessage = '로그인이 필요합니다. 다시 로그인해주세요.';
+          } else if (error.response.status === 422) {
+            errorMessage = '입력 정보를 확인해주세요.';
+            if (error.response.data.errors) {
+              const errorDetails = Object.values(error.response.data.errors).flat().join('\n');
+              errorMessage += '\n\n' + errorDetails;
+            }
+          } else if (error.response.data && error.response.data.error) {
+            errorMessage = error.response.data.error;
+          }
+          
+          alert(errorMessage);
+        } else if (error.request) {
+          console.error('네트워크 오류:', error.request);
+          alert('네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.');
+        } else {
+          console.error('요청 설정 오류:', error.message);
+          alert('요청 중 오류가 발생했습니다. 다시 시도해주세요.');
+        }
+      } finally {
+        isSubmitting.value = false;
+      }
     }
   };
   </script>

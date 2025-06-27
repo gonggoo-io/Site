@@ -146,6 +146,7 @@ const fullLink = computed(() => {
 const ogData = ref({
   title: '',
   description: '',
+  image: '',
   price: null,
 })
 
@@ -173,6 +174,7 @@ const fetchMetadata = async () => {
     ogData.value = {
       title: metaData.title || '',
       description: metaData.description || '',
+      image: metaData.image || '',
       price: null,
     };
   } catch (error) {
@@ -184,14 +186,15 @@ const fetchMetadata = async () => {
 
 const goToNext = () => {
   if (isFormValid.value) {
-    router.visit('/insert-details', {
-      data: {
-        link: fullLink.value,
-        title: ogData.value.title,
-        description: ogData.value.description,
-        price: ogData.value.price,
-      }
-    });
+    sessionStorage.setItem('insertData', JSON.stringify({
+      link: fullLink.value,
+      title: ogData.value.title,
+      description: ogData.value.description,
+      image: ogData.value.image,
+      price: ogData.value.price,
+    }));
+    
+    router.visit('/insert-details');
   }
 };
 

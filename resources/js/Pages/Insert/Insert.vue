@@ -145,9 +145,15 @@ const isFormValid = computed(() => {
 
 const goToNext = () => {
   if (isFormValid.value) {
-    router.visit('/insert-details', {
-      data: form.value
-    });
+    sessionStorage.setItem('insertData', JSON.stringify({
+      link: form.value.link,
+      title: form.value.title,
+      description: form.value.description,
+      image: '',
+      price: form.value.price,
+    }));
+    
+    router.visit('/insert-details');
   }
 };
 

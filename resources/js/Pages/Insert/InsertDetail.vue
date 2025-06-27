@@ -87,7 +87,7 @@
   </template>
   
   <script setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted } from 'vue';
   import Header from '../components/Header.vue';
   import Container from '../components/Container.vue';
   import { router } from '@inertiajs/vue3';
@@ -105,7 +105,15 @@
   
   const goToNext = () => {
     if (isFormValid.value) {
-      router.get('/insert-deposit');
+      const storedData = sessionStorage.getItem('insertData');
+      let insertData = storedData ? JSON.parse(storedData) : {};
+      insertData.people_count = parseInt(form.value.peopleCount);
+      insertData.per_person_count = parseInt(form.value.perPersonCount);
+      insertData.address = form.value.address;
+      
+      sessionStorage.setItem('insertData', JSON.stringify(insertData));
+      
+      router.visit('/insert-deposit');
     }
   };
   

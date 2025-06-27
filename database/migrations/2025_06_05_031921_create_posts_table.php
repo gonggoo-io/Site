@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('insert', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('item');
+            $table->string('item')->nullable();
             $table->string('link');
-            $table->integer('count');
+            $table->integer('count')->nullable();
             $table->integer('price');
             $table->timestamps();
             $table->timestamp('deadline')->nullable();
