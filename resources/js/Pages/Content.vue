@@ -6,14 +6,24 @@
         <div class="mt-32">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="relative">
-              <div class="bg-gray-100 h-[260px] md:h-[400px] rounded-2xl overflow-hidden flex items-center justify-center">
+              <div 
+                class="bg-gray-100 h-[260px] md:h-[400px] rounded-2xl overflow-hidden flex items-center justify-center magnifier-container"
+                @mousemove="handleMouseMove"
+                @mouseleave="handleMouseLeave"
+              >
                 <img
                   v-if="insert.image"
                   :src="insert.image"
                   :alt="contentTitle"
-                  class="w-full h-full object-cover"
+                  class="w-full h-full object-cover magnifier-image"
+                  ref="productImage"
                 />
                 <OpenGraph v-else :image="contentImage" />
+                <div 
+                  v-if="showMagnifier && insert.image"
+                  class="magnifier-lens"
+                  :style="magnifierStyle"
+                ></div>
               </div>
               <p class="text-base text-gray-500 mt-2 text-center w-full">※ 구매 링크 미리보기 이미지입니다.</p>
             </div>
@@ -102,8 +112,6 @@ import OpenGraph from './components/OpenGraph.vue'
 
 const page = usePage()
 const insert = page.props.insert || {}
-
-const contentTitle = computed(() => insert.title || '제목 없음')
 const contentImage = computed(() => insert.image || 'https://via.placeholder.com/400x300.png?text=OG+Image')
 const contentPrice = computed(() => insert.price || 0)
 const contentTotal = computed(() => (insert.price || 0) * (insert.people_count || 1))
@@ -111,7 +119,6 @@ const contentDescription = computed(() => insert.description || '')
 const contentLink = computed(() => insert.link || '')
 const contentAddress = computed(() => insert.address || '')
 const contentPeopleCount = computed(() => insert.people_count || 0)
-const contentPerPersonCount = computed(() => insert.per_person_count || 0)
 const contentDeadline = computed(() => insert.deadline || '')
 const contentBuys = computed(() => insert.buys ? insert.buys.length : 0)
 
@@ -131,6 +138,9 @@ const formatDeadline = (deadline) => {
 let map = null
 let marker = null
 const copyButtonRef = ref(null)
+const productImage = ref(null)
+const showMagnifier = ref(false)
+const magnifierStyle = ref({})
 
 const initKakaoMap = () => {
   if (typeof kakao === 'undefined') {
@@ -187,6 +197,33 @@ const shareLink = async () => {
   }
 }
 
+const handleMouseMove = (event) => {
+  if (!productImage.value) return
+  const rect = productImage.value.getBoundingClientRect()
+  const x = event.clientX - rect.left
+  const y = event.clientY - rect.top
+  const scale = 2
+  const width = rect.width * scale
+  const height = rect.height * scale
+  const centerX = x - width / 2
+  const centerY = y - height / 2
+  magnifierStyle.value = {
+    left: `${centerX}px`,
+    top: `${centerY}px`,
+    width: `${width}px`,
+    height: `${height}px`,
+    backgroundImage: `url(${insert.image})`,
+    backgroundPosition: `${-centerX}px ${-centerY}px`,
+    backgroundSize: `${rect.width}px ${rect.height}px`,
+    transform: `scale(${scale})`,
+  }
+  showMagnifier.value = true
+}
+
+const handleMouseLeave = () => {
+  showMagnifier.value = false
+}
+
 onMounted(async () => {
   try {
     await loadKakaoMapScript()
@@ -198,4 +235,39 @@ onMounted(async () => {
 onUnmounted(() => {
   if (map) map = null
 })
-</script> 
+</script>
+
+<style scoped>
+.magnifier-container {
+  position: relative;
+  cursor: crosshair;
+}
+
+.magnifier-image {
+  pointer-events: none;
+}
+
+.magnifier-lens {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border: 2px solid #2F9266;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .magnifier-lens {
+    display: none;
+  }
+  
+  .magnifier-container {
+    cursor: default;
+  }
+}
+</style> 
