@@ -55,6 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/select-insert-type', function () {
         return Inertia::render('Insert/SelectInsertType');
     })->middleware(['auth']);
+
+    Route::get('/notifications', fn () => Inertia::render('Notifications'))->name('notifications');
 });
 
 Route::post('/api/meta', [MetaController::class, 'fetchMeta'])->name('meta.fetch');

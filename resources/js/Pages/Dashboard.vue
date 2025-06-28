@@ -90,7 +90,7 @@
         }
       );
       const keywordData = await keywordRes.json();
-
+        
       if (keywordData.documents && keywordData.documents.length > 0) {
         locationName.value = keywordData.documents[0].place_name;
       } else {

@@ -1,6 +1,6 @@
 <template>
   <header
-    class="bg-white/60 backdrop-blur-sm py-4 transition-all duration-200 fixed top-0 left-0 right-0 z-50"
+    class="backdrop-blur-sm bg-transparent bg-opacity-60 py-4 transition-all duration-200 fixed top-0 left-0 right-0 z-50"
     :class="{}"
   >
     <Container :flex="true" class="flex items-center justify-between">
@@ -16,7 +16,7 @@
             공구 등록하기
             <img :src="headerPlusIcon" alt="plus" class="size-4" />
           </Link>
-          <button class="flex items-center gap-2 text-base text-[#2B2D36] font-normal transition-colors px-3.5 py-1.5 rounded-md hover:bg-gray-100">
+          <button @click="handleBellClick" class="flex items-center gap-2 text-base text-[#2B2D36] font-normal transition-colors px-3.5 py-1.5 rounded-md hover:bg-gray-100 focus:outline-none">
             알림
             <img :src="headerBellIcon" alt="bell" class="size-5" />
           </button>
@@ -70,6 +70,14 @@
       </div>
     </Container>
 
+    <NotificationModal
+      v-if="isNotificationModalOpen"
+      :open="isNotificationModalOpen"
+      :notifications="notifications"
+      @close="isNotificationModalOpen = false"
+      id="notification-modal-root"
+    />
+
     <transition
       enter-active-class="transition ease-out duration-100"
       enter-from-class="transform opacity-0 scale-95"
@@ -83,6 +91,9 @@
           <template v-if="auth?.user">
             <Link href="/select-insert-type" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
               공구 등록하기
+            </Link>
+            <Link href="/notifications" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
+              알림
             </Link>
             <Link href="/logout" method="post" as="button" class="w-full text-left text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
               로그아웃
@@ -104,12 +115,13 @@
 
 <script setup>
 import Container from './Container.vue';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link, usePage, router } from '@inertiajs/vue3';
 import { computed, ref, onMounted, onUnmounted, watch } from 'vue';
 import headerPlusIcon from '/public/images/header-plus.svg';
 import headerBellIcon from '/public/images/header-bell.svg';
 import headerLogoutIcon from '/public/images/header-logout.svg';
 import headerHamburgerIcon from '/public/images/header-hamburger.svg';
+import NotificationModal from './NotificationModal.vue';
 
 const page = usePage();
 const currentPath = computed(() => page.url);
@@ -117,10 +129,35 @@ const auth = computed(() => page.props.auth);
 
 const isDropdownOpen = ref(false);
 const isMobileMenuOpen = ref(false);
+const isNotificationModalOpen = ref(false);
 
 const desktopDropdownContainer = ref(null);
 const mobileMenuButton = ref(null);
 const mobileMenuContainer = ref(null);
+
+const notifications = [
+  {
+    id: 1,
+    user: auth.value?.user?.name || '나',
+    action: '참여',
+    group: '맛있는 딸기',
+    date: '2024-06-01 10:00',
+  },
+  {
+    id: 2,
+    user: '홍길동',
+    action: '취소',
+    group: '맛있는 딸기',
+    date: '2024-06-01 11:00',
+  },
+  {
+    id: 3,
+    user: '나',
+    action: '모집완료',
+    group: '신선한 사과',
+    date: '2024-06-02 09:30',
+  },
+];
 
 watch(isMobileMenuOpen, (newVal) => {
   if (newVal) {
@@ -153,6 +190,20 @@ const handleClickOutside = (event) => {
     !mobileMenuContainer.value.contains(event.target)
   ) {
     isMobileMenuOpen.value = false;
+  }
+  if (isNotificationModalOpen.value) {
+    const modal = document.getElementById('notification-modal-root');
+    if (modal && !modal.contains(event.target)) {
+      isNotificationModalOpen.value = false;
+    }
+  }
+};
+
+const handleBellClick = (e) => {
+  if (window.innerWidth < 768) {
+    router.visit('/notifications');
+  } else {
+    isNotificationModalOpen.value = !isNotificationModalOpen.value;
   }
 };
 
