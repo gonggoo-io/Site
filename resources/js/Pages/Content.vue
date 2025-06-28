@@ -5,28 +5,12 @@
       <Container>
         <div class="mt-32">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="relative">
-              <div 
-                class="bg-gray-100 h-[260px] md:h-[400px] rounded-2xl overflow-hidden flex items-center justify-center magnifier-container"
-                @mousemove="handleMouseMove"
-                @mouseleave="handleMouseLeave"
-              >
-                <img
-                  v-if="insert.image"
-                  :src="insert.image"
-                  :alt="contentTitle"
-                  class="w-full h-full object-cover magnifier-image"
-                  ref="productImage"
-                />
-                <OpenGraph v-else :image="contentImage" />
-                <div 
-                  v-if="showMagnifier && insert.image"
-                  class="magnifier-lens"
-                  :style="magnifierStyle"
-                ></div>
-              </div>
-              <p class="text-base text-gray-500 mt-2 text-center w-full">※ 구매 링크 미리보기 이미지입니다.</p>
-            </div>
+            <ImageLenz 
+              :image="insert.image"
+              :alt="contentTitle"
+            >
+              <OpenGraph :image="contentImage" />
+            </ImageLenz>
 
             <div class="space-y-6">
               <div>
@@ -109,9 +93,12 @@ import Container from './components/Container.vue'
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 import OpenGraph from './components/OpenGraph.vue'
+import ImageLenz from './components/ImageLenz.vue'
 
 const page = usePage()
 const insert = page.props.insert || {}
+
+const contentTitle = computed(() => insert.title || '제목 없음')
 const contentImage = computed(() => insert.image || 'https://via.placeholder.com/400x300.png?text=OG+Image')
 const contentPrice = computed(() => insert.price || 0)
 const contentTotal = computed(() => (insert.price || 0) * (insert.people_count || 1))
@@ -138,9 +125,6 @@ const formatDeadline = (deadline) => {
 let map = null
 let marker = null
 const copyButtonRef = ref(null)
-const productImage = ref(null)
-const showMagnifier = ref(false)
-const magnifierStyle = ref({})
 
 const initKakaoMap = () => {
   if (typeof kakao === 'undefined') {
@@ -189,39 +173,12 @@ const loadKakaoMapScript = () => {
 const shareLink = async () => {
   try {
     await navigator.share({
-      title: '친구가 공구를 요청했어요.',
+      title: '공구를 요청했어요.',
       text: `${contentTitle.value} 공구를 친구가 요청했어요.`,
       url: window.location.href,
     });
   } catch (err) {
   }
-}
-
-const handleMouseMove = (event) => {
-  if (!productImage.value) return
-  const rect = productImage.value.getBoundingClientRect()
-  const x = event.clientX - rect.left
-  const y = event.clientY - rect.top
-  const scale = 2
-  const width = rect.width * scale
-  const height = rect.height * scale
-  const centerX = x - width / 2
-  const centerY = y - height / 2
-  magnifierStyle.value = {
-    left: `${centerX}px`,
-    top: `${centerY}px`,
-    width: `${width}px`,
-    height: `${height}px`,
-    backgroundImage: `url(${insert.image})`,
-    backgroundPosition: `${-centerX}px ${-centerY}px`,
-    backgroundSize: `${rect.width}px ${rect.height}px`,
-    transform: `scale(${scale})`,
-  }
-  showMagnifier.value = true
-}
-
-const handleMouseLeave = () => {
-  showMagnifier.value = false
 }
 
 onMounted(async () => {
@@ -236,38 +193,3 @@ onUnmounted(() => {
   if (map) map = null
 })
 </script>
-
-<style scoped>
-.magnifier-container {
-  position: relative;
-  cursor: crosshair;
-}
-
-.magnifier-image {
-  pointer-events: none;
-}
-
-.magnifier-lens {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  border: 2px solid #2F9266;
-  border-radius: 50%;
-  background-repeat: no-repeat;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  pointer-events: none;
-  z-index: 10;
-  overflow: hidden;
-}
-
-@media (max-width: 768px) {
-  .magnifier-lens {
-    display: none;
-  }
-  
-  .magnifier-container {
-    cursor: default;
-  }
-}
-</style> 
