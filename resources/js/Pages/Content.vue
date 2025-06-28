@@ -136,6 +136,7 @@ const formatDeadline = (deadline) => {
 
 let map = null
 let marker = null
+let geocoder = null
 const copyButtonRef = ref(null)
 
 const initKakaoMap = () => {
@@ -144,20 +145,63 @@ const initKakaoMap = () => {
   }
   const container = document.getElementById('kakao-map')
   if (!container) return
-  const position = new kakao.maps.LatLng(35.1595454, 129.0477508)
-  const options = {
-    center: position,
-    level: 2
+
+  if (contentAddress.value) {
+    geocoder = new kakao.maps.services.Geocoder()
+    
+    geocoder.addressSearch(contentAddress.value, function(result, status) {
+      if (status === kakao.maps.services.Status.OK) {
+        const coords = new kakao.maps.LatLng(result[0].y, result[0].x)
+        
+        const options = {
+          center: coords,
+          level: 2
+        }
+        
+        map = new kakao.maps.Map(container, options)
+        marker = new kakao.maps.Marker({
+          position: coords,
+          map: map
+        })
+
+        kakao.maps.event.addListener(marker, 'click', () => {
+          const kakaoMapUrl = `https://map.kakao.com/link/to/${contentAddress.value},${coords.getLat()},${coords.getLng()}`
+          window.open(kakaoMapUrl, '_blank')
+        })
+      } else {
+        const position = new kakao.maps.LatLng(35.1595454, 129.0477508)
+        const options = {
+          center: position,
+          level: 2
+        }
+        map = new kakao.maps.Map(container, options)
+        marker = new kakao.maps.Marker({
+          position: position,
+          map: map
+        })
+        kakao.maps.event.addListener(marker, 'click', () => {
+          const kakaoMapUrl = `https://map.kakao.com/link/to/${contentAddress.value},${position.getLat()},${position.getLng()}`
+          window.open(kakaoMapUrl, '_blank')
+        })
+      }
+    })
+  } else {
+    const position = new kakao.maps.LatLng(35.1595454, 129.0477508)
+    const options = {
+      center: position,
+      level: 2
+    }
+    map = new kakao.maps.Map(container, options)
+    marker = new kakao.maps.Marker({
+      position: position,
+      map: map
+    })
+    kakao.maps.event.addListener(marker, 'click', () => {
+      const kakaoMapUrl = `https://map.kakao.com/link/to/${contentAddress.value},${position.getLat()},${position.getLng()}`
+      window.open(kakaoMapUrl, '_blank')
+    })
   }
-  map = new kakao.maps.Map(container, options)
-  marker = new kakao.maps.Marker({
-    position: position,
-    map: map
-  })
-  kakao.maps.event.addListener(marker, 'click', () => {
-    const kakaoMapUrl = `https://map.kakao.com/link/to/${contentAddress.value},${position.getLat()},${position.getLng()}`
-    window.open(kakaoMapUrl, '_blank')
-  })
+
   setTimeout(() => {
     if (map) map.relayout()
   }, 100)
@@ -171,7 +215,7 @@ const loadKakaoMapScript = () => {
     }
 
     const script = document.createElement('script')
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAO_MAP_KEY}&autoload=false`
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAO_MAP_KEY}&libraries=services&autoload=false`
     script.onload = () => {
       kakao.maps.load(() => {
         resolve()
