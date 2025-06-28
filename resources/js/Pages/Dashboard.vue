@@ -6,7 +6,7 @@
         <Container>
           <h1 class="text-2xl sm:text-3xl md:text-[2.5rem] font-semibold mt-32 sm:mt-44 tracking-tight">{{ userName }}님</h1>
           <h1 class="text-2xl sm:text-3xl md:text-[2.5rem] font-semibold mt-2 sm:mt-4 tracking-tight">근처에서 새로운<br class="sm:hidden" /> 공구가 시작되었어요👏</h1>
-          <div class="text-sm sm:text-base mt-4 text-gray-500">지금 {{ inserts.length }}+개의 공구가 등록되어있고, 런칭 이후 10+개의 공구가 성사되었어요. {{ userName }}님도 공구를 성사시켜봐요!</div>
+          <div class="text-sm sm:text-base mt-4 text-gray-500">지금 {{ inserts.length }}+개의 공구가 등록되어있고, 런칭 이후 여러개의 공구가 성사되었어요. {{ userName }}님도 공구를 성사시켜봐요!</div>
           <div class="mt-7 flex items-center justify-between">
             <div class="text-xl sm:text-xl md:text-2xl font-bold mt-8 mb-1">
               <template v-if="locationLoading">내 위치</template>
