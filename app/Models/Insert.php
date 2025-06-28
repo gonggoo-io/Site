@@ -26,6 +26,11 @@ class Insert extends BaseModel
         return $this->hasMany(Buy::class, 'insert_id');
     }
 
+    public function activeBuys()
+    {
+        return $this->hasMany(Buy::class, 'insert_id')->whereNull('cancelled_at');
+    }
+
     protected static function booted()
     {
         static::addGlobalScope('not_expired', function ($query) {

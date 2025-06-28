@@ -26,7 +26,7 @@ Route::middleware('guest')->group(function () {
 Route::get('/inserts', [InsertController::class, 'index']);
 
 Route::get('/content/{id}', function ($id) {
-    $insert = \App\Models\Insert::with(['user', 'buys'])->findOrFail($id);
+    $insert = \App\Models\Insert::with(['user', 'buys', 'activeBuys'])->findOrFail($id);
     return Inertia::render('Content', [
         'insert' => $insert
     ]);
@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/buy', [BuyController::class, 'store'])->name('buy.store');
     Route::delete('/buy', [BuyController::class, 'destroy'])->name('buy.destroy');
     Route::get('/buy/{insertId}', [BuyController::class, 'show'])->name('buy.show');
+    Route::get('/buy/{insertId}/bancheck', [BuyController::class, 'bancheck'])->name('buy.bancheck');
 
     Route::get('/select-insert-type', function () {
         return Inertia::render('Insert/SelectInsertType');
