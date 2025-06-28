@@ -65,8 +65,18 @@
               </div>
 
               <div class="flex gap-4">
-                <button class="w-1/2 bg-[#2F9266] text-white py-4 rounded-xl font-semibold hover:bg-[#267a54] transition-colors">
+                <button 
+                  v-if="!isCreator"
+                  class="w-1/2 bg-[#2F9266] text-white py-4 rounded-xl font-semibold hover:bg-[#267a54] transition-colors"
+                >
                   공구 참여하기
+                </button>
+                <button 
+                  v-if="isCreator"
+                  class="w-1/2 bg-gray-200 text-gray-500 py-4 rounded-xl font-semibold cursor-not-allowed"
+                  disabled
+                >
+                  내가 등록한 공구입니다
                 </button>
                 <button 
                   ref="copyButtonRef"
@@ -109,6 +119,7 @@ const contentPeopleCount = computed(() => insert.people_count || 0)
 const contentDeadline = computed(() => insert.deadline || '')
 const contentBuys = computed(() => insert.buys ? insert.buys.length : 0)
 const contentPerPersonCount = computed(() => insert.per_person_count || 0)
+const isCreator = computed(() => insert.user_id === page.props.auth?.user?.id)
 
 const formatPrice = (price) => new Intl.NumberFormat('ko-KR').format(price)
 const formatDeadline = (deadline) => {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Insert;
+use App\Models\Buy;
 use App\Http\Resources\InsertResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -53,6 +54,13 @@ class InsertController extends Controller
             Log::info('Creating insert with data:', $data);
 
             $insert = Insert::create($data);
+
+            Buy::create([
+                'user_id' => auth()->id(),
+                'insert_id' => $insert->id,
+                'created_at' => now()->setTimezone('Asia/Seoul'),
+                'updated_at' => now()->setTimezone('Asia/Seoul')
+            ]);
 
             Log::info('Insert created successfully:', ['insert_id' => $insert->id]);
 
