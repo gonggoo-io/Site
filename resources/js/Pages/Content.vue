@@ -67,20 +67,20 @@
               <div class="flex gap-4">
                 <button 
                   v-if="!isCreator"
-                  class="w-1/2 bg-[#2F9266] text-white py-4 rounded-xl font-semibold hover:bg-[#267a54] transition-colors"
+                  class="w-1/2 bg-[#2F9266] text-white py-3 rounded-xl font-semibold hover:bg-[#267a54] transition-colors"
                 >
                   공구 참여하기
                 </button>
                 <button 
                   v-if="isCreator"
-                  class="w-1/2 bg-gray-200 text-gray-500 py-4 rounded-xl font-semibold cursor-not-allowed"
+                  class="w-1/2 bg-gray-200 text-gray-500 py-3  rounded-xl font-semibold cursor-not-allowed"
                   disabled
                 >
                   내가 등록한 공구입니다
                 </button>
                 <button 
                   ref="copyButtonRef"
-                  class="w-1/2 border-2 border-[#2F9266] bg-white text-[#2F9266] py-4 rounded-xl font-semibold hover:bg-[#f0f0f0] transition-colors"
+                  class="w-1/2 border-2 border-[#2F9266] bg-white text-[#2F9266] py-3 rounded-xl font-semibold hover:bg-[#f0f0f0] transition-colors"
                   @click="shareLink"
                 >
                   친구에게 공구 공유하기
