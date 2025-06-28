@@ -14,10 +14,12 @@
         <template v-if="auth?.user">
           <Link href="/select-insert-type" class="flex items-center gap-2 text-base text-[#2B2D36] font-normal transition-colors px-3.5 py-1.5 rounded-md hover:bg-gray-100">
             공구 등록하기
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-            </svg>
+            <img :src="headerPlusIcon" alt="plus" class="size-4" />
           </Link>
+          <button class="flex items-center gap-2 text-base text-[#2B2D36] font-normal transition-colors px-3.5 py-1.5 rounded-md hover:bg-gray-100">
+            알림
+            <img :src="headerBellIcon" alt="bell" class="size-5" />
+          </button>
           <div class="relative" ref="desktopDropdownContainer">
             <button 
               @click="toggleDropdown" 
@@ -38,9 +40,7 @@
                 as="button"
                 class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
-                </svg>
+                <img :src="headerLogoutIcon" alt="logout" class="size-4" />
                 로그아웃
               </Link>
             </div>
@@ -65,9 +65,7 @@
 
       <div class="md:hidden flex items-center" ref="mobileMenuButton">
         <button @click="toggleMobileMenu">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-          </svg>
+          <img :src="headerHamburgerIcon" alt="menu" class="size-6" />
         </button>
       </div>
     </Container>
@@ -108,6 +106,10 @@
 import Container from './Container.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed, ref, onMounted, onUnmounted, watch } from 'vue';
+import headerPlusIcon from '/public/images/header-plus.svg';
+import headerBellIcon from '/public/images/header-bell.svg';
+import headerLogoutIcon from '/public/images/header-logout.svg';
+import headerHamburgerIcon from '/public/images/header-hamburger.svg';
 
 const page = usePage();
 const currentPath = computed(() => page.url);
