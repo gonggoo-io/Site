@@ -6,7 +6,7 @@
         <div class="w-full md:w-[50%] flex items-center justify-center mb-12 md:mb-40">
           <transition name="slide-fade">
             <div class="flex flex-col items-center" key="question">
-              <img src="/public/images/section-choice.svg" alt="section choice" class="w-80 mb-6" />
+              <img :src="sectionChoiceImage" alt="section choice" class="w-80 mb-6" />
               <h1 class="text-2xl md:text-3xl font-bold text-gray-800 animate-fadein text-center">
                 어떤 플랫폼에서<br class="md:hidden"/> 구매를 하시나요?
               </h1>
@@ -72,6 +72,7 @@ import { ref } from 'vue';
 import Header from '../components/Header.vue';
 import Container from '../components/Container.vue';
 import { router } from '@inertiajs/vue3';
+import sectionChoiceImage from '/public/images/section-choice.svg';
 
 const selectedPlatform = ref(null);
 

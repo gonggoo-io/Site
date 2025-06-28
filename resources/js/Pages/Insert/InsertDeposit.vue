@@ -6,7 +6,7 @@
           <div class="w-full md:w-[50%] flex items-center justify-center mb-12 md:mb-40">
             <transition name="slide-fade">
               <div class="flex flex-col items-center" key="question">
-                <img src="/public/images/insert-deposit.png" alt="section choice" class="w-60 hidden md:block mb-7 mt-20" />
+                <img :src="insertDepositImage" alt="section choice" class="w-60 hidden md:block mb-7 mt-20" />
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-800 animate-fadein text-center">
                   물품 정보 > 세부 정보 ><span class="text-[#2F9266]">입금 정보</span>
                 </h1>
@@ -89,6 +89,7 @@
   import Container from '../components/Container.vue';
   import { router } from '@inertiajs/vue3';
   import axios from 'axios';
+  import insertDepositImage from '/public/images/insert-deposit.png';
   
   const form = ref({
     bank: '',

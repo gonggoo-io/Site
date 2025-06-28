@@ -6,7 +6,7 @@
           <div class="w-full md:w-[50%] flex items-center justify-center mb-12 md:mb-40">
             <transition name="slide-fade">
               <div class="flex flex-col items-center" key="question">
-                <img src="/public/images/insert-search.png" alt="section choice" class="w-60 hidden md:block" />
+                <img :src="insertSearchImage" alt="section choice" class="w-60 hidden md:block" />
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-800 animate-fadein text-center">
                   물품 정보 > <span class="text-[#2F9266]">세부 정보</span> > 입금 정보
                 </h1>
@@ -93,6 +93,7 @@
   import Container from '../components/Container.vue';
   import { router } from '@inertiajs/vue3';
   import KakaoMap from './KakaoMap.vue';
+  import insertSearchImage from '/public/images/insert-search.png';
   
   const form = ref({
     peopleCount: '',
