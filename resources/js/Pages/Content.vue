@@ -17,7 +17,7 @@
                 <h1 class="text-3xl font-bold text-gray-900">{{ contentTitle }}</h1>
                 <div class="flex items-center gap-2 mt-4">
                   <p class="text-2xl font-semibold text-gray-900">
-                    1인 <span class="text-[#2F9266] font-bold">{{ formatPrice(contentPrice) }}원</span>
+                    1인 <span class="text-black">{{ contentPerPersonCount }}개</span> <span class="text-[#2F9266] font-bold">{{ formatPrice(contentPrice) }}원</span>
                   </p>
                   <span class="text-gray-400">·</span>
                   <p class="text-2xl font-semibold text-gray-900">합계 {{ formatPrice(contentTotal) }}원</p>
@@ -101,13 +101,14 @@ const insert = page.props.insert || {}
 const contentTitle = computed(() => insert.title || '제목 없음')
 const contentImage = computed(() => insert.image || 'https://via.placeholder.com/400x300.png?text=OG+Image')
 const contentPrice = computed(() => insert.price || 0)
-const contentTotal = computed(() => (insert.price || 0) * (insert.people_count || 1))
+const contentTotal = computed(() => (insert.price || 0) * (insert.people_count || 1) * (insert.per_person_count || 1))
 const contentDescription = computed(() => insert.description || '')
 const contentLink = computed(() => insert.link || '')
 const contentAddress = computed(() => insert.address || '')
 const contentPeopleCount = computed(() => insert.people_count || 0)
 const contentDeadline = computed(() => insert.deadline || '')
 const contentBuys = computed(() => insert.buys ? insert.buys.length : 0)
+const contentPerPersonCount = computed(() => insert.per_person_count || 0)
 
 const formatPrice = (price) => new Intl.NumberFormat('ko-KR').format(price)
 const formatDeadline = (deadline) => {
