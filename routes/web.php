@@ -8,6 +8,7 @@ use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\MetaController;
 use App\Models\Insert;
 use App\Http\Controllers\BuyController;
+use App\Models\Notification;
 
 Route::get('/', fn () => Inertia::render('Home'));
 
@@ -57,6 +58,16 @@ Route::middleware('auth')->group(function () {
     })->middleware(['auth']);
 
     Route::get('/notifications', fn () => Inertia::render('Notifications'))->name('notifications');
+
+    Route::get('/mypage', fn () => Inertia::render('MyPage'))->name('mypage');
+
+    Route::middleware('auth')->get('/notifications', function () {
+        $user = auth()->user();
+        return Notification::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->pluck('data');
+    });
 });
 
 Route::post('/api/meta', [MetaController::class, 'fetchMeta'])->name('meta.fetch');

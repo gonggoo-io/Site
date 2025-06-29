@@ -16,6 +16,9 @@
             공구 등록하기
             <img :src="headerPlusIcon" alt="plus" class="size-4" />
           </Link>
+          <Link href="/mypage" class="flex items-center gap-2 text-base text-[#2B2D36] font-normal transition-colors px-3.5 py-1.5 rounded-md hover:bg-gray-100">
+            마이페이지
+          </Link>
           <button @click="handleBellClick" class="flex items-center gap-2 text-base text-[#2B2D36] font-normal transition-colors px-3.5 py-1.5 rounded-md hover:bg-gray-100 focus:outline-none">
             알림
             <img :src="headerBellIcon" alt="bell" class="size-5" />
@@ -34,6 +37,12 @@
               v-if="isDropdownOpen"
               class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
             >
+              <Link
+                href="/mypage"
+                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+              >
+                마이페이지
+              </Link>
               <Link
                 href="/logout"
                 method="post"
@@ -92,6 +101,9 @@
             <Link href="/select-insert-type" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
               공구 등록하기
             </Link>
+            <Link href="/mypage" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
+              마이페이지
+            </Link>
             <Link href="/notifications" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
               알림
             </Link>
@@ -122,6 +134,7 @@ import headerBellIcon from '/public/images/header-bell.svg';
 import headerLogoutIcon from '/public/images/header-logout.svg';
 import headerHamburgerIcon from '/public/images/header-hamburger.svg';
 import NotificationModal from './NotificationModal.vue';
+import axios from 'axios';
 
 const page = usePage();
 const currentPath = computed(() => page.url);
@@ -135,29 +148,7 @@ const desktopDropdownContainer = ref(null);
 const mobileMenuButton = ref(null);
 const mobileMenuContainer = ref(null);
 
-const notifications = [
-  {
-    id: 1,
-    user: auth.value?.user?.name || '나',
-    action: '참여',
-    group: '맛있는 딸기',
-    date: '2024-06-01 10:00',
-  },
-  {
-    id: 2,
-    user: '홍길동',
-    action: '취소',
-    group: '맛있는 딸기',
-    date: '2024-06-01 11:00',
-  },
-  {
-    id: 3,
-    user: '나',
-    action: '모집완료',
-    group: '신선한 사과',
-    date: '2024-06-02 09:30',
-  },
-];
+const notifications = ref([]);
 
 watch(isMobileMenuOpen, (newVal) => {
   if (newVal) {
@@ -207,7 +198,9 @@ const handleBellClick = (e) => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
+  const res = await axios.get('/notifications');
+  notifications.value = res.data;
   document.addEventListener('mousedown', handleClickOutside);
 });
 

@@ -15,7 +15,7 @@
                   {{ notification.user }}님이 {{ notification.group }}공구를 {{ notification.action }}하셨습니다.
                 </div>
                 <div class="text-xs text-gray-400">
-                  오늘 11:40
+                  {{ notification.date }}
                 </div>
               </div>
             </div>
@@ -34,35 +34,19 @@
   <script setup>
   import Header from './components/Header.vue';
   import Footer from './components/Footer.vue';
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted } from 'vue';
   import { usePage } from '@inertiajs/vue3';
+  import axios from 'axios';
   
   const page = usePage();
   const userName = computed(() => page.props.auth?.user?.name || '나');
   
-  const notifications = ref([
-    {
-      id: 1,
-      user: userName.value,
-      action: '참여',
-      group: '맛있는 딸기',
-      date: '2024-06-01 10:00',
-    },
-    {
-      id: 2,
-      user: '홍길동',
-      action: '취소',
-      group: '맛있는 딸기',
-      date: '2024-06-01 11:00',
-    },
-    {
-      id: 3,
-      user: '나',
-      action: '모집완료',
-      group: '신선한 사과',
-      date: '2024-06-02 09:30',
-    },
-  ]);
+  const notifications = ref([]);
+  
+  onMounted(async () => {
+    const res = await axios.get('/notifications');
+    notifications.value = res.data;
+  });
   </script>
   
   <style scoped>

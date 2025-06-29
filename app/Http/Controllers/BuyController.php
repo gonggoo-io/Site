@@ -36,6 +36,17 @@ class BuyController extends Controller
             'created_at' => now()->setTimezone('Asia/Seoul'),
             'updated_at' => now()->setTimezone('Asia/Seoul')
         ]);
+
+        \App\Models\Notification::create([
+            'user_id' => $insert->user_id,
+            'data' => [
+                'user' => Auth::user()->name,
+                'action' => '참여',
+                'group' => $insert->title ?? $insert->name ?? '공구',
+                'date' => now()->setTimezone('Asia/Seoul')->format('Y-m-d H:i'),
+            ],
+        ]);
+
         return response()->json(['success' => true, 'buy' => $buy]);
     }
 
@@ -53,6 +64,17 @@ class BuyController extends Controller
         }
         $buy->cancelled_at = now()->setTimezone('Asia/Seoul');
         $buy->save();
+
+        \App\Models\Notification::create([
+            'user_id' => $insert->user_id,
+            'data' => [
+                'user' => Auth::user()->name,
+                'action' => '취소',
+                'group' => $insert->title ?? $insert->name ?? '공구',
+                'date' => now()->setTimezone('Asia/Seoul')->format('Y-m-d H:i'),
+            ],
+        ]);
+
         return response()->json(['success' => true]);
     }
 

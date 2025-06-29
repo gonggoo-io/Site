@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div v-if="open" class="fixed top-16 right-6 z-50 w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden animate-fadein">
+    <div v-if="open" class="fixed top-16 right-6 z-50 w-full max-w-sm bg-gray-50 rounded-2xl shadow-2xl border border-gray-200 overflow-hidden animate-fadein">
       <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gray-50">
         <slot name="header">
           <span class="font-bold text-lg text-gray-900">알림</span>
@@ -9,7 +9,7 @@
       </div>
       <div class="max-h-[60vh] overflow-y-auto px-4 py-3">
         <div v-if="notifications.length > 0" class="space-y-3">
-          <div v-for="notification in notifications" :key="notification.id" class="bg-white rounded-xl p-4 border border-gray-100">
+          <div v-for="notification in notifications" :key="notification.date + notification.user" class="bg-white rounded-xl p-4 border border-gray-100">
             <div class="flex items-center space-x-3">
               <div class="flex-shrink-0 w-10 h-10 bg-[#2F9266] rounded-full flex items-center justify-center">
                 <span class="text-xl font-semibold text-white">s</span>
@@ -19,7 +19,7 @@
                 <div class="text-gray-black text-sm font-medium">
                   {{ notification.user }}님이 {{ notification.group }}공구를 {{ notification.action }}하셨습니다.
                 </div>
-                <div class="text-xs text-gray-400">오늘 11:40</div>
+                <div class="text-xs text-gray-400">{{ notification.date }}</div>
               </div>
             </div>
           </div>
