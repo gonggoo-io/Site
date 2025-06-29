@@ -30,7 +30,9 @@
               >
                 <div class="w-full">
                   <div class="font-semibold mb-1 text-xl text-gray-800">{{ insert.title || '제목 없음' }}</div>
-                  <div v-if="insert.description" class="text-sm text-gray-600 mb-3 line-clamp-2">{{ insert.description }}</div>
+                  <div v-if="insert.description" class="text-sm text-gray-600 mb-3 line-clamp-2">
+                    {{ insert.description }} · <img src="/public/images/dashboard-users.svg" alt="users" class="w-3 h-3 inline mr-1" />{{ getActiveBuysCount(insert) }}/{{ insert.max_participants || 10 }}
+                  </div>
                   <div class="flex space-x-3 mt-4">
                     <button 
                       @click.stop="goToContent(insert.id)"
@@ -45,12 +47,6 @@
                       취소하기
                     </button>
                   </div>
-                </div>
-                <div class="flex items-center self-center">
-                  <img src="/public/images/dashboard-users.svg" alt="users" class="w-4 h-4 mr-1.5" />
-                  <span class="text-sm font-semibold text-gray-600">
-                    {{ getActiveBuysCount(insert) }}/{{ insert.people_count || 0 }}
-                  </span>
                 </div>
               </section>
             </div>
