@@ -71,7 +71,19 @@ Route::middleware('auth')->group(function () {
         return Notification::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->get()
-            ->pluck('data');
+            ->map(function($n) {
+                $data = $n->data;
+                return [
+                    'id' => $n->id,
+                    'user' => $data['user'] ?? null,
+                    'action' => $data['action'] ?? null,
+                    'group' => $data['group'] ?? null,
+                    'date' => $data['date'] ?? $n->created_at->format('Y-m-d H:i'),
+                    'read_at' => $n->read_at,
+                    'title' => $data['group'] ?? null,
+                    'insert_id' => $data['insert_id'] ?? null,
+                ];
+            });
     });
 });
 

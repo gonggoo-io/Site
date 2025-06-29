@@ -152,7 +152,7 @@ const mobileMenuButton = ref(null);
 const mobileMenuContainer = ref(null);
 
 const notifications = ref([]);
-const unreadCount = ref(0);
+const unreadCount = computed(() => notifications.value.filter(n => !n.read_at).length);
 
 watch(isMobileMenuOpen, (newVal) => {
   if (newVal) {
@@ -201,7 +201,6 @@ const handleBellClick = (e) => {
     isNotificationModalOpen.value = !isNotificationModalOpen.value;
     if (isNotificationModalOpen.value) {
       axios.post('/api/notifications/read').then(() => {
-        unreadCount.value = 0;
         notifications.value = notifications.value.map(n => ({ ...n, read_at: n.read_at || new Date().toISOString() }));
       });
     }
@@ -212,16 +211,11 @@ let eventSource;
 onMounted(async () => {
   const res = await axios.get('/notifications');
   notifications.value = res.data;
-  try {
-    const streamRes = await axios.get('/api/notifications/unread-count');
-    unreadCount.value = streamRes.data.unread_count;
-  } catch {}
   document.addEventListener('mousedown', handleClickOutside);
   eventSource = new EventSource('/api/notifications/stream');
   eventSource.onmessage = (event) => {
     const data = JSON.parse(event.data);
     notifications.value = data.notifications;
-    unreadCount.value = data.unread_count;
   };
 });
 
