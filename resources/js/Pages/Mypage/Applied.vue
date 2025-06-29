@@ -1,40 +1,9 @@
 <template>
   <Header />
-
-  <Container class="w-full max-w-none">
+  <Container>
     <div class="flex flex-col min-h-screen">
       <div class="flex flex-col lg:flex-row flex-1 gap-10">
-        <aside
-          class="w-full lg:w-[220px] bg-white border-b lg:border-b-0 lg:border-r border-[#eee] pt-6 lg:pt-10 mt-20 lg:min-h-full"
-        >
-          <ul class="flex flex-row lg:flex-col gap-x-6 lg:gap-x-0 px-6 lg:px-0 justify-center items-center w-full">
-            <li
-              :class="[
-                'text-lg mb-0 lg:mb-6 cursor-pointer whitespace-nowrap',
-                selectedMenu === 'applied' ? 'text-black font-bold' : 'text-gray-400'
-              ]"
-            >
-              진행중인 거래
-            </li>
-            <li 
-              :class="[
-                'text-lg mb-0 lg:mb-6 cursor-pointer whitespace-nowrap',
-                selectedMenu === 'joined' ? 'text-black font-bold' : 'text-gray-400'
-              ]"
-            >
-              배송 중인 거래
-            </li>
-            <li
-              :class="[
-                'text-lg mb-0 lg:mb-6 cursor-pointer whitespace-nowrap',
-                selectedMenu === 'shipping' ? 'text-black font-bold' : 'text-gray-400'
-              ]"
-            >
-              완료된 거래
-            </li>
-          </ul>
-        </aside>
-
+        <Sidebar active="applied" />
         <main class="flex-1 pt-6 lg:pt-10 lg:mt-20 px-0 w-full">
           <div class="text-black font-semibold text-3xl mb-1">
             📫 총 4건
@@ -52,13 +21,13 @@
                 01.선없는멀티탭절전형 1구 멀티탭(스위치)화이트 (-4,150원)
                 <span class="mx-2 text-gray-300 hidden sm:inline">·</span>
                 <img src="/public/images/dashboard-users.svg" alt="users" class="size-4 mr-1" />
-                <span class="text-[#2F9266] font-semibold text-sm sm:text-base">1/12</span>
+                <span class="text-primary font-semibold text-sm sm:text-base">1/12</span>
               </div>
               <button class="block sm:hidden w-full mt-4 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium text-sm flex items-center justify-center">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
-                나가기
+                공구 취소
               </button>
             </div>
             <button class="hidden sm:block ml-4 p-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium text-sm whitespace-nowrap flex-shrink-0">
@@ -75,10 +44,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import Header from './components/Header.vue'
-import Footer from './components/Footer.vue'
-import Container from './components/Container.vue'
-
-const selectedMenu = ref('applied')
-</script>
+import Header from '../components/Header.vue'
+import Footer from '../components/Footer.vue'
+import Container from '../components/Container.vue'
+import Sidebar from '../components/Sidebar.vue'
+</script> 

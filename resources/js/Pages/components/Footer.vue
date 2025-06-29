@@ -20,8 +20,6 @@
 <script setup>  
 import { ref, onMounted } from 'vue';
 import Container from './Container.vue';
-
-// 이미지 임포트
 import logoImage from '/public/images/logo.svg';
 import githubLogoImage from '/public/images/github-logo.svg';
 

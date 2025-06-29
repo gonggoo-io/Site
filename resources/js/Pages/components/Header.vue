@@ -25,7 +25,7 @@
               @click="toggleDropdown" 
               class="flex items-center hover:opacity-80 transition"
             >
-              <div class="w-9 h-9 rounded-full bg-[#2F9266] flex items-center justify-center text-white font-medium text-xl leading-none">
+              <div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white font-medium text-xl leading-none">
                 <span class="flex items-center justify-center w-full h-full">{{ auth.user.name.charAt(0) }}</span>
               </div>
             </button>
@@ -35,7 +35,7 @@
               class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
             >
               <Link
-                href="/mypage"
+                href="/mypage/applied"
                 class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
               >
                 마이페이지
@@ -62,7 +62,7 @@
           </Link>
           <Link
             href="/signup"
-            class="px-3.5 py-1.5 text-[14px] border border-[#2F9266] bg-[#2F9266] text-white rounded-md hover:bg-[#247A4F] hover:border-[#247A4F] transition-colors"
+            class="px-3.5 py-1.5 text-[14px] border border-primary bg-primary text-white rounded-md hover:bg-[#247A4F] hover:border-[#247A4F] transition-colors"
           >
             회원가입
           </Link>
@@ -101,7 +101,7 @@
             <Link href="/select-insert-type" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
               공구 등록하기
             </Link>
-            <Link href="/mypage" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
+            <Link href="/mypage/applied" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
               마이페이지
             </Link>
             <Link href="/logout" method="post" as="button" class="w-full text-left text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">

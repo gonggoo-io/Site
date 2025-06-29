@@ -18,7 +18,7 @@
               v-model="form.email"
               type="email"
               placeholder="이메일을 입력하세요"
-              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
               required
             />
           </div>
@@ -30,7 +30,7 @@
               v-model="form.password"
               type="password"
               placeholder="비밀번호를 입력하세요"
-              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
               required
             />
           </div>
@@ -40,7 +40,7 @@
               <input
                 type="checkbox"
                 v-model="form.remember"
-                class="w-4 h-4 text-[#2F9266] border-gray-300 rounded focus:ring-[#2F9266]"
+                class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
               />
               <span class="ml-2 text-sm text-gray-600">로그인 상태 유지</span>
             </label>
@@ -48,7 +48,7 @@
 
           <button
             type="submit"
-            class="w-full bg-[#2F9266] text-white py-2 px-4 text-sm sm:text-base rounded-md hover:bg-[#247A4F] transition focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:ring-offset-2"
+            class="w-full bg-primary text-white py-2 px-4 text-sm sm:text-base rounded-md hover:bg-[#247A4F] transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             :disabled="form.processing"
           >
             <span v-if="form.processing">로그인 중...</span>
@@ -58,7 +58,7 @@
 
         <p class="text-center text-sm text-gray-600 mt-6">
           계정이 없으신가요?
-          <Link href="/signup" class="text-[#2F9266] hover:underline ml-2">회원가입</Link>
+          <Link href="/signup" class="text-primary hover:underline ml-2">회원가입</Link>
         </p>
 
         <div v-if="message" :class="['mt-4', 'p-3', 'rounded-md', messageType === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700']">

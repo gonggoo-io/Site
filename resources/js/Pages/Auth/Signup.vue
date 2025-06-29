@@ -18,7 +18,7 @@
               v-model="form.name"
               type="text"
               placeholder="이름을 입력하세요"
-              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
               :class="{ 'border-red-500': form.errors.name }"
             />
             <p v-if="form.errors.name" class="text-red-500 text-sm mt-1">{{ form.errors.name }}</p>
@@ -33,14 +33,14 @@
                 type="email"
                 placeholder="이메일을 입력하세요"
                 :disabled="isEmailVerified"
-                class="flex-1 px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266] disabled:bg-gray-100"
+                class="flex-1 px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-100"
                 :class="{ 'border-red-500': form.errors.email }"
               />
               <button
                 type="button"
                 @click="sendVerificationCode"
                 :disabled="isCodeSending || isEmailVerified || !form.email"
-                class="px-3 sm:px-4 py-2 bg-[#2F9266] text-white text-sm sm:text-base rounded-md hover:bg-[#247A4F] transition disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                class="px-3 sm:px-4 py-2 bg-primary text-white text-sm sm:text-base rounded-md hover:bg-[#247A4F] transition disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
               >
                 <span v-if="isCodeSending">전송중...</span>
                 <span v-else-if="isEmailVerified">인증완료</span>
@@ -64,7 +64,7 @@
                 type="text"
                 maxlength="6"
                 placeholder="6자리 인증번호"
-                class="flex-1 px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+                class="flex-1 px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
               />
               <button
                 type="button"
@@ -91,7 +91,7 @@
               v-model="form.password"
               type="password"
               placeholder="비밀번호를 입력하세요"
-              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
               :class="{ 'border-red-500': form.errors.password }"
             />
             <p v-if="form.errors.password" class="text-red-500 text-sm mt-1">{{ form.errors.password }}</p>
@@ -104,7 +104,7 @@
               v-model="form.password_confirmation"
               type="password"
               placeholder="비밀번호를 다시 입력하세요"
-              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2F9266]"
+              class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
               :class="{ 'border-red-500': form.errors.password_confirmation }"
             />
             <p v-if="form.errors.password_confirmation" class="text-red-500 text-sm mt-1">{{ form.errors.password_confirmation }}</p>
@@ -115,11 +115,11 @@
               <input
                 type="checkbox"
                 v-model="privacyAgreement"
-                class="w-4 h-4 text-[#2F9266] border-gray-300 rounded focus:ring-[#2F9266]"
+                class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
               />
               <span class="ml-2 text-sm text-gray-600">
                 개인정보 수집 및 이용에 동의합니다.
-                <Link href="/privacy" class="text-[#2F9266] hover:underline">자세히 보기</Link>
+                <Link href="/privacy" class="text-primary hover:underline">자세히 보기</Link>
               </span>
             </label>
             <p v-if="privacyError" class="text-red-500 text-sm mt-1">개인정보 수집 및 이용에 동의해주세요.</p>
@@ -127,7 +127,7 @@
 
           <button
             type="submit"
-            class="w-full bg-[#2F9266] text-white py-2 px-4 text-sm sm:text-base rounded-md hover:bg-[#247A4F] transition focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:ring-offset-2 disabled:opacity-50"
+            class="w-full bg-primary text-white py-2 px-4 text-sm sm:text-base rounded-md hover:bg-[#247A4F] transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50"
             :disabled="form.processing || !isEmailVerified"
           >
             <span v-if="form.processing">회원가입 중...</span>
@@ -136,7 +136,7 @@
         </form>
 
         <p class="text-center text-sm text-gray-600 mt-6">
-          <Link href="/signin" class="text-[#2F9266] hover:underline ml-2">이미 계정이 있으신가요?</Link>
+          <Link href="/signin" class="text-primary hover:underline ml-2">이미 계정이 있으신가요?</Link>
         </p>
       </div>
     </main>

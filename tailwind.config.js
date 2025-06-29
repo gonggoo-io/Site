@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        'primary': '#2F9266',
+      },
       gridTemplateColumns: {
         '20': 'repeat(20, 64px)',
         '16': 'repeat(16, 64px)',

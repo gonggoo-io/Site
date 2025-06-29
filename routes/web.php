@@ -59,7 +59,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/notifications', fn () => Inertia::render('Notifications'))->name('notifications');
 
-    Route::get('/mypage', fn () => Inertia::render('MyPage'))->name('mypage');
+    Route::get('/mypage', function () {
+        return redirect('/mypage/applied');
+    })->name('mypage');
+    Route::get('/mypage/applied', fn () => Inertia::render('Mypage/Applied'))->name('mypage.applied');
+    Route::get('/mypage/shipping', fn () => Inertia::render('Mypage/Shipping'))->name('mypage.shipping');
+    Route::get('/mypage/completed', fn () => Inertia::render('Mypage/Completed'))->name('mypage.completed');
 
     Route::middleware('auth')->get('/notifications', function () {
         $user = auth()->user();

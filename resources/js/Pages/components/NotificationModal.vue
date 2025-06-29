@@ -11,7 +11,7 @@
         <div v-if="notifications.length > 0" class="space-y-3">
           <div v-for="notification in notifications" :key="notification.date + notification.user" class="bg-white rounded-xl p-4 border border-gray-100">
             <div class="flex items-center space-x-3">
-              <div class="flex-shrink-0 w-10 h-10 bg-[#2F9266] rounded-full flex items-center justify-center">
+              <div class="flex-shrink-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                 <span class="text-xl font-semibold text-white">s</span>
               </div>
               <div class="flex-1 min-w-0">
