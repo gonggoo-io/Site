@@ -16,9 +16,6 @@
             공구 등록하기
             <img :src="headerPlusIcon" alt="plus" class="size-4" />
           </Link>
-          <Link href="/mypage" class="flex items-center gap-2 text-base text-[#2B2D36] font-normal transition-colors px-3.5 py-1.5 rounded-md hover:bg-gray-100">
-            마이페이지
-          </Link>
           <button @click="handleBellClick" class="flex items-center gap-2 text-base text-[#2B2D36] font-normal transition-colors px-3.5 py-1.5 rounded-md hover:bg-gray-100 focus:outline-none">
             알림
             <img :src="headerBellIcon" alt="bell" class="size-5" />
@@ -72,7 +69,10 @@
         </template>
       </div>
 
-      <div class="md:hidden flex items-center" ref="mobileMenuButton">
+      <div class="md:hidden flex items-center gap-2" ref="mobileMenuButton">
+        <button @click="handleBellClick" class="flex items-center">
+          <img :src="headerBellIcon" alt="bell" class="size-6" />
+        </button>
         <button @click="toggleMobileMenu">
           <img :src="headerHamburgerIcon" alt="menu" class="size-6" />
         </button>
@@ -103,9 +103,6 @@
             </Link>
             <Link href="/mypage" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
               마이페이지
-            </Link>
-            <Link href="/notifications" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
-              알림
             </Link>
             <Link href="/logout" method="post" as="button" class="w-full text-left text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" @click="toggleMobileMenu">
               로그아웃
