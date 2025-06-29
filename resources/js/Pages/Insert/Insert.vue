@@ -8,14 +8,14 @@
             <div class="flex flex-col items-center" key="question">
               <img :src="insertPaperImage" alt="section choice" class="w-60 mb-6 hidden md:block" />
               <h1 class="text-2xl md:text-3xl font-bold text-gray-800 animate-fadein text-center">
-                <span class="text-[#2F9266]">물품 정보</span> > 세부 정보 > 입금 정보
+                <span class="text-primary">물품 정보</span> > 세부 정보 > 입금 정보
               </h1>
               <div class="w-full text-center text-gray-500 mt-1 mb-[-2] text-base md:text-lg">
                 쿠팡, G마켓, 옥션에서 구입하지 않는다면?
               </div>
               <p class="px-4 text-base text-gray-500 flex items-center gap-2">
                 <button
-                  class="ml-2 text-[#2F9266] hover:text-[#247A4F] transition-colors duration-200"
+                  class="ml-2 text-primary hover:text-[#247A4F] transition-colors duration-200"
                   @click="goBack"
                   type="button"
                 >
@@ -41,7 +41,7 @@
                   v-model="form.title"
                   type="text"
                   placeholder="예: 아이폰 15 Pro 256GB 자연 티타늄"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
                   required
                 />
               </div>
@@ -54,7 +54,7 @@
                   v-model="form.description"
                   placeholder="물품에 대한 자세한 설명을 입력해주세요."
                   rows="4"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white resize-none"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white resize-none"
                 ></textarea>
               </div>
               <div class="form-group">
@@ -67,7 +67,7 @@
                     v-model="form.link"
                     type="url"
                     placeholder="https://example.com/product"
-                    class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                    class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
                     required
                   />
                   <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -88,7 +88,7 @@
                     min="0"
                     step="1000"
                     placeholder="예: 1200000"
-                    class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                    class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
                     required
                   />
                   <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -103,7 +103,7 @@
               <div class="pt-4 pb-6">
                 <button
                   type="submit"
-                  class="w-full bg-gradient-to-r from-[#2F9266] to-[#34A373] text-white py-3 px-6 rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  class="w-full bg-gradient-to-r from-primary to-[#34A373] text-white py-3 px-6 rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   :disabled="!isFormValid"
                 >
                   <span class="flex items-center justify-center gap-2">

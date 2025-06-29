@@ -250,7 +250,7 @@ onUnmounted(() => {
 
                     <div class="text-center xl:text-left flex flex-col justify-center max-w-2xl" data-aos="fade-left">
                         <h2 class="text-2xl sm:text-3xl xl:text-4xl font-semibold mb-6 text-gray-800 leading-tight">
-                            공동구매로 <span class="text-[#2F9266]">{{ animatedDiscount }}%</span><span class="text-base text-gray-400"> 5인 기준</span><br/>
+                            공동구매로 <span class="text-primary">{{ animatedDiscount }}%</span><span class="text-base text-gray-400"> 5인 기준</span><br/>
                             <span>할인 받으며 구매해요.</span>
                         </h2>
                         <p class="text-base sm:text-lg xl:text-xl text-gray-600 leading-relaxed">
@@ -267,14 +267,14 @@ onUnmounted(() => {
                     <div class="text-center xl:text-center order-2 xl:order-1 flex flex-col justify-center max-w-2xl">
                         <h2 class="text-2xl sm:text-3xl xl:text-4xl font-semibold mb-6 text-gray-800 leading-tight">
                             더 이상 채팅방에서<br/>
-                            <span class="text-[#2F9266]" v-html="typingText"></span><span v-if="isTyping" class="animate-pulse">|</span> 묻지 말고, <span class="underline-animation" :class="{ 'animate-underline': shouldAnimate }">🔗링크 공유만</span>
+                            <span class="text-primary" v-html="typingText"></span><span v-if="isTyping" class="animate-pulse">|</span> 묻지 말고, <span class="underline-animation" :class="{ 'animate-underline': shouldAnimate }">🔗링크 공유만</span>
                         </h2>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="py-12 sm:py-20 md:py-28 bg-[#2F9266]" ref="statsSection">
+        <section class="py-12 sm:py-20 md:py-28 bg-primary" ref="statsSection">
             <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
                     <h2 class="text-xl sm:text-2xl md:text-3xl font-medium mb-4 sm:mb-6 md:mb-8 text-white" data-aos="fade-right" data-aos-delay="200">
@@ -282,7 +282,7 @@ onUnmounted(() => {
                     </h2>
                     <button 
                         @click="goToSignup"
-                        class="bg-white text-[#2F9266] px-6 sm:px-8 md:px-12 py-2.5 sm:py-3 md:py-4 rounded-full font-semibold text-base sm:text-lg md:text-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(255,255,255,0.3)] active:scale-[0.98] shadow-[0_4px_12px_rgba(255,255,255,0.2)]"
+                        class="bg-white text-primary px-6 sm:px-8 md:px-12 py-2.5 sm:py-3 md:py-4 rounded-full font-semibold text-base sm:text-lg md:text-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(255,255,255,0.3)] active:scale-[0.98] shadow-[0_4px_12px_rgba(255,255,255,0.2)]"
                         data-aos="fade-left"
                         data-aos-delay="600"
                     >

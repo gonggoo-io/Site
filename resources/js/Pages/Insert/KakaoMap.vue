@@ -25,7 +25,7 @@
     <div id="kakao-map" class="w-full h-64 rounded mb-2 relative">
       <div v-if="mapLoading" class="absolute inset-0 flex items-center justify-center bg-gray-100 rounded">
         <div class="text-center">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2F9266] mx-auto mb-2"></div>
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
           <p class="text-sm text-gray-600">지도를 불러오는 중...</p>
         </div>
       </div>
@@ -34,7 +34,7 @@
           <p class="text-sm text-red-600 mb-2">지도를 불러올 수 없습니다.</p>
           <button 
             @click="retryLoadMap" 
-            class="px-3 py-1 bg-[#2F9266] text-white rounded text-sm hover:bg-[#267a54] transition-colors"
+            class="px-3 py-1 bg-primary text-white rounded text-sm hover:bg-[#267a54] transition-colors"
           >
             다시 시도
           </button>

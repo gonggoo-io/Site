@@ -28,12 +28,12 @@
                 @click="selectPlatform(platform.value)"
                 :class="[
                   'flex items-start gap-3 p-5 rounded-xl bg-white cursor-pointer border border-gray-300',
-                  selectedPlatform === platform.value ? 'ring-2 ring-[#2F9266]' : '',
+                  selectedPlatform === platform.value ? 'ring-2 ring-primary' : '',
                 ]"
               >
                 <input
                   type="checkbox"
-                  class="w-5 h-5 mt-1 accent-[#2F9266] cursor-pointer"
+                  class="w-5 h-5 mt-1 accent-primary cursor-pointer"
                   :checked="selectedPlatform === platform.value"
                   @change="selectPlatform(platform.value)"
                   @click.stop
@@ -48,7 +48,7 @@
                 class="w-full mt-6 py-3 rounded-lg text-base font-semibold transition"
                 :class="[
                   selectedPlatform
-                    ? 'bg-[#2F9266] text-white cursor-pointer'
+                    ? 'bg-primary text-white cursor-pointer'
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed',
                 ]"
                 :disabled="!selectedPlatform"

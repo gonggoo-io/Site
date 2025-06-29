@@ -8,7 +8,7 @@
               <div class="flex flex-col items-center" key="question">
                 <img :src="insertDepositImage" alt="section choice" class="w-60 hidden md:block mb-7 mt-20" />
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-800 animate-fadein text-center">
-                  물품 정보 > 세부 정보 ><span class="text-[#2F9266]">입금 정보</span>
+                  물품 정보 > 세부 정보 ><span class="text-primary">입금 정보</span>
                 </h1>
                 <div class="w-full text-center te   xt-gray-500 mt-1 mb-[-2] text-base md:text-lg">
                   공구가 완료되면 송금하기 위해 계좌 정보가 필요해요.
@@ -30,7 +30,7 @@
                   <select
                     id="bank"
                     v-model="form.bank"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
                     required
                   >
                     <option value="" disabled>은행을 선택하세요</option>
@@ -55,14 +55,14 @@
                     v-model="form.accountNumber"
                     type="text"
                     placeholder="예: 12345678901234"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
                     required
                   />
                 </div>
                 <div class="pt-4 pb-6">
                   <button
                     type="submit"
-                    class="w-full bg-gradient-to-r from-[#2F9266] to-[#34A373] text-white py-3 px-6 rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    class="w-full bg-gradient-to-r from-primary to-[#34A373] text-white py-3 px-6 rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     :disabled="!isFormValid || isSubmitting"
                     @click="goToNext"
                   >

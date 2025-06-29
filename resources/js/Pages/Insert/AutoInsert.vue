@@ -8,14 +8,14 @@
             <div class="flex flex-col items-center" key="question">
               <img :src="insertPaperImage" alt="section choice" class="w-60 mb-6 hidden md:block" />
               <h1 class="text-2xl md:text-3xl font-bold text-gray-800 animate-fadein text-center">
-                <span class="text-[#2F9266]">물품 정보</span> > 세부 정보 > 입금 정보
+                <span class="text-primary">물품 정보</span> > 세부 정보 > 입금 정보
               </h1>
               <div class="w-full text-center text-gray-500 mt-1 mb-[-2] text-base md:text-lg">
                 링크를 입력하면 자동으로 정보를 불러와요.
               </div>
               <p class="px-4 text-base text-gray-500 flex items-center gap-2">
                 <button
-                  class="ml-2 text-[#2F9266] hover:text-[#247A4F] transition-colors duration-200"
+                  class="ml-2 text-primary hover:text-[#247A4F] transition-colors duration-200"
                   @click="goBack"
                   type="button"
                 >
@@ -42,14 +42,14 @@
                     v-model="form.link"
                     type="text"
                     placeholder="https://"
-                    class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                    class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
                     @keyup.enter="fetchMetadata"
                   />
                   <button
                     type="button"
                     @click="fetchMetadata"
                     :disabled="isLoading || !form.link.trim()"
-                    class="px-4 py-2 bg-[#2F9266] text-white rounded-xl hover:bg-[#247A4F] transition focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-[#247A4F] transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <div v-if="isLoading" class="flex items-center">
                       <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -66,7 +66,7 @@
                     id="ogTitle"
                     v-model="ogData.title"
                     type="text"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] bg-gray-50 hover:bg-white"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 hover:bg-white"
                   />
                 </div>
                 <div class="form-group">
@@ -75,7 +75,7 @@
                     id="ogDescription"
                     v-model="ogData.description"
                     rows="4"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] bg-gray-50 hover:bg-white resize-none"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50 hover:bg-white resize-none"
                   ></textarea>
                 </div>
                 <div class="form-group">
@@ -90,7 +90,7 @@
                       min="0"
                       step="1000"
                       placeholder="예: 1200000"
-                      class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                      class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
                       required
                     />
                     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -108,7 +108,7 @@
                   type="button"
                   @click="goToNext"
                   :disabled="!isFormValid"
-                  class="w-full bg-gradient-to-r from-[#2F9266] to-[#34A373] text-white py-3 px-6 rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  class="w-full bg-gradient-to-r from-primary to-[#34A373] text-white py-3 px-6 rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
                 다음 단계로 (1/3)
                 </button>
@@ -130,8 +130,6 @@ import Container from '../components/Container.vue';
 import { ref, computed } from 'vue'
 import axios from 'axios'
 import { router } from '@inertiajs/vue3'
-
-// 이미지 임포트
 import insertPaperImage from '/public/images/insert-paper.png';
 
 const form = ref({

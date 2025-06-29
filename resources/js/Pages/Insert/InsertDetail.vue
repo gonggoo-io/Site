@@ -8,7 +8,7 @@
               <div class="flex flex-col items-center" key="question">
                 <img :src="insertSearchImage" alt="section choice" class="w-60 hidden md:block" />
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-800 animate-fadein text-center">
-                  물품 정보 > <span class="text-[#2F9266]">세부 정보</span> > 입금 정보
+                  물품 정보 > <span class="text-primary">세부 정보</span> > 입금 정보
                 </h1>
                 <div class="w-full text-center text-gray-500 mt-1 mb-[-2] text-base md:text-lg">
                   공구에 참여하는 분들을 위해 세부 내용을 작성해요.
@@ -35,7 +35,7 @@
                       min="1"
                       step="1"
                       placeholder="예: 10"
-                      class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                      class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
                       required
                     />
                     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -55,7 +55,7 @@
                       min="1"
                       step="1"
                       placeholder="예: 1"
-                      class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                      class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
                       required
                     />
                     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -63,12 +63,12 @@
                     </div>
                   </div>
                 </div>
-                <KakaoMap v-model:address="form.address" input-class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2F9266] focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white" />
+                <KakaoMap v-model:address="form.address" input-class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white" />
                 <div class="pt-4 pb-6">
                   <button
                     type="button"
                     @click="goToNext"
-                    class="w-full bg-gradient-to-r from-[#2F9266] to-[#34A373] text-white py-3 px-6 rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    class="w-full bg-gradient-to-r from-primary to-[#34A373] text-white py-3 px-6 rounded-xl font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     :disabled="!isFormValid"
                   >
                     <span class="flex items-center justify-center gap-2">
