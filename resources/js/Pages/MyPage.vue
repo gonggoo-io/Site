@@ -51,7 +51,9 @@
               </div>
               <button class="block sm:hidden w-full mt-4 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition font-medium text-sm">참여 취소</button>
             </div>
-            <button class="hidden sm:block ml-4 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition font-medium text-sm">참여 취소</button>
+            <button class="hidden sm:block ml-4 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition font-medium text-sm whitespace-nowrap flex-shrink-0 min-w-[90px]">
+              참여 취소
+            </button>
           </section>
         </main>
       </div>
