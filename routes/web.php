@@ -65,6 +65,34 @@ Route::middleware('auth')->group(function () {
     Route::get('/mypage/applied', fn () => Inertia::render('Mypage/Applied'))->name('mypage.applied');
     Route::get('/mypage/shipping', fn () => Inertia::render('Mypage/Shipping'))->name('mypage.shipping');
     Route::get('/mypage/completed', fn () => Inertia::render('Mypage/Completed'))->name('mypage.completed');
+    Route::get('/debug/my-buys', function () {
+        $userId = auth()->id();
+        $buys = \App\Models\Buy::with(['insert.user', 'insert.buys'])
+            ->where('user_id', $userId)
+            ->whereNull('cancelled_at')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return response()->json([
+            'user_id' => $userId,
+            'buys_count' => $buys->count(),
+            'buys' => $buys->toArray()
+        ]);
+    });
+
+    Route::get('/debug/my-inserts', function () {
+        $userId = auth()->id();
+        $inserts = \App\Models\Insert::with(['user', 'buys'])
+            ->where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return response()->json([
+            'user_id' => $userId,
+            'inserts_count' => $inserts->count(),
+            'inserts' => $inserts->toArray()
+        ]);
+    });
 
     Route::middleware('auth')->get('/notifications', function () {
         $user = auth()->user();

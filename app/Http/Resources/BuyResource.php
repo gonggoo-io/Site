@@ -20,6 +20,7 @@ class BuyResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'insert_id' => $this->insert_id,
+            'cancelled_at' => $this->cancelled_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user', function () {

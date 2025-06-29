@@ -16,6 +16,6 @@ class Buy extends Model
 
     public function insert()
     {
-        return $this->belongsTo(Insert::class, 'insert_id');
+        return $this->belongsTo(\App\Models\Insert::class, 'insert_id');
     }
 }
