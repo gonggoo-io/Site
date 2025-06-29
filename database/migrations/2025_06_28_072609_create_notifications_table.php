@@ -13,6 +13,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->json('data');
             $table->timestamps();
+            $table->timestamp('read_at')->nullable();
         });
     }
 

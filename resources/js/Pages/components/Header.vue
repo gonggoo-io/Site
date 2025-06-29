@@ -18,7 +18,10 @@
           </Link>
           <button @click="handleBellClick" class="flex items-center gap-2 text-base text-[#2B2D36] font-normal transition-colors px-3.5 py-1.5 rounded-md hover:bg-gray-100 focus:outline-none">
             알림
-            <img :src="headerBellIcon" alt="bell" class="size-5" />
+            <span class="relative inline-block">
+              <img :src="headerBellIcon" alt="bell" class="size-5" />
+              <span v-if="unreadCount > 0" class="red-dot"></span>
+            </span>
           </button>
           <div class="relative" ref="desktopDropdownContainer">
             <button 
@@ -71,7 +74,10 @@
 
       <div class="md:hidden flex items-center gap-2" ref="mobileMenuButton">
         <button @click="handleBellClick" class="flex items-center">
-          <img :src="headerBellIcon" alt="bell" class="size-6" />
+          <span class="relative inline-block">
+            <img :src="headerBellIcon" alt="bell" class="size-6" />
+            <span v-if="unreadCount > 0" class="red-dot"></span>
+          </span>
         </button>
         <button @click="toggleMobileMenu">
           <img :src="headerHamburgerIcon" alt="menu" class="size-6" />
@@ -146,6 +152,7 @@ const mobileMenuButton = ref(null);
 const mobileMenuContainer = ref(null);
 
 const notifications = ref([]);
+const unreadCount = ref(0);
 
 watch(isMobileMenuOpen, (newVal) => {
   if (newVal) {
@@ -192,23 +199,52 @@ const handleBellClick = (e) => {
     router.visit('/notifications');
   } else {
     isNotificationModalOpen.value = !isNotificationModalOpen.value;
+    if (isNotificationModalOpen.value) {
+      axios.post('/api/notifications/read').then(() => {
+        unreadCount.value = 0;
+        notifications.value = notifications.value.map(n => ({ ...n, read_at: n.read_at || new Date().toISOString() }));
+      });
+    }
   }
 };
 
+let eventSource;
 onMounted(async () => {
   const res = await axios.get('/notifications');
   notifications.value = res.data;
+  try {
+    const streamRes = await axios.get('/api/notifications/unread-count');
+    unreadCount.value = streamRes.data.unread_count;
+  } catch {}
   document.addEventListener('mousedown', handleClickOutside);
+  eventSource = new EventSource('/api/notifications/stream');
+  eventSource.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    notifications.value = data.notifications;
+    unreadCount.value = data.unread_count;
+  };
 });
 
 onUnmounted(() => {
   document.removeEventListener('mousedown', handleClickOutside);
   document.body.style.overflow = '';
+  if (eventSource) eventSource.close();
 });
 </script>
 
 <style scoped>
 .rotate-180 {
   transform: rotate(180deg);
+}
+.red-dot {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 9px;
+  height: 9px;
+  background: #ff3b30;
+  border-radius: 50%;
+  border: 2px solid white;
+  z-index: 10;
 }
 </style>

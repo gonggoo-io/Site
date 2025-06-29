@@ -44,6 +44,7 @@ class BuyController extends Controller
                 'action' => '참여',
                 'group' => $insert->title ?? $insert->name ?? '공구',
                 'date' => now()->setTimezone('Asia/Seoul')->format('Y-m-d H:i'),
+                'insert_id' => $insert->id,
             ],
         ]);
 
@@ -72,6 +73,7 @@ class BuyController extends Controller
                 'action' => '취소',
                 'group' => $insert->title ?? $insert->name ?? '공구',
                 'date' => now()->setTimezone('Asia/Seoul')->format('Y-m-d H:i'),
+                'insert_id' => $insert->id,
             ],
         ]);
 

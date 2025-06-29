@@ -9,14 +9,14 @@
       </div>
       <div class="max-h-[60vh] overflow-y-auto px-4 py-3">
         <div v-if="notifications.length > 0" class="space-y-3">
-          <div v-for="notification in notifications" :key="notification.date + notification.user" class="bg-white rounded-xl p-4 border border-gray-100">
-            <div class="flex items-center space-x-3">
+          <div v-for="notification in notifications" :key="notification.id" class="bg-white rounded-xl p-4 border border-gray-100 cursor-pointer flex items-center" @click="goToContent(notification.insert_id)">
+            <div class="flex items-center space-x-3 w-full">
               <div class="flex-shrink-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                 <span class="text-xl font-semibold text-white">s</span>
               </div>
               <div class="flex-1 min-w-0">
-                <div class="text-sm text-gray-500 truncate max-w-[220px]">[11번가] 삼성 QLED TV KQ75QD63AFXKR 189cm(75인치) 4K 사운드바 무상증정</div>
-                <div class="text-gray-black text-sm font-medium">
+                <div class="text-sm text-gray-500 truncate max-w-[220px]">{{ notification.title }}</div>
+                <div :class="['text-gray-black text-sm font-medium', { 'font-bold': !notification.read_at }]">
                   {{ notification.user }}님이 {{ notification.group }}공구를 {{ notification.action }}하셨습니다.
                 </div>
                 <div class="text-xs text-gray-400">{{ notification.date }}</div>
@@ -34,6 +34,7 @@
 
 <script setup>
 import { defineProps, defineEmits } from 'vue';
+import { router } from '@inertiajs/vue3';
 const props = defineProps({
   open: Boolean,
   notifications: {
@@ -42,6 +43,12 @@ const props = defineProps({
   }
 });
 defineEmits(['close']);
+
+function goToContent(insertId) {
+  if (insertId) {
+    router.visit(`/content/${insertId}`);
+  }
+}
 </script>
 
 <style scoped>
