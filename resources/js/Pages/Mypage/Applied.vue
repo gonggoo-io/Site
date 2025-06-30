@@ -210,6 +210,7 @@ const handlePurchaseInput = (insertId) => {
 
 const groupedInserts = computed(() => {
   const groups = {}
+  const ownedInsertIds = new Set(inserts.value.map(insert => insert.id))
   
   inserts.value.forEach(insert => {
     const date = new Date(insert.created_at).toISOString().split('T')[0]
@@ -223,15 +224,17 @@ const groupedInserts = computed(() => {
   })
   
   buys.value.forEach(buy => {
-    const date = new Date(buy.created_at).toISOString().split('T')[0]
-    if (!groups[date]) {
-      groups[date] = []
+    if (!ownedInsertIds.has(buy.insert.id)) {
+      const date = new Date(buy.created_at).toISOString().split('T')[0]
+      if (!groups[date]) {
+        groups[date] = []
+      }
+      groups[date].push({
+        ...buy.insert,
+        type: 'buy',
+        buy_id: buy.id
+      })
     }
-    groups[date].push({
-      ...buy.insert,
-      type: 'buy',
-      buy_id: buy.id
-    })
   })
   
   return groups
@@ -262,7 +265,11 @@ const getActiveBuysCount = (insert) => {
   return insert.buys.filter(buy => buy.cancelled_at === null).length
 }
 
-const allItems = computed(() => [...inserts.value, ...buys.value])
+const allItems = computed(() => {
+  const ownedInsertIds = new Set(inserts.value.map(insert => insert.id))
+  const filteredBuys = buys.value.filter(buy => !ownedInsertIds.has(buy.insert.id))
+  return [...inserts.value, ...filteredBuys]
+})
 
 const totalCount = computed(() => allItems.value.length)
 
