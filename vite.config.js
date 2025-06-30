@@ -24,8 +24,11 @@ export default defineConfig({
         include: ['vue', '@inertiajs/vue3'],
     },
     server: {
-        host: 'localhost',
+        host: '0.0.0.0',
         port: 5173,
         cors: true,
+        hmr: {
+            host: '3.34.246.61',
+        },
     },
 });
