@@ -39,7 +39,7 @@
                     </span>
                   </div>
                   <div v-if="insert.description" class="text-sm text-gray-600 mb-3 line-clamp-2">
-                    {{ insert.description }} · <img src="/public/images/dashboard-users.svg" alt="users" class="w-3 h-3 inline mr-1" />{{ getActiveBuysCount(insert) }}/{{ insert.max_participants || 10 }}
+                    {{ insert.description }} · <img src="/public/images/dashboard-users.svg" alt="users" class="w-3 h-3 inline mr-1" />{{ getActiveBuysCount(insert) }}/{{ insert.people_count || 10 }}
                   </div>
                   <div class="flex space-x-3 mt-4">
                     <button 
@@ -50,14 +50,14 @@
                       상세보기
                     </button>
                     <button 
-                      v-if="insert.owner && getActiveBuysCount(insert) < (insert.max_participants || 10)"
+                      v-if="insert.owner && getActiveBuysCount(insert) < (insert.people_count || 10)"
                       disabled
                       class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium text-sm cursor-not-allowed"
                     >
                       주문하기
                     </button>
                     <button 
-                      v-if="insert.owner && getActiveBuysCount(insert) >= (insert.max_participants || 10)"
+                      v-if="insert.owner && getActiveBuysCount(insert) >= (insert.people_count || 10)"
                       @click.stop="handlePurchaseInput(insert.id)"
                       class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#247A4F] transition-all duration-200 font-medium text-sm"
                     >
