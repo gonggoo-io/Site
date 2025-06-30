@@ -33,6 +33,7 @@ class InsertResource extends JsonResource
             'deadline' => $this->deadline,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'owner' => auth()->id() === $this->user_id,
             'user' => $this->whenLoaded('user', function () {
                 return new UserResource($this->user);
             }),

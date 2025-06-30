@@ -212,11 +212,13 @@ onMounted(async () => {
   const res = await axios.get('/notifications');
   notifications.value = res.data;
   document.addEventListener('mousedown', handleClickOutside);
-  eventSource = new EventSource('/api/notifications/stream');
-  eventSource.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    notifications.value = data.notifications;
-  };
+  
+  // EventSource 연결을 임시로 비활성화
+  // eventSource = new EventSource('/api/notifications/stream');
+  // eventSource.onmessage = (event) => {
+  //   const data = JSON.parse(event.data);
+  //   notifications.value = data.notifications;
+  // };
 });
 
 onUnmounted(() => {

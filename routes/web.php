@@ -90,7 +90,7 @@ Route::middleware('auth')->group(function () {
         return response()->json([
             'user_id' => $userId,
             'inserts_count' => $inserts->count(),
-            'inserts' => $inserts->toArray()
+            'inserts' => \App\Http\Resources\InsertResource::collection($inserts)
         ]);
     });
 
