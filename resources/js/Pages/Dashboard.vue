@@ -20,7 +20,7 @@
           <div>
           </div>
           <div class="mt-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-8">
-            <div v-for="insert in inserts" :key="insert.id" class="cursor-pointer" @click="goToContent(insert.id)">
+            <div v-for="insert in visibleInserts" :key="insert.id" class="cursor-pointer" @click="goToContent(insert.id)">
               <div class="bg-gray-100 h-[150px] sm:h-[180px] rounded-2xl overflow-hidden">
                 <img v-if="insert.image" :src="insert.image" :alt="insert.title" class="w-full h-full object-cover" />
                 <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
@@ -47,7 +47,7 @@
   </template>
   
   <script setup>
-  import { ref, onMounted, onUnmounted } from 'vue'
+  import { ref, onMounted, onUnmounted, computed } from 'vue'
   import { router, usePage } from '@inertiajs/vue3'
   import Container from '../Pages/components/Container.vue'
   import Header from '../Pages/components/Header.vue'
@@ -190,5 +190,12 @@
   const goToInsert = () => {
     router.visit('/insert')
   }
+
+  const visibleInserts = computed(() => {
+    return inserts.filter(insert => {
+      const activeCount = insert.buys ? insert.buys.filter(buy => buy.cancelled_at === null).length : 0
+      return activeCount < (insert.people_count || 0)
+    })
+  })
   </script>
   
