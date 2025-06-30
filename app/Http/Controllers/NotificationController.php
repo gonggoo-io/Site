@@ -9,6 +9,39 @@ use App\Models\Notification;
 
 class NotificationController extends Controller
 {
+    public function index()
+    {
+        $userId = Auth::id();
+        if (!$userId) {
+            return response()->json([], 401);
+        }
+
+        $notifications = Notification::where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function($n) {
+                $data = $n->data;
+                return [
+                    'id' => $n->id,
+                    'user' => $data['user'] ?? null,
+                    'action' => $data['action'] ?? null,
+                    'group' => $data['group'] ?? null,
+                    'date' => $data['date'] ?? $n->created_at->format('Y-m-d H:i'),
+                    'read_at' => $n->read_at,
+                    'title' => $data['title'] ?? $data['group'] ?? null,
+                    'insert_id' => $data['insert_id'] ?? null,
+                    'type' => $data['type'] ?? null,
+                    'courier' => $data['courier'] ?? null,
+                    'tracking_number' => $data['tracking_number'] ?? null,
+                    'bank' => $data['bank'] ?? null,
+                    'account_number' => $data['account_number'] ?? null,
+                    'message' => $data['message'] ?? null,
+                ];
+            });
+
+        return response()->json($notifications);
+    }
+
     public function stream(Request $request)
     {
         $userId = Auth::id();
@@ -31,8 +64,14 @@ class NotificationController extends Controller
                         'group' => $data['group'] ?? null,
                         'date' => $data['date'] ?? $n->created_at->format('Y-m-d H:i'),
                         'read_at' => $n->read_at,
-                        'title' => $data['group'] ?? null,
+                        'title' => $data['title'] ?? $data['group'] ?? null,
                         'insert_id' => $data['insert_id'] ?? null,
+                        'type' => $data['type'] ?? null,
+                        'courier' => $data['courier'] ?? null,
+                        'tracking_number' => $data['tracking_number'] ?? null,
+                        'bank' => $data['bank'] ?? null,
+                        'account_number' => $data['account_number'] ?? null,
+                        'message' => $data['message'] ?? null,
                     ];
                 });
             $unreadCount = Notification::where('user_id', $userId)->whereNull('read_at')->count();

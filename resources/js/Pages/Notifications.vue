@@ -12,7 +12,17 @@
               <div class="flex-1 min-w-0">
                 <div class="text-sm text-gray-500 truncate max-w-[220px]">{{ notification.title }}</div>
                 <div :class="['text-gray-black text-sm font-medium', { 'font-bold': !notification.read_at }]">
-                  {{ notification.user }}님이 {{ notification.group }}공구를 {{ notification.action }}하셨습니다.
+                  <div v-if="notification.type === 'purchase_completed'">
+                    <div class="font-semibold mb-2">{{ notification.user }}님이 {{ notification.group }}공구를 {{ notification.action }}하셨습니다.</div>
+                    <div class="text-xs text-gray-600 space-y-1">
+                      <div><strong>택배사:</strong> {{ notification.courier }}</div>
+                      <div><strong>운송장번호:</strong> {{ notification.tracking_number }}</div>
+                      <div><strong>입금 정보:</strong> {{ notification.bank }} {{ notification.account_number }}</div>
+                    </div>
+                  </div>
+                  <div v-else>
+                    {{ notification.user }}님이 {{ notification.group }}공구를 {{ notification.action }}하셨습니다.
+                  </div>
                   <span v-if="!notification.read_at" class="inline-block ml-2 w-2 h-2 bg-red-500 rounded-full align-middle"></span>
                 </div>
                 <div class="text-xs text-gray-400">{{ notification.date }}</div>
@@ -43,7 +53,7 @@
   const notifications = ref([]);
   
   onMounted(async () => {
-    const res = await axios.get('/notifications');
+    const res = await axios.get('/api/notifications');
     notifications.value = res.data;
   });
   

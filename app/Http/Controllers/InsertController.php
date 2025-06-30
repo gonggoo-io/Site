@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Insert;
 use App\Models\Buy;
+use App\Models\Notification;
 use App\Http\Resources\InsertResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -120,6 +121,98 @@ class InsertController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to delete insert'
+            ], 500);
+        }
+    }
+
+    public function submitTrackingNumber(Request $request, $id)
+    {
+        try {
+            if (!auth()->check()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not authenticated'
+                ], 401);
+            }
+
+            $request->validate([
+                'tracking_number' => 'required|string|max:255',
+                'courier' => 'required|string|max:255'
+            ]);
+
+            $insert = Insert::with(['user', 'buys.user'])->findOrFail($id);
+            
+            // 공구 주인만 운송장번호를 입력할 수 있음
+            if ($insert->user_id !== auth()->id()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Only the insert owner can submit tracking number'
+                ], 403);
+            }
+
+            // 운송장번호, 택배사 업데이트
+            $insert->update([
+                'tracking_number' => $request->tracking_number,
+                'courier' => $request->courier,
+                'purchased_at' => now()->setTimezone('Asia/Seoul')
+            ]);
+
+            // 참여자들에게 알림 전송
+            $activeBuys = $insert->buys()->whereNull('cancelled_at')->get();
+            
+            foreach ($activeBuys as $buy) {
+                // 공구 주인에게는 알림을 보내지 않음
+                if ($buy->user_id === $insert->user_id) {
+                    continue;
+                }
+
+                Notification::create([
+                    'user_id' => $buy->user_id,
+                    'data' => [
+                        'user' => $insert->user->name,
+                        'action' => '구매 완료',
+                        'group' => $insert->title,
+                        'date' => now()->setTimezone('Asia/Seoul')->format('Y-m-d H:i'),
+                        'insert_id' => $insert->id,
+                        'title' => '공구 상품 구매 완료',
+                        'message' => "[{$insert->title}] 공구의 상품이 구매되었습니다.\n\n" .
+                            "택배사: {$request->courier}\n" .
+                            "운송장번호: {$request->tracking_number}\n\n" .
+                            "입금 정보\n" .
+                            "은행: {$insert->bank}\n" .
+                            "계좌번호: {$insert->account_number}",
+                        'type' => 'purchase_completed',
+                        'courier' => $request->courier,
+                        'tracking_number' => $request->tracking_number,
+                        'bank' => $insert->bank,
+                        'account_number' => $insert->account_number
+                    ]
+                ]);
+            }
+
+            Log::info('Tracking number submitted successfully:', [
+                'insert_id' => $id,
+                'tracking_number' => $request->tracking_number,
+                'courier' => $request->courier,
+                'notifications_sent' => $activeBuys->count() - 1
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Tracking number submitted successfully',
+                'notifications_sent' => $activeBuys->count() - 1
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error submitting tracking number:', [
+                'error' => $e->getMessage(),
+                'insert_id' => $id,
+                'user_id' => auth()->id()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to submit tracking number'
             ], 500);
         }
     }

@@ -25,7 +25,7 @@
               <section 
                 v-for="insert in group" 
                 :key="insert.id" 
-                @click="goToContent(insert.id)"
+                @click.self="goToContent(insert.id)"
                 class="bg-white rounded-xl p-6 mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between border border-gray-200/60 shadow-sm transition-all duration-200 w-full cursor-pointer"
               >
                 <div class="w-full">
@@ -41,6 +41,47 @@
                   <div v-if="insert.description" class="text-sm text-gray-600 mb-3 line-clamp-2">
                     {{ insert.description }} · <img src="/public/images/dashboard-users.svg" alt="users" class="w-3 h-3 inline mr-1" />{{ getActiveBuysCount(insert) }}/{{ insert.people_count || 10 }}
                   </div>
+
+                  <div v-if="showTrackingInput === insert.id" class="mb-4 p-4 bg-gray-50 rounded-lg">
+                    <div class="text-sm font-medium text-gray-700 mb-2">운송장번호 입력</div>
+                    <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+                      <select v-model="selectedCourier" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full sm:w-auto" :disabled="isSubmittingTracking">
+                        <option value="">택배사 선택</option>
+                        <option value="CJ대한통운">CJ대한통운</option>
+                        <option value="한진택배">한진택배</option>
+                        <option value="우체국택배">우체국택배</option>
+                        <option value="롯데택배">롯데택배</option>
+                        <option value="로젠택배">로젠택배</option>
+                        <option value="경동택배">경동택배</option>
+                        <option value="일양로지스">일양로지스</option>
+                        <option value="CU편의점택배">CU편의점택배</option>
+                        <option value="GSPostbox">GSPostbox</option>
+                        <option value="기타">기타</option>
+                      </select>
+                      <input 
+                        v-model="trackingNumber"
+                        type="text" 
+                        placeholder="운송장번호를 입력하세요"
+                        class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        :disabled="isSubmittingTracking"
+                      />
+                      <button 
+                        @click="submitTrackingNumber(insert.id)"
+                        :disabled="!trackingNumber.trim() || !selectedCourier || isSubmittingTracking"
+                        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#247A4F] transition-all duration-200 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {{ isSubmittingTracking ? '처리중...' : '입력완료' }}
+                      </button>
+                      <button 
+                        @click="cancelTrackingInput"
+                        :disabled="isSubmittingTracking"
+                        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-all duration-200 font-medium text-sm"
+                      >
+                        취소
+                      </button>
+                    </div>
+                  </div>
+                  
                   <div class="flex space-x-3 mt-4">
                     <button 
                       v-if="!insert.owner"
@@ -96,6 +137,10 @@ const buys = ref([])
 const isLoadingInserts = ref(true)
 const isLoadingBuys = ref(true)
 const isCancelling = ref(false)
+const showTrackingInput = ref(null)
+const trackingNumber = ref('')
+const isSubmittingTracking = ref(false)
+const selectedCourier = ref("")
 
 const fetchInserts = async () => {
   try {
@@ -205,7 +250,52 @@ const cancelInsert = async (insertId) => {
 }
 
 const handlePurchaseInput = (insertId) => {
-  alert('구매 입력 기능은 준비 중입니다.')
+  showTrackingInput.value = insertId
+  trackingNumber.value = ''
+  selectedCourier.value = ''
+}
+
+const cancelTrackingInput = () => {
+  showTrackingInput.value = null
+  trackingNumber.value = ''
+  selectedCourier.value = ''
+}
+
+const submitTrackingNumber = async (insertId) => {
+  if (!trackingNumber.value.trim() || !selectedCourier.value) return
+  
+  try {
+    isSubmittingTracking.value = true
+    
+    const response = await fetch(`/insert/${insertId}/tracking`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: JSON.stringify({
+        tracking_number: trackingNumber.value.trim(),
+        courier: selectedCourier.value
+      })
+    })
+    
+    if (response.ok) {
+      const data = await response.json()
+      alert('운송장번호가 성공적으로 입력되었습니다. 참여자들에게 알림이 전송되었습니다.')
+      cancelTrackingInput()
+      await fetchInserts()
+      await fetchBuys()
+    } else {
+      const errorData = await response.json()
+      alert(errorData.message || '운송장번호 입력에 실패했습니다.')
+    }
+  } catch (error) {
+    console.error('Error submitting tracking number:', error)
+    alert('운송장번호 입력 중 오류가 발생했습니다.')
+  } finally {
+    isSubmittingTracking.value = false
+  }
 }
 
 const groupedInserts = computed(() => {

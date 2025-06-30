@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/insert-deposit', fn () => Inertia::render('Insert/InsertDeposit'))->name('insert.deposit');
     Route::post('/insert', [InsertController::class, 'store']);
     Route::delete('/insert/{id}', [InsertController::class, 'destroy'])->name('insert.destroy');
+    Route::post('/insert/{id}/tracking', [InsertController::class, 'submitTrackingNumber'])->name('insert.tracking');
 
     Route::post('/buy', [BuyController::class, 'store'])->name('buy.store');
     Route::delete('/buy', [BuyController::class, 'destroy'])->name('buy.destroy');
@@ -59,6 +60,7 @@ Route::middleware('auth')->group(function () {
     })->middleware(['auth']);
 
     Route::get('/notifications', fn () => Inertia::render('Notifications'))->name('notifications');
+    Route::get('/api/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('api.notifications');
 
     Route::get('/mypage', function () {
         return redirect('/mypage/applied');

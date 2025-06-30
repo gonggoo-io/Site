@@ -209,16 +209,9 @@ const handleBellClick = (e) => {
 
 let eventSource;
 onMounted(async () => {
-  const res = await axios.get('/notifications');
+  const res = await axios.get('/api/notifications');
   notifications.value = res.data;
   document.addEventListener('mousedown', handleClickOutside);
-  
-  // EventSource 연결을 임시로 비활성화
-  // eventSource = new EventSource('/api/notifications/stream');
-  // eventSource.onmessage = (event) => {
-  //   const data = JSON.parse(event.data);
-  //   notifications.value = data.notifications;
-  // };
 });
 
 onUnmounted(() => {
