@@ -42,7 +42,6 @@
                     {{ insert.description }} · <img src="/public/images/dashboard-users.svg" alt="users" class="w-3 h-3 inline mr-1" />{{ getActiveBuysCount(insert) }}/{{ insert.people_count || 10 }}
                   </div>
                   
-                  <!-- 배송 정보 표시 -->
                   <div class="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                     <div class="flex items-center text-blue-700">
                       <span class="text-sm font-medium">🚚 배송중</span>
@@ -119,7 +118,7 @@ const fetchBuys = async () => {
     
     if (response.ok) {
       const data = await response.json()
-      buys.value = data.buys || []
+      buys.value = data.all_buys || []
     } else {
       console.error('Failed to fetch buys:', response.status, response.statusText)
     }
@@ -144,45 +143,30 @@ const isShipping = (insert) => {
 }
 
 const shippingItems = computed(() => {
-  const ownedInsertIds = new Set(inserts.value.map(insert => insert.id))
-  const filteredBuys = buys.value.filter(buy => !ownedInsertIds.has(buy.insert.id))
-  const allItems = [...inserts.value, ...filteredBuys]
-  
-  // 운송장번호가 입력된 항목만 필터링
-  return allItems.filter(item => isShipping(item))
+  const shippingInserts = inserts.value
+    .filter(insert => isShipping(insert))
+    .map(insert => ({ ...insert, type: 'insert' }))
+
+  const shippingBuys = buys.value
+    .filter(buy => isShipping(buy.insert))
+    .map(buy => ({
+      ...buy.insert,
+      type: 'buy',
+      buy_id: buy.id
+    }))
+
+  return [...shippingInserts, ...shippingBuys]
 })
 
 const groupedShippingItems = computed(() => {
   const groups = {}
-  const ownedInsertIds = new Set(inserts.value.map(insert => insert.id))
-  
-  inserts.value.forEach(insert => {
-    if (isShipping(insert)) {
-      const date = new Date(insert.purchased_at || insert.created_at).toISOString().split('T')[0]
-      if (!groups[date]) {
-        groups[date] = []
-      }
-      groups[date].push({
-        ...insert,
-        type: 'insert'
-      })
-    }
+
+  shippingItems.value.forEach(item => {
+    const date = new Date(item.purchased_at || item.created_at).toISOString().split('T')[0]
+    if (!groups[date]) groups[date] = []
+    groups[date].push(item)
   })
-  
-  buys.value.forEach(buy => {
-    if (!ownedInsertIds.has(buy.insert.id) && isShipping(buy.insert)) {
-      const date = new Date(buy.insert.purchased_at || buy.created_at).toISOString().split('T')[0]
-      if (!groups[date]) {
-        groups[date] = []
-      }
-      groups[date].push({
-        ...buy.insert,
-        type: 'buy',
-        buy_id: buy.id
-      })
-    }
-  })
-  
+
   return groups
 })
 

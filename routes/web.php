@@ -70,16 +70,36 @@ Route::middleware('auth')->group(function () {
     Route::get('/mypage/completed', fn () => Inertia::render('Mypage/Completed'))->name('mypage.completed');
     Route::get('/debug/my-buys', function () {
         $userId = auth()->id();
-        $buys = \App\Models\Buy::with(['insert.user', 'insert.buys'])
+        $user = auth()->user();
+        
+        // 모든 buy 기록 (취소된 것 포함)
+        $allBuys = \App\Models\Buy::with(['insert.user', 'insert.buys'])
+            ->where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        // 취소되지 않은 buy 기록
+        $activeBuys = \App\Models\Buy::with(['insert.user', 'insert.buys'])
             ->where('user_id', $userId)
             ->whereNull('cancelled_at')
             ->orderBy('created_at', 'desc')
             ->get();
-        
+            
+        // 사용자가 만든 insert들
+        $userInserts = \App\Models\Insert::with(['user', 'buys'])
+            ->where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
         return response()->json([
             'user_id' => $userId,
-            'buys_count' => $buys->count(),
-            'buys' => $buys->toArray()
+            'user_email' => $user->email ?? 'N/A',
+            'all_buys_count' => $allBuys->count(),
+            'active_buys_count' => $activeBuys->count(),
+            'user_inserts_count' => $userInserts->count(),
+            'all_buys' => \App\Http\Resources\BuyResource::collection($allBuys),
+            'active_buys' => \App\Http\Resources\BuyResource::collection($activeBuys),
+            'user_inserts' => \App\Http\Resources\InsertResource::collection($userInserts),
         ]);
     });
 

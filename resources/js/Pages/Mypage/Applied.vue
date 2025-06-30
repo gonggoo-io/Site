@@ -193,7 +193,7 @@ const fetchBuys = async () => {
     if (response.ok) {
       const data = await response.json()
       console.log('Buys data:', data)
-      buys.value = data.buys || []
+      buys.value = data.all_buys || []
     } else {
       console.error('Failed to fetch buys:', response.status, response.statusText)
     }
@@ -350,10 +350,7 @@ const allItems = computed(() => {
     buy_id: buy.id
   }))
   
-  const allItems = [...allInserts, ...allBuys]
-  
-  // 운송장번호가 입력되지 않은 항목만 필터링 (배송중이 아닌 항목)
-  return allItems.filter(item => !(item.tracking_number && item.courier))
+  return [...allInserts, ...allBuys]
 })
 
 const totalCount = computed(() => allItems.value.length)
