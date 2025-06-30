@@ -91,20 +91,21 @@
                       상세보기
                     </button>
                     <button 
-                      v-if="insert.owner && getActiveBuysCount(insert) < (insert.people_count || 10)"
-                      disabled
-                      class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium text-sm cursor-not-allowed"
-                    >
-                      주문하기
-                    </button>
-                    <button 
-                      v-if="insert.owner && getActiveBuysCount(insert) >= (insert.people_count || 10)"
+                      v-if="insert.owner && getActiveBuysCount(insert) >= (insert.people_count || 10) && !isShipping(insert)"
                       @click.stop="handlePurchaseInput(insert.id)"
                       class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#247A4F] transition-all duration-200 font-medium text-sm"
                     >
                       구매 입력
                     </button>
                     <button 
+                      v-if="isShipping(insert)"
+                      disabled
+                      class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium text-sm cursor-not-allowed"
+                    >
+                      🚚 배송중
+                    </button>
+                    <button 
+                      v-if="!isShipping(insert)"
                       @click.stop="cancelInsert(insert.id)"
                       class="px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200"
                       :class="insert.owner ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
@@ -266,7 +267,6 @@ const submitTrackingNumber = async (insertId) => {
   
   try {
     isSubmittingTracking.value = true
-    
     const response = await fetch(`/insert/${insertId}/tracking`, {
       method: 'POST',
       headers: {
@@ -281,7 +281,6 @@ const submitTrackingNumber = async (insertId) => {
     })
     
     if (response.ok) {
-      const data = await response.json()
       alert('운송장번호가 성공적으로 입력되었습니다. 참여자들에게 알림이 전송되었습니다.')
       cancelTrackingInput()
       await fetchInserts()
@@ -291,7 +290,6 @@ const submitTrackingNumber = async (insertId) => {
       alert(errorData.message || '운송장번호 입력에 실패했습니다.')
     }
   } catch (error) {
-    console.error('Error submitting tracking number:', error)
     alert('운송장번호 입력 중 오류가 발생했습니다.')
   } finally {
     isSubmittingTracking.value = false
@@ -300,31 +298,13 @@ const submitTrackingNumber = async (insertId) => {
 
 const groupedInserts = computed(() => {
   const groups = {}
-  const ownedInsertIds = new Set(inserts.value.map(insert => insert.id))
   
-  inserts.value.forEach(insert => {
-    const date = new Date(insert.created_at).toISOString().split('T')[0]
+  allItems.value.forEach(item => {
+    const date = new Date(item.created_at).toISOString().split('T')[0]
     if (!groups[date]) {
       groups[date] = []
     }
-    groups[date].push({
-      ...insert,
-      type: 'insert'
-    })
-  })
-  
-  buys.value.forEach(buy => {
-    if (!ownedInsertIds.has(buy.insert.id)) {
-      const date = new Date(buy.created_at).toISOString().split('T')[0]
-      if (!groups[date]) {
-        groups[date] = []
-      }
-      groups[date].push({
-        ...buy.insert,
-        type: 'buy',
-        buy_id: buy.id
-      })
-    }
+    groups[date].push(item)
   })
   
   return groups
@@ -358,7 +338,22 @@ const getActiveBuysCount = (insert) => {
 const allItems = computed(() => {
   const ownedInsertIds = new Set(inserts.value.map(insert => insert.id))
   const filteredBuys = buys.value.filter(buy => !ownedInsertIds.has(buy.insert.id))
-  return [...inserts.value, ...filteredBuys]
+  
+  const allInserts = inserts.value.map(insert => ({
+    ...insert,
+    type: 'insert'
+  }))
+  
+  const allBuys = filteredBuys.map(buy => ({
+    ...buy.insert,
+    type: 'buy',
+    buy_id: buy.id
+  }))
+  
+  const allItems = [...allInserts, ...allBuys]
+  
+  // 운송장번호가 입력되지 않은 항목만 필터링 (배송중이 아닌 항목)
+  return allItems.filter(item => !(item.tracking_number && item.courier))
 })
 
 const totalCount = computed(() => allItems.value.length)
@@ -372,6 +367,11 @@ const dateRange = computed(() => {
   
   return `${minDate.getFullYear()}. ${String(minDate.getMonth() + 1).padStart(2, '0')}.${String(minDate.getDate()).padStart(2, '0')} ~ ${maxDate.getFullYear()}. ${String(maxDate.getMonth() + 1).padStart(2, '0')}.${String(maxDate.getDate()).padStart(2, '0')}`
 })
+
+const isShipping = (insert) => {
+  if (!insert || !insert.tracking_number || !insert.courier) return false
+  return true
+}
 
 onMounted(() => {
   fetchInserts()

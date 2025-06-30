@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('insert', function (Blueprint $table) {
-            $table->string('tracking_number')->nullable()->after('account_number');
             $table->string('courier')->nullable()->after('tracking_number');
         });
     }
@@ -23,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('insert', function (Blueprint $table) {
-            $table->dropColumn(['tracking_number', 'courier']);
+            $table->dropColumn('courier');
         });
     }
 };

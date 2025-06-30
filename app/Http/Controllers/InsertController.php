@@ -128,7 +128,14 @@ class InsertController extends Controller
     public function submitTrackingNumber(Request $request, $id)
     {
         try {
+            Log::info('submitTrackingNumber called', [
+                'insert_id' => $id,
+                'user_id' => auth()->id(),
+                'request_data' => $request->all()
+            ]);
+
             if (!auth()->check()) {
+                Log::error('User not authenticated in submitTrackingNumber');
                 return response()->json([
                     'success' => false,
                     'message' => 'User not authenticated'
@@ -141,27 +148,46 @@ class InsertController extends Controller
             ]);
 
             $insert = Insert::with(['user', 'buys.user'])->findOrFail($id);
+            Log::info('Insert found', ['insert' => $insert->toArray()]);
             
-            // 공구 주인만 운송장번호를 입력할 수 있음
             if ($insert->user_id !== auth()->id()) {
+                Log::error('User is not the owner', [
+                    'insert_user_id' => $insert->user_id,
+                    'current_user_id' => auth()->id()
+                ]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Only the insert owner can submit tracking number'
                 ], 403);
             }
 
-            // 운송장번호, 택배사 업데이트
+            if ($insert->tracking_number && $insert->courier) {
+                Log::warning('Tracking number already exists', [
+                    'existing_tracking_number' => $insert->tracking_number,
+                    'existing_courier' => $insert->courier
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tracking number has already been submitted for this insert'
+                ], 400);
+            }
+
+            Log::info('Updating insert with tracking number', [
+                'tracking_number' => $request->tracking_number,
+                'courier' => $request->courier
+            ]);
+
             $insert->update([
                 'tracking_number' => $request->tracking_number,
                 'courier' => $request->courier,
                 'purchased_at' => now()->setTimezone('Asia/Seoul')
             ]);
 
-            // 참여자들에게 알림 전송
+            Log::info('Insert updated successfully', ['insert_id' => $id]);
+
             $activeBuys = $insert->buys()->whereNull('cancelled_at')->get();
             
             foreach ($activeBuys as $buy) {
-                // 공구 주인에게는 알림을 보내지 않음
                 if ($buy->user_id === $insert->user_id) {
                     continue;
                 }

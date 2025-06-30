@@ -13,7 +13,8 @@ class Insert extends BaseModel
     protected $table = 'insert';
     protected $fillable = [
         'user_id', 'title', 'description', 'image', 'link', 'price', 'people_count', 
-        'per_person_count', 'address', 'bank', 'account_number', 'deadline', 'count'
+        'per_person_count', 'address', 'bank', 'account_number', 'deadline', 'count',
+        'tracking_number', 'courier', 'purchased_at'
     ];   
 
     public function user()

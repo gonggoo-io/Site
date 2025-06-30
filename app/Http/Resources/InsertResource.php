@@ -40,6 +40,8 @@ class InsertResource extends JsonResource
             'buys' => $this->whenLoaded('buys', function () {
                 return BuyResource::collection($this->buys);
             }),
+            'tracking_number' => $this->tracking_number,
+            'courier' => $this->courier,
         ];
     }
 }

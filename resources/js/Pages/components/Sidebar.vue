@@ -10,26 +10,17 @@
         ]"
         @click="goTo('/mypage/applied')"
       >
-        마이페이지
+        진행중인 공구
       </li>
-      <!-- <li
+      <li
         :class="[
           'text-lg mb-0 lg:mb-6 cursor-pointer whitespace-nowrap text-left w-full py-3',
           active === 'shipping' ? 'text-black font-bold' : 'text-gray-400'
         ]"
         @click="goTo('/mypage/shipping')"
       >
-        배송 중인 거래
+        배송중인 거래
       </li>
-      <li
-        :class="[
-          'text-lg mb-0 lg:mb-6 cursor-pointer whitespace-nowrap text-left w-full py-3',
-          active === 'completed' ? 'text-black font-bold' : 'text-gray-400'
-        ]"
-        @click="goTo('/mypage/completed')"
-      >
-        완료된 거래
-      </li> -->
     </ul>
   </aside>
 </template>
