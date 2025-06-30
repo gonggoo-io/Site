@@ -1,66 +1,27 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## '공구' 기획
+공동구매라고 하면 보통 판매자가 상품을 등록하고, 일정 수량이 모이면 판매가 이루어지는 방식입니다.
+하지만 제가 기숙사 학교에서 생활을 하며 친구들과 공구를 할 때는 쿠팡, 알리익스프레스 등 플랫폼에 올려진 물품을 공동구매 하는 방법으로 하게 되었습니다.
+이 방법으로 공구를 하게 되면 살만할 친구들에게 카톡으로 보내고, 계좌도 보내며 1인당 가져가는 개수 등등 여러가지를 톡으로만 주고 받아야 했습니다.
+![Image](https://github.com/user-attachments/assets/f26cc943-eb8f-41d9-808d-e4f95edb87b7)
+이 불편함을 저는 서비스로 만들어서 좀 더 편하게 친구들에게 링크만으로 공유하고, 미리 작성해놓은 계좌 번호를 알림으로 보내면서 정말 간편하고 빠르게 공동구매가 이루어지도록 해결하고 싶어 공구를 개발하게 되었습니다.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+공구를 사용하면 직장 동료, 학교 친구, 아파트 주민등 다양한 영역에서 물건을 공구를 하는 것을 목표로 개발하였습니다.
 
-## About Laravel
+## 프로젝트 설계 (지도)
+아뮤즈 홈페이지 중 채용 부분을 보며 지도 API 리소스 관련 사용한 경험이 있으면 우대한다는 것을 본 적이 있었습니다. 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+이 사항을 프로젝트에 직접적으로 적용하고 싶었고, 공구 배송 위치를 알리는데 Kakao Map API를 사용하였습니다.
+- 등록에서 공구 지역을 검색할 때 카카오맵 검색 API를 사용하여 설계하였습니다.
+- 콘텐츠 영역에서 공구 지역을 사용자들께 보여줄 때 지도에 마커를 설정해 띄웠습니다. 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 프로젝트 설계 (알림)
+공구에 참여하거나, 취소, 공구가 성사되었을 때 입금 계좌 정보와 배송 정보를 유저에게 알리는데 알림을 사용했습니다.
+공구를 하면서 알림은 무조건 필요한 방법이라고 생각했습니다. 하지만 앱이 아니였고, 웹앱 이였기에 푸쉬 알림은 서비스에 적절하지 않다고 생각했습니다.
+방법을 찾던 도중 SSE라는 것을 알게되었고, 이 방법을 사용해 실시간 알림을 구현하였습니다. 
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 프로젝트 설계 (등록 og meta)
+공구에 대한 내용을 등록하기 위해서는 초반에 타이틀, 설명 등 꽤 귀찮은 정보를 적어야 합니다.
+이 귀찮음을 조금이나마 덜기 위해서 open graph라는 기술을 사용했습니다.
+개발자 도구에서 source에 나와있는 각 내용에 대한 타이틀, 설명, 이미지 URL을 가져와서 띄우는 방식이였습니다. 
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+개발을 하면서 왠만한 쇼핑 사이트에서는 og meta가 작동했지만 테스트한 서비스 중 쿠팡, 지마켓, 옥션에서는 og meta 태그를 가져가능 것을 막아 놓아 직접 입력 하는 방식으로 구현하게 되었습니다. 
