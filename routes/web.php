@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/insert-details', fn () => Inertia::render('Insert/InsertDetail'))->name('insert.details');
     Route::get('/insert-deposit', fn () => Inertia::render('Insert/InsertDeposit'))->name('insert.deposit');
     Route::post('/insert', [InsertController::class, 'store']);
+    Route::delete('/insert/{id}', [InsertController::class, 'destroy'])->name('insert.destroy');
 
     Route::post('/buy', [BuyController::class, 'store'])->name('buy.store');
     Route::delete('/buy', [BuyController::class, 'destroy'])->name('buy.destroy');

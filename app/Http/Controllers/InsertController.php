@@ -82,4 +82,45 @@ class InsertController extends Controller
             ], 500);
         }
     }
+
+    public function destroy($id)
+    {
+        try {
+            if (!auth()->check()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not authenticated'
+                ], 401);
+            }
+
+            $insert = Insert::findOrFail($id);
+            if ($insert->user_id !== auth()->id()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You can only delete your own inserts'
+                ], 403);
+            }
+
+            Buy::where('insert_id', $id)->delete();
+            $insert->delete();
+
+            Log::info('Insert deleted successfully:', ['insert_id' => $id, 'user_id' => auth()->id()]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Insert deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error deleting insert:', [
+                'error' => $e->getMessage(),
+                'insert_id' => $id,
+                'user_id' => auth()->id()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete insert'
+            ], 500);
+        }
+    }
 }
