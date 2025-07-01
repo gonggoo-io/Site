@@ -65,6 +65,11 @@ jobs:
         run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd /home/ubuntu/Site
+
+            # ✅ 퍼미션 설정 추가
+            sudo chown -R www-data:www-data storage bootstrap/cache
+            sudo chmod -R 775 storage bootstrap/cache
+
             git pull origin develop
             composer install --no-dev --optimize-autoloader
             pnpm install
