@@ -1,32 +1,82 @@
-- name: Deploy to EC2
-  run: |
-    ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-      TIMESTAMP=$(date +%Y%m%d%H%M%S)
-      RELEASE_DIR=/home/ubuntu/Site/releases/$TIMESTAMP
+name: Deploy Laravel + Vue with pnpm to EC2
 
-      # 릴리즈 디렉토리 생성
-      mkdir -p $RELEASE_DIR
+on:
+  push:
+    branches:
+      - develop
 
-      # 코드 복사
-      git clone --depth=1 --branch develop https://github.com/your/repo.git $RELEASE_DIR
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
 
-      cd $RELEASE_DIR
+    steps:
+      # 1. Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      composer install --no-dev --optimize-autoloader
-      pnpm install
-      pnpm run build
+      # 2. Setup PHP
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          extensions: mbstring, bcmath, curl, pdo, xml
 
-      # 심볼릭 링크 연결
-      ln -sfn /home/ubuntu/Site/shared/storage $RELEASE_DIR/storage
-      ln -sfn /home/ubuntu/Site/shared/bootstrap/cache $RELEASE_DIR/bootstrap/cache
+      # 3. Setup Node.js and pnpm
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
-      php artisan migrate --force
-      php artisan config:cache
-      php artisan route:cache
-      php artisan view:cache
+      - name: Install pnpm
+        run: npm install -g pnpm
 
-      # current 심볼릭 링크 교체 (무중단 배포 핵심)
-      ln -sfn $RELEASE_DIR /home/ubuntu/Site/current
+      # 4. Set up SSH
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      echo "✅ Deployment to $RELEASE_DIR completed."
-    EOF
+      # 5. Deploy to EC2
+      - name: Deploy to EC2 server with zero-downtime
+        run: |
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
+
+            TIMESTAMP=$(date +%Y%m%d%H%M%S)
+            BASE_DIR=/home/ubuntu/Site
+            RELEASE_DIR=$BASE_DIR/releases/$TIMESTAMP
+            SHARED_DIR=$BASE_DIR/shared
+            REPO_URL=git@github.com:your/repo.git  # ✅ 바꿔주세요
+
+            # 1. 릴리스 디렉토리 만들기
+            mkdir -p $RELEASE_DIR
+
+            # 2. 코드 클론
+            git clone --depth=1 --branch develop $REPO_URL $RELEASE_DIR
+
+            # 3. 백엔드 설치
+            cd $RELEASE_DIR
+            composer install --no-dev --optimize-autoloader
+
+            # 4. 프론트엔드 빌드
+            pnpm install
+            pnpm run build
+
+            # 5. 스토리지 심볼릭 링크 연결
+            rm -rf $RELEASE_DIR/storage
+            ln -sfn $SHARED_DIR/storage $RELEASE_DIR/storage
+            ln -sfn $SHARED_DIR/bootstrap/cache $RELEASE_DIR/bootstrap/cache
+
+            # 6. Laravel 마이그레이션 및 캐시
+            php artisan migrate --force
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+
+            # 7. 심볼릭 링크 교체 (무중단 핵심)
+            ln -sfn $RELEASE_DIR $BASE_DIR/current
+
+            echo "✅ Deployed to $RELEASE_DIR"
+          EOF
