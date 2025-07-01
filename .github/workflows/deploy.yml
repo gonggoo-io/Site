@@ -1,4 +1,4 @@
-name: Deploy Laravel + Vue with pnpm to EC2
+name: Deploy Laravel + Vite to EC2
 
 on:
   push:
@@ -10,19 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
-      - name: Checkout code
+      - name: Checkout source
         uses: actions/checkout@v3
 
-      # 2. Setup PHP
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.4
           extensions: mbstring, bcmath, curl, pdo, xml
 
-      # 3. Setup Node.js and pnpm
-      - name: Setup Node.js
+      - name: Setup Node.js & pnpm
         uses: actions/setup-node@v3
         with:
           node-version: 20
@@ -30,7 +27,6 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      # 4. Set up SSH
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -38,45 +34,50 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      # 5. Deploy to EC2
-      - name: Deploy to EC2 server with zero-downtime
+      - name: Deploy to EC2
         run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             set -e
 
-            TIMESTAMP=$(date +%Y%m%d%H%M%S)
+            # 📦 디렉토리 변수
             BASE_DIR=/home/ubuntu/Site
-            RELEASE_DIR=$BASE_DIR/releases/$TIMESTAMP
+            RELEASES_DIR=$BASE_DIR/releases
+            TIMESTAMP=$(date +%Y%m%d%H%M%S)
+            NEW_RELEASE=$RELEASES_DIR/$TIMESTAMP
             SHARED_DIR=$BASE_DIR/shared
-            REPO_URL=git@github.com:your/repo.git  # ✅ 바꿔주세요
 
-            # 1. 릴리스 디렉토리 만들기
-            mkdir -p $RELEASE_DIR
+            echo "📁 새로운 릴리스 디렉토리 생성: \$NEW_RELEASE"
+            mkdir -p \$NEW_RELEASE
 
-            # 2. 코드 클론
-            git clone --depth=1 --branch develop $REPO_URL $RELEASE_DIR
+            echo "📥 저장소 클론"
+            git clone git@github.com:gonggoo-io/Site.git \$NEW_RELEASE
 
-            # 3. 백엔드 설치
-            cd $RELEASE_DIR
+            echo "🔗 shared 디렉토리 심볼릭 링크 연결"
+            ln -sfn \$SHARED_DIR/storage \$NEW_RELEASE/storage
+            ln -sfn \$SHARED_DIR/bootstrap/cache \$NEW_RELEASE/bootstrap/cache
+
+            cd \$NEW_RELEASE
+
+            echo "🔐 권한 설정"
+            sudo chown -R ubuntu:www-data \$SHARED_DIR
+            sudo chmod -R 775 \$SHARED_DIR
+
+            echo "📦 의존성 설치"
             composer install --no-dev --optimize-autoloader
-
-            # 4. 프론트엔드 빌드
             pnpm install
             pnpm run build
 
-            # 5. 스토리지 심볼릭 링크 연결
-            rm -rf $RELEASE_DIR/storage
-            ln -sfn $SHARED_DIR/storage $RELEASE_DIR/storage
-            ln -sfn $SHARED_DIR/bootstrap/cache $RELEASE_DIR/bootstrap/cache
-
-            # 6. Laravel 마이그레이션 및 캐시
-            php artisan migrate --force
+            echo "🧱 Laravel 설정"
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
+            php artisan migrate --force
 
-            # 7. 심볼릭 링크 교체 (무중단 핵심)
-            ln -sfn $RELEASE_DIR $BASE_DIR/current
+            echo "🔄 심볼릭 링크 갱신"
+            ln -sfn \$NEW_RELEASE \$BASE_DIR/current
 
-            echo "✅ Deployed to $RELEASE_DIR"
+            echo "🔄 Nginx Reload"
+            sudo systemctl reload nginx
+
+            echo "✅ 배포 완료: \$NEW_RELEASE"
           EOF
