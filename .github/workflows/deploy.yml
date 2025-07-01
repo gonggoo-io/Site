@@ -18,7 +18,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.3
+          php-version: 8.4
           extensions: mbstring, bcmath, curl, pdo, xml
 
       # 3. Setup Node.js and pnpm
