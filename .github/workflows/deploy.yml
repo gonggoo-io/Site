@@ -67,7 +67,7 @@ jobs:
             cd /home/ubuntu/Site
 
             # ✅ 퍼미션 설정 추가
-            sudo chown -R www-data:www-data storage bootstrap/cache
+            sudo chown -R ubuntu:www-data storage bootstrap/cache
             sudo chmod -R 775 storage bootstrap/cache
 
             git pull origin develop
