@@ -10,19 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 코드 체크아웃
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
 
-      # 2. PHP 설치
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.4
           extensions: mbstring, bcmath, curl, pdo, xml
 
-      # 3. Node.js + pnpm 설치
-      - name: Setup Node.js
+      - name: Setup Node + pnpm
         uses: actions/setup-node@v3
         with:
           node-version: 20
@@ -30,52 +27,51 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      # 4. CI 환경용 .env 직접 생성
-      - name: Create .env for CI
+      # CI용 .env (테스트용)
+      - name: Create .env
         run: |
           echo "APP_ENV=local" >> .env
           echo "APP_KEY=base64:dummykey1234567890=" >> .env
           echo "DB_CONNECTION=sqlite" >> .env
-          echo "DB_DATABASE=/home/runner/work/Site/Site/database/database.sqlite" >> .env
-          echo "CACHE_DRIVER=file" >> .env
-          echo "QUEUE_CONNECTION=sync" >> .env
+          echo "DB_DATABASE=database/database.sqlite" >> .env
           mkdir -p database
           touch database/database.sqlite
 
-      # 5. PHP 의존성 설치 (artisan 생략)
-      - name: Install PHP dependencies
-        run: composer install --no-dev --optimize-autoloader --no-scripts
+      - name: Composer install
+        run: composer install --no-dev --optimize-autoloader
 
-      # 6. 프론트엔드 빌드
-      - name: Install JS deps and build
+      - name: Frontend build
         run: |
           pnpm install
           pnpm run build
 
-      # 7. SSH 키 설정 (GitHub Secrets 필요)
-      - name: Setup SSH
+      - name: Deploy to EC2
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      # 8. EC2 서버에 배포
-      - name: Deploy to EC2
-        run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            cd /home/ubuntu/Site
+            TIMESTAMP=$(date +%Y%m%d%H%M%S)
+            RELEASE_DIR=/home/ubuntu/Site/releases/$TIMESTAMP
 
-            # ✅ 퍼미션 설정 추가
-            sudo chown -R ubuntu:www-data storage bootstrap/cache
-            sudo chmod -R 775 storage bootstrap/cache
+            git clone https://github.com/gonggoo-io/Site.git $RELEASE_DIR
+            cd $RELEASE_DIR
+            git checkout develop
 
-            git pull origin develop
             composer install --no-dev --optimize-autoloader
             pnpm install
             pnpm run build
+
             php artisan migrate --force
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
+
+            sudo chown -R ubuntu:www-data storage bootstrap/cache
+            sudo chmod -R 775 storage bootstrap/cache
+
+            ln -sfn $RELEASE_DIR /home/ubuntu/Site/current
+            sudo systemctl reload nginx
           EOF
