@@ -11,6 +11,7 @@ export default defineConfig({
         vue(),
     ],
     build: {
+        reportCompressedSize: false,
         rollupOptions: {
             output: {
                 manualChunks: {
