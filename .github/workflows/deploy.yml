@@ -1,4 +1,4 @@
-name: Deploy Laravel + Vite to EC2
+name: Deploy Laravel + Vue to EC2 (Simple)
 
 on:
   push:
@@ -6,20 +6,23 @@ on:
       - develop
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source
+      # 1. 코드 체크아웃
+      - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2. PHP 설치
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.4
           extensions: mbstring, bcmath, curl, pdo, xml
 
-      - name: Setup Node.js & pnpm
+      # 3. Node.js + pnpm 설치
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
@@ -27,6 +30,7 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
+      # 4. SSH 접속 준비
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -34,50 +38,17 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
+      # 5. EC2 서버에 배포
       - name: Deploy to EC2
         run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            set -e
-
-            # 📦 디렉토리 변수
-            BASE_DIR=/home/ubuntu/Site
-            RELEASES_DIR=$BASE_DIR/releases
-            TIMESTAMP=$(date +%Y%m%d%H%M%S)
-            NEW_RELEASE=$RELEASES_DIR/$TIMESTAMP
-            SHARED_DIR=$BASE_DIR/shared
-
-            echo "📁 새로운 릴리스 디렉토리 생성: \$NEW_RELEASE"
-            mkdir -p \$NEW_RELEASE
-
-            echo "📥 저장소 클론"
-            git clone git@github.com:gonggoo-io/Site.git \$NEW_RELEASE
-
-            echo "🔗 shared 디렉토리 심볼릭 링크 연결"
-            ln -sfn \$SHARED_DIR/storage \$NEW_RELEASE/storage
-            ln -sfn \$SHARED_DIR/bootstrap/cache \$NEW_RELEASE/bootstrap/cache
-
-            cd \$NEW_RELEASE
-
-            echo "🔐 권한 설정"
-            sudo chown -R ubuntu:www-data \$SHARED_DIR
-            sudo chmod -R 775 \$SHARED_DIR
-
-            echo "📦 의존성 설치"
+            cd /home/ubuntu/Site
+            git pull origin develop
             composer install --no-dev --optimize-autoloader
             pnpm install
             pnpm run build
-
-            echo "🧱 Laravel 설정"
+            php artisan migrate --force
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
-            php artisan migrate --force
-
-            echo "🔄 심볼릭 링크 갱신"
-            ln -sfn \$NEW_RELEASE \$BASE_DIR/current
-
-            echo "🔄 Nginx Reload"
-            sudo systemctl reload nginx
-
-            echo "✅ 배포 완료: \$NEW_RELEASE"
           EOF
