@@ -1,4 +1,4 @@
-name: Deploy to EC2 (Laravel + Vue)
+name: Deploy Laravel + Vue with pnpm to EC2
 
 on:
   push:
@@ -10,39 +10,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 리포지토리 코드 가져오기
+      # 1. 코드 체크아웃
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. PHP 설정
+      # 2. PHP 설치
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.4
+          php-version: 8.2
           extensions: mbstring, bcmath, curl, pdo, xml
 
-      # 3. Node.js 설정
+      # 3. Node.js + pnpm 설치
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 18
 
-      # 4. CI용 .env 구성 + SQLite 파일 생성
-      - name: Setup CI Environment
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      # 4. CI 환경용 .env 직접 생성
+      - name: Create .env for CI
         run: |
-          cp .env.ci .env
+          echo "APP_ENV=local" >> .env
+          echo "APP_KEY=base64:dummykey1234567890=" >> .env
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=/home/runner/work/Site/Site/database/database.sqlite" >> .env
+          echo "CACHE_DRIVER=file" >> .env
+          echo "QUEUE_CONNECTION=sync" >> .env
           mkdir -p database
           touch database/database.sqlite
 
-      # 5. PHP 의존성 설치 (artisan 실행 X)
-      - name: Install Composer Dependencies
+      # 5. PHP 의존성 설치 (artisan 생략)
+      - name: Install PHP dependencies
         run: composer install --no-dev --optimize-autoloader --no-scripts
 
       # 6. 프론트엔드 빌드
-      - name: Build Vue (Vite)
+      - name: Install JS deps and build
         run: |
-          npm ci
-          npm run build
+          pnpm install
+          pnpm run build
 
       # 7. SSH 키 설정 (GitHub Secrets 필요)
       - name: Setup SSH
@@ -52,15 +60,15 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      # 8. EC2 접속 후 배포 수행
+      # 8. EC2 서버에 배포
       - name: Deploy to EC2
         run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd /var/www/site
             git pull origin develop
             composer install --no-dev --optimize-autoloader
-            npm ci
-            npm run build
+            pnpm install
+            pnpm run build
             php artisan migrate --force
             php artisan config:cache
             php artisan route:cache
