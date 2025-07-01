@@ -1,4 +1,4 @@
-name: Deploy Laravel + Vue App
+name: Deploy to EC2 (Laravel + Vue)
 
 on:
   push:
@@ -6,39 +6,53 @@ on:
       - develop
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      # 1. 리포지토리 코드 가져오기
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up PHP
+      # 2. PHP 설정
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.4
-          extensions: mbstring, bcmath, curl, xml, pdo, zip
+          extensions: mbstring, bcmath, curl, pdo, xml
 
-      - name: Install PHP Dependencies
-        run: composer install --no-dev --optimize-autoloader
-
-      - name: Set up Node
+      # 3. Node.js 설정
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
 
-      - name: Install Node Modules & Build Vue
+      # 4. CI용 .env 구성 + SQLite 파일 생성
+      - name: Setup CI Environment
+        run: |
+          cp .env.ci .env
+          mkdir -p database
+          touch database/database.sqlite
+
+      # 5. PHP 의존성 설치 (artisan 실행 X)
+      - name: Install Composer Dependencies
+        run: composer install --no-dev --optimize-autoloader --no-scripts
+
+      # 6. 프론트엔드 빌드
+      - name: Build Vue (Vite)
         run: |
           npm ci
           npm run build
 
-      - name: Add SSH Key
+      # 7. SSH 키 설정 (GitHub Secrets 필요)
+      - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
+      # 8. EC2 접속 후 배포 수행
       - name: Deploy to EC2
         run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
