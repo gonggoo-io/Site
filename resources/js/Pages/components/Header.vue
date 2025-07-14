@@ -6,7 +6,7 @@
     <Container :flex="true" class="flex items-center justify-between">
       <div class="flex items-center gap-10">
         <Link href="/dashboard" class="flex items-center gap-2 hover:opacity-80 transition">
-          <span class="text-2xl font-semibold text-black nexon-gothic">gonggoo</span>
+          <img src="./../../../../public/images/logo.png" alt="gonggoo" class="h-8" />
         </Link>
       </div>
 
