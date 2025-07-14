@@ -300,6 +300,7 @@ const groupedInserts = computed(() => {
   const groups = {}
   
   allItems.value.forEach(item => {
+    if (!item || !item.created_at) return
     const date = new Date(item.created_at).toISOString().split('T')[0]
     if (!groups[date]) {
       groups[date] = []
@@ -332,14 +333,14 @@ const formatPrice = (price) => {
 
 const getActiveBuysCount = (insert) => {
   if (!insert || !insert.buys) return 0
-  return insert.buys.filter(buy => buy.cancelled_at === null).length
+  return insert.buys.filter(buy => buy && buy.cancelled_at === null).length
 }
 
 const allItems = computed(() => {
-  const ownedInsertIds = new Set(inserts.value.map(insert => insert.id))
-  const filteredBuys = buys.value.filter(buy => !ownedInsertIds.has(buy.insert.id))
+  const ownedInsertIds = new Set(inserts.value.filter(insert => insert && insert.id).map(insert => insert.id))
+  const filteredBuys = buys.value.filter(buy => buy && buy.insert && buy.insert.id && !ownedInsertIds.has(buy.insert.id))
   
-  const allInserts = inserts.value.map(insert => ({
+  const allInserts = inserts.value.filter(insert => insert && insert.id).map(insert => ({
     ...insert,
     type: 'insert'
   }))
@@ -358,7 +359,12 @@ const totalCount = computed(() => allItems.value.length)
 const dateRange = computed(() => {
   if (allItems.value.length === 0) return ''
   
-  const dates = allItems.value.map(item => new Date(item.created_at))
+  const dates = allItems.value
+    .filter(item => item && item.created_at)
+    .map(item => new Date(item.created_at))
+    
+  if (dates.length === 0) return ''
+  
   const minDate = new Date(Math.min(...dates))
   const maxDate = new Date(Math.max(...dates))
   

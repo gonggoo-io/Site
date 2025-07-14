@@ -135,7 +135,7 @@ const goToContent = (insertId) => {
 
 const getActiveBuysCount = (insert) => {
   if (!insert || !insert.buys) return 0
-  return insert.buys.filter(buy => buy.cancelled_at === null).length
+  return insert.buys.filter(buy => buy && buy.cancelled_at === null).length
 }
 
 const isShipping = (insert) => {
@@ -144,11 +144,11 @@ const isShipping = (insert) => {
 
 const shippingItems = computed(() => {
   const shippingInserts = inserts.value
-    .filter(insert => isShipping(insert))
+    .filter(insert => insert && isShipping(insert))
     .map(insert => ({ ...insert, type: 'insert' }))
 
   const shippingBuys = buys.value
-    .filter(buy => isShipping(buy.insert))
+    .filter(buy => buy && buy.insert && isShipping(buy.insert))
     .map(buy => ({
       ...buy.insert,
       type: 'buy',
@@ -162,6 +162,7 @@ const groupedShippingItems = computed(() => {
   const groups = {}
 
   shippingItems.value.forEach(item => {
+    if (!item || (!item.purchased_at && !item.created_at)) return
     const date = new Date(item.purchased_at || item.created_at).toISOString().split('T')[0]
     if (!groups[date]) groups[date] = []
     groups[date].push(item)
@@ -178,7 +179,12 @@ const formatDate = (dateString) => {
 const dateRange = computed(() => {
   if (shippingItems.value.length === 0) return ''
   
-  const dates = shippingItems.value.map(item => new Date(item.purchased_at || item.created_at))
+  const dates = shippingItems.value
+    .filter(item => item && (item.purchased_at || item.created_at))
+    .map(item => new Date(item.purchased_at || item.created_at))
+    
+  if (dates.length === 0) return ''
+  
   const minDate = new Date(Math.min(...dates))
   const maxDate = new Date(Math.max(...dates))
   
