@@ -161,7 +161,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Head title="공구 - 함께하면 더 저렴해요." />
+    <Head title="주변의 공동구매를 쉽게 연결해드려요" />
     <Header />
     <main class="pt-[72px]">
         <section class="min-h-[95vh] bg-gradient-to-b from-white via-[#2F9266]/7 to-[#2F9266]/15 text-gray-800 flex items-center relative">
