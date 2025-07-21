@@ -195,15 +195,11 @@ const handleClickOutside = (event) => {
 };
 
 const handleBellClick = (e) => {
-  if (window.innerWidth < 768) {
-    router.visit('/notifications');
-  } else {
-    isNotificationModalOpen.value = !isNotificationModalOpen.value;
-    if (isNotificationModalOpen.value) {
-      axios.post('/api/notifications/read').then(() => {
-        notifications.value = notifications.value.map(n => ({ ...n, read_at: n.read_at || new Date().toISOString() }));
-      });
-    }
+  isNotificationModalOpen.value = !isNotificationModalOpen.value;
+  if (isNotificationModalOpen.value) {
+    axios.post('/api/notifications/read').then(() => {
+      notifications.value = notifications.value.map(n => ({ ...n, read_at: n.read_at || new Date().toISOString() }));
+    });
   }
 };
 

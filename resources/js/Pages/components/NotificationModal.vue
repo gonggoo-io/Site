@@ -1,6 +1,8 @@
 <template>
   <transition name="fade">
-    <div v-if="open" class="fixed top-16 right-6 z-50 w-full max-w-sm bg-gray-50 rounded-2xl shadow-2xl border border-gray-200 overflow-hidden animate-fadein">
+    <div v-if="open" class="fixed z-50 bg-gray-50 rounded-2xl shadow-2xl border border-gray-200 overflow-hidden animate-fadein
+                          top-20 left-4 right-4 w-auto max-w-none
+                          md:top-16 md:right-6 md:left-auto md:w-full md:max-w-sm">
       <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gray-50">
         <slot name="header">
           <span class="font-bold text-lg text-gray-900">알림</span>
