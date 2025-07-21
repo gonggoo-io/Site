@@ -1,4 +1,7 @@
 <template>
+  <!-- 모바일용 배경 오버레이 -->
+  <div v-if="open" class="fixed inset-0 bg-black bg-opacity-40 z-40 md:hidden" @click="$emit('close')"></div>
+  
   <transition name="fade">
     <div v-if="open" class="fixed z-50 bg-gray-50 rounded-2xl shadow-2xl border border-gray-200 overflow-hidden animate-fadein
                           top-20 left-4 right-4 w-auto max-w-none
@@ -9,7 +12,7 @@
         </slot>
         <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
       </div>
-      <div class="max-h-[60vh] overflow-y-auto px-4 py-3">
+      <div class="max-h-[70vh] md:max-h-[60vh] overflow-y-auto px-4 py-3">
         <div v-if="notifications.length > 0" class="space-y-3">
           <div v-for="notification in notifications" :key="notification.id" class="bg-white rounded-xl p-4 border border-gray-100 cursor-pointer flex items-center" @click="goToContent(notification.insert_id)">
             <div class="flex items-center space-x-3 w-full">
@@ -17,7 +20,7 @@
                 <span class="text-xl font-semibold text-white">s</span>
               </div>
               <div class="flex-1 min-w-0">
-                <div class="text-sm text-gray-500 truncate max-w-[220px]">{{ notification.title }}</div>
+                <div class="text-sm text-gray-500 truncate max-w-[300px] md:max-w-[220px]">{{ notification.title }}</div>
                 <div :class="['text-gray-black text-sm font-medium', { 'font-bold': !notification.read_at }]">
                   <div v-if="notification.type === 'purchase_completed'">
                     <div class="font-semibold mb-1">{{ notification.user }}님이 {{ notification.group }}공구를 {{ notification.action }}하셨습니다.</div>
