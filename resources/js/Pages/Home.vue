@@ -2,6 +2,7 @@
 import { Head } from '@inertiajs/vue3';
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
+import MobileBanner from './components/MobileBanner.vue';
 import { onMounted, ref, onUnmounted } from 'vue';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -293,6 +294,9 @@ onUnmounted(() => {
         </section>
     </main>
     <Footer />
+    
+    <!-- 모바일 배너 -->
+    <MobileBanner pdf-file="gonggoo.pdf" />
 </template>
 
 <style>

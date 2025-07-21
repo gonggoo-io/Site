@@ -1,6 +1,6 @@
 <template>
   <header
-    class="backdrop-blur-sm bg-transparent bg-opacity-60 py-4 transition-all duration-200 fixed top-0 left-0 right-0 z-50"
+    class="backdrop-blur-sm bg-transparent bg-opacity-60 py-4 transition-all duration-200 fixed top-0 left-0 right-0 z-40"
     :class="{}"
   >
     <Container :flex="true" class="flex items-center justify-between">
