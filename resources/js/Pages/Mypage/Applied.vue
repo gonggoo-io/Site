@@ -5,11 +5,7 @@
       <div class="flex flex-col lg:flex-row flex-1 gap-10">
         <Sidebar active="applied" />
         <main class="flex-1 pt-6 lg:pt-10 lg:mt-20 px-0 w-full">
-          <div class="text-black font-semibold text-3xl mb-1">
-            총 {{ totalCount }}건
-            <span class="text-lg text-gray-700 font-medium"> · {{ dateRange }}</span>
-          </div>
-          <div class="text-md text-gray-500 font-medium">※ 등록한 공구와 참여한 공구의 진행 상황을 확인하세요.</div>
+
           
           <div v-if="isLoadingInserts || isLoadingBuys" class="mt-12 flex justify-center">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -20,101 +16,136 @@
           </div>
 
           <template v-else>
-            <div v-for="(group, date) in groupedInserts" :key="date" class="mt-12">
-              <div class="text-black font-semibold text-2xl mb-2 pb-2 border-b border-gray-200">{{ formatDate(date) }}</div>
-              <section 
-                v-for="insert in group" 
-                :key="insert.id" 
-                @click.self="goToContent(insert.id)"
-                class="bg-white rounded-xl p-6 mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between border border-gray-200/60 shadow-sm transition-all duration-200 w-full cursor-pointer"
-              >
-                <div class="w-full">
-                  <div class="font-semibold mb-1 text-xl text-gray-800 flex items-center">
-                    {{ insert.title || '제목 없음' }}
-                    <span v-if="insert.owner" class="ml-2 px-2 py-1 text-primary text-sm font-semibold">
-                      Owner
-                    </span>
-                    <span v-if="insert.type === 'buy'" class="ml-2 px-2 py-1 text-blue-500 text-sm font-semibold">
-                      User
-                    </span>
-                  </div>
-                  <div v-if="insert.description" class="text-sm text-gray-600 mb-3 line-clamp-2">
-                    {{ insert.description }} · <img src="/public/images/dashboard-users.svg" alt="users" class="w-3 h-3 inline mr-1" />{{ getActiveBuysCount(insert) }}/{{ insert.people_count || 10 }}
-                  </div>
+            <div v-if="ownerItems.length > 0" class="mt-0">
+              <div class="text-black font-semibold text-3xl pb-3">
+                내가 등록한 공구 현황이에요.
+              </div>
+              <div class="text-gray-600 text-base mb-8 -mt-2">
+                내가 등록한 공구는 {{ ownerItems.length }}건이에요
+              </div>
+              <div v-for="(group, date) in groupedOwnerItems" :key="`owner-${date}`" class="mt-8">
+                <div class="text-black font-semibold text-xl mb-2 pb-2 border-b border-gray-200">{{ formatDate(date) }}</div>
+                <section 
+                  v-for="insert in group" 
+                  :key="`owner-${insert.id}`" 
+                  @click.self="goToContent(insert.id)"
+                  class="bg-white rounded-xl p-6 mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between border border-gray-200/60 shadow-sm transition-all duration-200 w-full cursor-pointer"
+                >
+                  <div class="w-full">
+                    <div class="font-semibold mb-1 text-xl text-gray-800 flex items-center">
+                      {{ insert.title || '제목 없음' }}
+                      <span class="ml-2 px-2 py-1 text-primary text-sm font-semibold">
+                        Owner
+                      </span>
+                    </div>
+                    <div v-if="insert.description" class="text-sm text-gray-600 mb-3 line-clamp-2">
+                      {{ insert.description }} · <img src="/public/images/dashboard-users.svg" alt="users" class="w-3 h-3 inline mr-1" />{{ getActiveBuysCount(insert) }}/{{ insert.people_count || 10 }}
+                    </div>
 
-                  <div v-if="showTrackingInput === insert.id" class="mb-4 p-4 bg-gray-50 rounded-lg">
-                    <div class="text-sm font-medium text-gray-700 mb-2">운송장번호 입력</div>
-                    <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-                      <select v-model="selectedCourier" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full sm:w-auto" :disabled="isSubmittingTracking">
-                        <option value="">택배사 선택</option>
-                        <option value="CJ대한통운">CJ대한통운</option>
-                        <option value="한진택배">한진택배</option>
-                        <option value="우체국택배">우체국택배</option>
-                        <option value="롯데택배">롯데택배</option>
-                        <option value="로젠택배">로젠택배</option>
-                        <option value="경동택배">경동택배</option>
-                        <option value="일양로지스">일양로지스</option>
-                        <option value="CU편의점택배">CU편의점택배</option>
-                        <option value="GSPostbox">GSPostbox</option>
-                        <option value="기타">기타</option>
-                      </select>
-                      <input 
-                        v-model="trackingNumber"
-                        type="text" 
-                        placeholder="운송장번호를 입력하세요"
-                        class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                        :disabled="isSubmittingTracking"
-                      />
+                    <div v-if="showTrackingInput === insert.id" class="mb-4 p-4 bg-gray-50 rounded-lg">
+                      <div class="text-sm font-medium text-gray-700 mb-2">운송장번호 입력</div>
+                      <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+                        <select v-model="selectedCourier" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full sm:w-auto" :disabled="isSubmittingTracking">
+                          <option value="">택배사 선택</option>
+                          <option value="CJ대한통운">CJ대한통운</option>
+                          <option value="한진택배">한진택배</option>
+                          <option value="우체국택배">우체국택배</option>
+                          <option value="롯데택배">롯데택배</option>
+                          <option value="로젠택배">로젠택배</option>
+                          <option value="경동택배">경동택배</option>
+                          <option value="일양로지스">일양로지스</option>
+                          <option value="CU편의점택배">CU편의점택배</option>
+                          <option value="GSPostbox">GSPostbox</option>
+                          <option value="기타">기타</option>
+                        </select>
+                        <input 
+                          v-model="trackingNumber"
+                          type="text" 
+                          placeholder="운송장번호를 입력하세요"
+                          class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                          :disabled="isSubmittingTracking"
+                        />
+                        <button 
+                          @click="submitTrackingNumber(insert.id)"
+                          :disabled="!trackingNumber.trim() || !selectedCourier || isSubmittingTracking"
+                          class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#247A4F] transition-all duration-200 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {{ isSubmittingTracking ? '처리중...' : '입력완료' }}
+                        </button>
+                        <button 
+                          @click="cancelTrackingInput"
+                          :disabled="isSubmittingTracking"
+                          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-all duration-200 font-medium text-sm"
+                        >
+                          취소
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div class="flex space-x-3 mt-4">
                       <button 
-                        @click="submitTrackingNumber(insert.id)"
-                        :disabled="!trackingNumber.trim() || !selectedCourier || isSubmittingTracking"
-                        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#247A4F] transition-all duration-200 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        v-if="getActiveBuysCount(insert) >= (insert.people_count || 10)"
+                        @click.stop="handlePurchaseInput(insert.id)"
+                        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#247A4F] transition-all duration-200 font-medium text-sm"
                       >
-                        {{ isSubmittingTracking ? '처리중...' : '입력완료' }}
+                        구매 입력
                       </button>
                       <button 
-                        @click="cancelTrackingInput"
-                        :disabled="isSubmittingTracking"
-                        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-all duration-200 font-medium text-sm"
+                        v-if="!(getActiveBuysCount(insert) >= (insert.people_count || 10))"
+                        @click.stop="cancelInsert(insert.id)"
+                        class="px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded-lg font-medium text-sm transition-all duration-200"
                       >
-                        취소
+                        삭제하기
                       </button>
                     </div>
                   </div>
-                  
-                  <div class="flex space-x-3 mt-4">
-                    <button 
-                      v-if="!insert.owner"
-                      @click.stop="goToContent(insert.id)"
-                      class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#247A4F] transition-all duration-200 font-medium text-sm"
-                    >
-                      상세보기
-                    </button>
-                    <button 
-                      v-if="insert.owner && getActiveBuysCount(insert) >= (insert.people_count || 10) && !isShipping(insert)"
-                      @click.stop="handlePurchaseInput(insert.id)"
-                      class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#247A4F] transition-all duration-200 font-medium text-sm"
-                    >
-                      구매 입력
-                    </button>
-                    <button 
-                      v-if="isShipping(insert)"
-                      disabled
-                      class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium text-sm cursor-not-allowed"
-                    >
-                      🚚 배송중
-                    </button>
-                    <button 
-                      v-if="!isShipping(insert) && !(insert.owner && getActiveBuysCount(insert) >= (insert.people_count || 10))"
-                      @click.stop="cancelInsert(insert.id)"
-                      class="px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200"
-                      :class="insert.owner ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
-                    >
-                      {{ insert.owner ? '삭제하기' : '취소하기' }}
-                    </button>
+                </section>
+              </div>
+            </div>
+
+            <div v-if="userItems.length > 0" class="mt-16">
+              <div class="text-black font-semibold text-3xl pb-3">
+                내가 참여한 공구 현황이에요.
+              </div>
+              <div class="text-gray-600 text-base mb-8 -mt-2">
+                대시보드에 있는 공동구매에 {{ userItems.length }}번 참여했어요
+              </div>
+              <div v-for="(group, date) in groupedUserItems" :key="`user-${date}`" class="mt-8">
+                <div class="text-black font-semibold text-xl mb-2 pb-2 border-b border-gray-200">{{ formatDate(date) }}</div>
+                <section 
+                  v-for="insert in group" 
+                  :key="`user-${insert.id}`" 
+                  @click.self="goToContent(insert.id)"
+                  class="bg-white rounded-xl p-6 mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between border border-gray-200/60 shadow-sm transition-all duration-200 w-full cursor-pointer"
+                >
+                  <div class="w-full">
+                    <div class="font-semibold mb-1 text-xl text-gray-800 flex items-center">
+                      {{ insert.title || '제목 없음' }}
+                      <span class="ml-2 px-2 py-1 text-blue-500 text-sm font-semibold">
+                        User
+                      </span>
+                    </div>
+                    <div v-if="insert.description" class="text-sm text-gray-600 mb-3 line-clamp-2">
+                      {{ insert.description }} · <img src="/public/images/dashboard-users.svg" alt="users" class="w-3 h-3 inline mr-1" />{{ getActiveBuysCount(insert) }}/{{ insert.people_count || 10 }}
+                    </div>
+                    
+                    <div class="flex space-x-3 mt-4">
+                      <button 
+                        @click.stop="goToContent(insert.id)"
+                        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#247A4F] transition-all duration-200 font-medium text-sm"
+                      >
+                        상세보기
+                      </button>
+                      <button 
+                        @click.stop="cancelInsert(insert.id)"
+                        class="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg font-medium text-sm transition-all duration-200"
+                      >
+                        취소하기
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </section>
+                </section>
+              </div>
             </div>
             <div class="pb-20 lg:pb-32"></div>
           </template>
@@ -374,6 +405,40 @@ const isShipping = (insert) => {
   if (!insert || !insert.tracking_number || !insert.courier) return false
   return true
 }
+
+const ownerItems = computed(() => {
+  return allItems.value.filter(item => item.owner)
+})
+
+const userItems = computed(() => {
+  return allItems.value.filter(item => !item.owner)
+})
+
+const groupedOwnerItems = computed(() => {
+  const groups = {}
+  ownerItems.value.forEach(item => {
+    if (!item || !item.created_at) return
+    const date = new Date(item.created_at).toISOString().split('T')[0]
+    if (!groups[date]) {
+      groups[date] = []
+    }
+    groups[date].push(item)
+  })
+  return groups
+})
+
+const groupedUserItems = computed(() => {
+  const groups = {}
+  userItems.value.forEach(item => {
+    if (!item || !item.created_at) return
+    const date = new Date(item.created_at).toISOString().split('T')[0]
+    if (!groups[date]) {
+      groups[date] = []
+    }
+    groups[date].push(item)
+  })
+  return groups
+})
 
 onMounted(() => {
   fetchInserts()
