@@ -21,7 +21,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/signin', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/signin', [AuthController::class, 'login']);
     
-    // 카카오 로그인
+
     Route::get('/auth/kakao', [KakaoAuthController::class, 'redirectToKakao'])->name('kakao.login');
     Route::get('/auth/kakao/callback', [KakaoAuthController::class, 'handleKakaoCallback'])->name('kakao.callback');
     
@@ -66,6 +66,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/notifications', fn () => Inertia::render('Notifications'))->name('notifications');
     Route::get('/api/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('api.notifications');
+    Route::post('/notifications/read', [App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
 
     Route::get('/mypage', function () {
         return redirect('/mypage/applied');

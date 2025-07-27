@@ -20,7 +20,9 @@
             알림
             <span class="relative inline-block">
               <img :src="headerBellIcon" alt="bell" class="size-5" />
-              <span v-if="unreadCount > 0" class="red-dot"></span>
+              <span v-if="unreadCount > 0" class="notification-badge">
+                {{ unreadCount > 99 ? '99+' : unreadCount }}
+              </span>
             </span>
           </button>
           <div class="relative" ref="desktopDropdownContainer">
@@ -76,7 +78,9 @@
         <button @click="handleBellClick" class="flex items-center">
           <span class="relative inline-block">
             <img :src="headerBellIcon" alt="bell" class="size-6" />
-            <span v-if="unreadCount > 0" class="red-dot"></span>
+            <span v-if="unreadCount > 0" class="notification-badge">
+              {{ unreadCount > 99 ? '99+' : unreadCount }}
+            </span>
           </span>
         </button>
         <button @click="toggleMobileMenu">
@@ -89,7 +93,7 @@
       v-if="isNotificationModalOpen"
       :open="isNotificationModalOpen"
       :notifications="notifications"
-      @close="isNotificationModalOpen = false"
+      @close="handleModalClose"
       id="notification-modal-root"
     />
 
@@ -146,6 +150,7 @@ const auth = computed(() => page.props.auth);
 const isDropdownOpen = ref(false);
 const isMobileMenuOpen = ref(false);
 const isNotificationModalOpen = ref(false);
+const isProcessingClose = ref(false);
 
 const desktopDropdownContainer = ref(null);
 const mobileMenuButton = ref(null);
@@ -196,17 +201,56 @@ const handleClickOutside = (event) => {
 
 const handleBellClick = (e) => {
   isNotificationModalOpen.value = !isNotificationModalOpen.value;
-  if (isNotificationModalOpen.value) {
-    axios.post('/api/notifications/read').then(() => {
-      notifications.value = notifications.value.map(n => ({ ...n, read_at: n.read_at || new Date().toISOString() }));
-    });
+};
+
+const handleModalClose = async () => {
+  if (isProcessingClose.value) {
+    return;
+  }
+  
+  const wasOpen = isNotificationModalOpen.value;
+  const hadUnreadNotifications = unreadCount.value > 0;
+  
+  isNotificationModalOpen.value = false;
+  
+  if (wasOpen && hadUnreadNotifications) {
+    isProcessingClose.value = true;
+    try {
+      await axios.post('/notifications/read', {}, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json',
+        }
+      });
+      
+      notifications.value = notifications.value.map(n => ({
+        ...n,
+        read_at: n.read_at || new Date().toISOString()
+      }));
+      
+    } catch (error) {
+      try {
+        const res = await axios.get('/api/notifications');
+        notifications.value = res.data;
+      } catch (fetchError) {
+        console.error('Failed to refresh notifications:', fetchError);
+      }
+    } finally {
+      setTimeout(() => {
+        isProcessingClose.value = false;
+      }, 500);
+    }
   }
 };
 
 let eventSource;
 onMounted(async () => {
-  const res = await axios.get('/api/notifications');
-  notifications.value = res.data;
+  try {
+    const res = await axios.get('/api/notifications');
+    notifications.value = res.data;
+  } catch (error) {
+    console.error('Failed to load notifications:', error);
+  }
   document.addEventListener('mousedown', handleClickOutside);
 });
 
@@ -221,15 +265,22 @@ onUnmounted(() => {
 .rotate-180 {
   transform: rotate(180deg);
 }
-.red-dot {
+.notification-badge {
   position: absolute;
-  top: 0px;
-  right: 0px;
-  width: 9px;
-  height: 9px;
+  top: -6px;
+  right: -6px;
+  min-width: 16px;
+  height: 16px;
   background: #ff3b30;
-  border-radius: 50%;
-  border: 2px solid white;
+  border-radius: 8px;
+  border: 1px solid white;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 600;
+  color: white;
+  padding: 0 3px;
 }
 </style>
