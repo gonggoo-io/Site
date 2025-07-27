@@ -29,8 +29,8 @@ const scrollToFeatures = () => {
     featuresSection.value?.scrollIntoView({ behavior: 'smooth' });
 };
 
-const goToSignup = () => {
-    router.visit('/signup');
+const goToSignin = () => {
+    router.visit('/signin');
 };
 
 const startCountingAnimation = () => {
@@ -187,7 +187,7 @@ onUnmounted(() => {
                         <span class="text-base sm:text-lg md:text-xl">더</span> <span class="text-lg sm:text-xl md:text-2xl">더</span> <span class="text-xl sm:text-2xl md:text-3xl">더</span> 많은 사람이 모일수록 더 저렴해져요.
                     </p>
                     <button 
-                        @click="goToSignup"
+                        @click="goToSignin"
                         class="bg-[#2F9266] text-white px-8 sm:px-12 py-3 sm:py-4 rounded-full font-semibold text-lg sm:text-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(47,146,102,0.3)] active:scale-[0.98] shadow-[0_4px_12px_rgba(47,146,102,0.2)]"
                     >
                         지금 시작하기
@@ -282,7 +282,7 @@ onUnmounted(() => {
                         공구를 이용해<br class="block sm:hidden" /> 함께 더 저렴하게 물건을 구입해요✌
                     </h2>
                     <button 
-                        @click="goToSignup"
+                        @click="goToSignin"
                         class="bg-white text-primary px-6 sm:px-8 md:px-12 py-2.5 sm:py-3 md:py-4 rounded-full font-semibold text-base sm:text-lg md:text-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(255,255,255,0.3)] active:scale-[0.98] shadow-[0_4px_12px_rgba(255,255,255,0.2)]"
                         data-aos="fade-left"
                         data-aos-delay="600"
@@ -295,7 +295,6 @@ onUnmounted(() => {
     </main>
     <Footer />
     
-    <!-- 모바일 배너 -->
     <MobileBanner pdf-file="gonggoo.pdf" />
 </template>
 
