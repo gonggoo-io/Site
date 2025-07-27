@@ -11,7 +11,10 @@
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.1",
-        "laravel/tinker": "^2.9"
+        "laravel/socialite": "*",
+        "laravel/tinker": "^2.9",
+        "socialiteproviders/kakao": "*",
+        "socialiteproviders/zoho": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

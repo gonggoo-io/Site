@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\InsertController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\KakaoAuthController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\MetaController;
 use App\Models\Insert;
@@ -19,6 +20,10 @@ Route::middleware('guest')->group(function () {
     Route::post('/signup', [AuthController::class, 'signup']);
     Route::get('/signin', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/signin', [AuthController::class, 'login']);
+    
+    // 카카오 로그인
+    Route::get('/auth/kakao', [KakaoAuthController::class, 'redirectToKakao'])->name('kakao.login');
+    Route::get('/auth/kakao/callback', [KakaoAuthController::class, 'handleKakaoCallback'])->name('kakao.callback');
     
     Route::post('/verification/send', [VerificationController::class, 'sendVerificationCode']);
     Route::post('/verification/code', [VerificationController::class, 'verifyCode']);

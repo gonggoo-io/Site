@@ -11,5 +11,6 @@ class VerifyCsrfToken extends Middleware
         '/signin',
         '/verification/send',
         '/verification/code',
+        '/api/*',
     ];
 }

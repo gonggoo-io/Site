@@ -4,11 +4,9 @@
     
     <main class="flex-grow flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div class="w-full max-w-md mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6 nexon-gothic mt-14 flex justify-center items-center">
-          <img :src="logoImage" alt="gonggoo logo" class="h-6 w-6 mr-4 mt-1" />
+        <h2 class="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-8 nexon-gothic mt-14 flex justify-center items-center">
           gonggoo
         </h2>
-        <p class="text-center text-sm sm:text-base text-gray-700 -mt-2 sm:-mt-4 mb-6">공구에 방문하신걸 환영해요👋</p>
 
         <form @submit.prevent="submit" class="space-y-4 sm:space-y-6">
           <div>
