@@ -36,9 +36,11 @@ return [
     ],
 
     'kakao' => [
-        'client_id' => env('KAKAO_CLIENT_ID'),
-        'client_secret' => env('KAKAO_CLIENT_SECRET'),
-        'redirect' => env('KAKAO_REDIRECT_URI'),
+        'client_id' => 'f0298b393c792dbd2b88f93af6ede529',
+        'client_secret' => '9PQPYwDSa5Et5mpFjdiiTEcDzRGbGPIo',
+        'redirect' => env('APP_ENV') === 'local' 
+            ? 'http://localhost:8000/auth/kakao/callback'
+            : 'https://gonggoo.kro.kr/auth/kakao/callback',
         'guzzle' => [
             'curl' => [
                 CURLOPT_SSL_VERIFYPEER => env('APP_ENV') === 'production',
