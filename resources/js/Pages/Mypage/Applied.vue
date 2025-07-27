@@ -34,9 +34,6 @@
                   <div class="w-full">
                     <div class="font-semibold mb-1 text-xl text-gray-800 flex items-center">
                       {{ insert.title || '제목 없음' }}
-                      <span class="ml-2 px-2 py-1 text-primary text-sm font-semibold">
-                        Owner
-                      </span>
                     </div>
                     <div v-if="insert.description" class="text-sm text-gray-600 mb-3 line-clamp-2">
                       {{ insert.description }} · <img src="/public/images/dashboard-users.svg" alt="users" class="w-3 h-3 inline mr-1" />{{ getActiveBuysCount(insert) }}/{{ insert.people_count || 10 }}
@@ -121,9 +118,6 @@
                   <div class="w-full">
                     <div class="font-semibold mb-1 text-xl text-gray-800 flex items-center">
                       {{ insert.title || '제목 없음' }}
-                      <span class="ml-2 px-2 py-1 text-blue-500 text-sm font-semibold">
-                        User
-                      </span>
                     </div>
                     <div v-if="insert.description" class="text-sm text-gray-600 mb-3 line-clamp-2">
                       {{ insert.description }} · <img src="/public/images/dashboard-users.svg" alt="users" class="w-3 h-3 inline mr-1" />{{ getActiveBuysCount(insert) }}/{{ insert.people_count || 10 }}
@@ -164,7 +158,7 @@ import Footer from '../components/Footer.vue'
 import Container from '../components/Container.vue'
 import Sidebar from '../components/Sidebar.vue'
 
-const activeTab = ref('inserts')
+const activeTab = ref('inserts')  
 const inserts = ref([])
 const buys = ref([])
 const isLoadingInserts = ref(true)
