@@ -1,50 +1,49 @@
 <template>
-  <!-- 모바일용 배경 오버레이 -->
-  <div v-if="open" class="fixed inset-0 bg-black bg-opacity-40 z-40 md:hidden" @click="$emit('close')"></div>
-  
-  <transition name="fade">
-    <div v-if="open" class="fixed z-50 bg-gray-50 rounded-2xl shadow-2xl border border-gray-200 overflow-hidden animate-fadein
-                          top-20 left-4 right-4 w-auto max-w-none
-                          md:top-16 md:right-6 md:left-auto md:w-full md:max-w-sm">
-      <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gray-50">
-        <slot name="header">
-          <span class="font-bold text-lg text-gray-900">알림</span>
-        </slot>
-        <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
-      </div>
-      <div class="max-h-[70vh] md:max-h-[60vh] overflow-y-auto px-4 py-3">
-        <div v-if="notifications.length > 0" class="space-y-3">
-          <div v-for="notification in notifications" :key="notification.id" class="bg-white rounded-xl p-4 border border-gray-100 cursor-pointer flex items-center" @click="goToContent(notification.insert_id)">
-            <div class="flex items-center space-x-3 w-full">
-              <div class="flex-shrink-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-                <span class="text-xl font-semibold text-white">s</span>
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="text-sm text-gray-500 truncate max-w-[300px] md:max-w-[220px]">{{ notification.title }}</div>
-                <div :class="['text-gray-black text-sm font-medium', { 'font-bold': !notification.read_at }]">
-                  <div v-if="notification.type === 'purchase_completed'">
-                    <div class="font-semibold mb-1">{{ notification.user }}님이 {{ notification.group }}공구를 {{ notification.action }}하셨습니다.</div>
-                    <div class="text-xs text-gray-600 space-y-1">
-                      <div><strong>택배사:</strong> {{ notification.courier }}</div>
-                      <div><strong>운송장번호:</strong> {{ notification.tracking_number }}</div>
-                      <div><strong>입금 정보:</strong> {{ notification.bank }} {{ notification.account_number }}</div>
+  <div v-if="open" class="fixed inset-0 z-40" @click="$emit('close')">
+    <div class="absolute inset-0 bg-black bg-opacity-40 md:bg-transparent"></div>
+    
+    <transition name="fade">
+      <div v-if="open" class="fixed z-50 bg-gray-50 rounded-2xl shadow-2xl border border-gray-200 overflow-hidden animate-fadein top-20 left-4 right-4 w-auto max-w-none md:top-16 md:right-6 md:left-auto md:w-full md:max-w-sm" @click.stop>
+        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gray-50">
+          <slot name="header">
+            <span class="font-bold text-lg text-gray-900">알림</span>
+          </slot>
+          <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+        </div>
+        <div class="max-h-[70vh] md:max-h-[60vh] overflow-y-auto px-4 py-3">
+          <div v-if="notifications.length > 0" class="space-y-3">
+            <div v-for="notification in notifications" :key="notification.id" class="bg-white rounded-xl p-4 border border-gray-100 cursor-pointer flex items-center" @click="goToContent(notification.insert_id)">
+              <div class="flex items-center space-x-3 w-full">
+                <div class="flex-shrink-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                  <span class="text-xl font-semibold text-white">s</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm text-gray-500 truncate max-w-[300px] md:max-w-[220px]">{{ notification.title }}</div>
+                  <div :class="['text-gray-black text-sm font-medium', { 'font-bold': !notification.read_at }]">
+                    <div v-if="notification.type === 'purchase_completed'">
+                      <div class="font-semibold mb-1">{{ notification.user }}님이 {{ notification.group }}공구를 {{ notification.action }}하셨습니다.</div>
+                      <div class="text-xs text-gray-600 space-y-1">
+                        <div><strong>택배사:</strong> {{ notification.courier }}</div>
+                        <div><strong>운송장번호:</strong> {{ notification.tracking_number }}</div>
+                        <div><strong>입금 정보:</strong> {{ notification.bank }} {{ notification.account_number }}</div>
+                      </div>
+                    </div>
+                    <div v-else>
+                      {{ notification.user }}님이 {{ notification.group }}공구를 {{ notification.action }}하셨습니다.
                     </div>
                   </div>
-                  <div v-else>
-                    {{ notification.user }}님이 {{ notification.group }}공구를 {{ notification.action }}하셨습니다.
-                  </div>
+                  <div class="text-xs text-gray-400">{{ notification.date }}</div>
                 </div>
-                <div class="text-xs text-gray-400">{{ notification.date }}</div>
               </div>
             </div>
           </div>
-        </div>
-        <div v-else class="flex items-center justify-center py-10">
-          <span class="text-gray-400">온 알림이 없어요</span>
+          <div v-else class="flex items-center justify-center py-10">
+            <span class="text-gray-400">온 알림이 없어요</span>
+          </div>
         </div>
       </div>
-    </div>
-  </transition>
+    </transition>
+  </div>
 </template>
 
 <script setup>
