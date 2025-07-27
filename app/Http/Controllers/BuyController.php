@@ -60,9 +60,11 @@ class BuyController extends Controller
         if (!$buy) {
             return response()->json(['message' => '참여 기록이 없습니다.'], 404);
         }
-        if ($insert->active_buys_count == $insert->count || $insert->active_buys_count == $insert->count - 1) {
-            return response()->json(['message' => '최대 인원수 또는 최대-1에 도달하여 취소가 불가합니다.'], 403);
-        }
+        
+        // if ($insert->active_buys_count == $insert->count || $insert->active_buys_count == $insert->count - 1) {
+        //     return response()->json(['message' => '최대 인원수 또는 최대-1에 도달하여 취소가 불가합니다.'], 403);
+        // }
+        
         $buy->cancelled_at = now()->setTimezone('Asia/Seoul');
         $buy->save();
 

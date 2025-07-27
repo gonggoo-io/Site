@@ -105,7 +105,7 @@
                       🚚 배송중
                     </button>
                     <button 
-                      v-if="!isShipping(insert)"
+                      v-if="!isShipping(insert) && !(insert.owner && getActiveBuysCount(insert) >= (insert.people_count || 10))"
                       @click.stop="cancelInsert(insert.id)"
                       class="px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200"
                       :class="insert.owner ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
@@ -156,17 +156,11 @@ const fetchInserts = async () => {
       credentials: 'same-origin'
     })
     
-    console.log('Inserts response status:', response.status)
-    console.log('Inserts response headers:', response.headers)
-    
     if (response.ok) {
       const data = await response.json()
-      console.log('Inserts data:', data)
       inserts.value = data.inserts || []
     } else {
       console.error('Failed to fetch inserts:', response.status, response.statusText)
-      const errorText = await response.text()
-      console.error('Error response:', errorText)
     }
   } catch (error) {
     console.error('Error fetching inserts:', error)
@@ -188,11 +182,8 @@ const fetchBuys = async () => {
       credentials: 'same-origin'
     })
     
-    console.log('Buys response status:', response.status)
-    
     if (response.ok) {
       const data = await response.json()
-      console.log('Buys data:', data)
       buys.value = data.all_buys || []
     } else {
       console.error('Failed to fetch buys:', response.status, response.statusText)
@@ -213,13 +204,21 @@ const cancelInsert = async (insertId) => {
   
   const insert = inserts.value.find(i => i.id === insertId) || buys.value.find(b => b.insert.id === insertId)?.insert
   const isOwner = insert?.owner
-  const isBuy = buys.value.find(b => b.insert.id === insertId)
+  const isBuy = !isOwner && buys.value.find(b => b.insert.id === insertId)
   
   if (!confirm(isOwner ? '정말로 이 공구를 삭제하시겠습니까?' : '정말로 이 공구를 취소하시겠습니까?')) return
   
   try {
     let response
-    if (isBuy) {
+    if (isOwner) {
+      response = await fetch(`/insert/${insertId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+      })
+    } else if (isBuy) {
       response = await fetch(`/buy`, {
         method: 'DELETE',
         headers: {
@@ -229,13 +228,8 @@ const cancelInsert = async (insertId) => {
         body: JSON.stringify({ insert_id: insertId })
       })
     } else {
-      response = await fetch(`/insert/${insertId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        }
-      })
+      alert('삭제할 수 없는 공구입니다.')
+      return
     }
 
     if (response.ok) {
