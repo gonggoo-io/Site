@@ -6,7 +6,7 @@
         <Sidebar active="shipping" />
         <main class="flex-1 pt-6 lg:pt-10 lg:mt-20 px-0 w-full">
           <div class="text-black font-semibold text-3xl mb-1">
-            🚚 배송 중인 거래
+            배송 중인 거래
             <span class="text-lg text-gray-700 font-medium"> · {{ dateRange }}</span>
           </div>
           <div class="text-md text-gray-500 font-medium">※ 배송이 완료되면 거래가 완료로 이동합니다.</div>
@@ -56,6 +56,7 @@
                 </div>
               </section>
             </div>
+            <div class="pb-32 lg:pb-40"></div>
           </template>
         </main>
       </div>

@@ -6,7 +6,7 @@
         <Sidebar active="applied" />
         <main class="flex-1 pt-6 lg:pt-10 lg:mt-20 px-0 w-full">
           <div class="text-black font-semibold text-3xl mb-1">
-            📝 총 {{ totalCount }}건
+            총 {{ totalCount }}건
             <span class="text-lg text-gray-700 font-medium"> · {{ dateRange }}</span>
           </div>
           <div class="text-md text-gray-500 font-medium">※ 등록한 공구와 참여한 공구의 진행 상황을 확인하세요.</div>
@@ -335,16 +335,20 @@ const allItems = computed(() => {
   const ownedInsertIds = new Set(inserts.value.filter(insert => insert && insert.id).map(insert => insert.id))
   const filteredBuys = buys.value.filter(buy => buy && buy.insert && buy.insert.id && !ownedInsertIds.has(buy.insert.id))
   
-  const allInserts = inserts.value.filter(insert => insert && insert.id).map(insert => ({
-    ...insert,
-    type: 'insert'
-  }))
+  const allInserts = inserts.value
+    .filter(insert => insert && insert.id && !isShipping(insert))  // 배송중인 항목 제외
+    .map(insert => ({
+      ...insert,
+      type: 'insert'
+    }))
   
-  const allBuys = filteredBuys.map(buy => ({
-    ...buy.insert,
-    type: 'buy',
-    buy_id: buy.id
-  }))
+  const allBuys = filteredBuys
+    .filter(buy => !isShipping(buy.insert))  // 배송중인 항목 제외
+    .map(buy => ({
+      ...buy.insert,
+      type: 'buy',
+      buy_id: buy.id
+    }))
   
   return [...allInserts, ...allBuys]
 })
