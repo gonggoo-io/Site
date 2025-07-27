@@ -85,7 +85,7 @@
                         @click.stop="handlePurchaseInput(insert.id)"
                         class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#247A4F] transition-all duration-200 font-medium text-sm"
                       >
-                        구매 입력
+                        운송장 입력
                       </button>
                       <button 
                         v-if="!(getActiveBuysCount(insert) >= (insert.people_count || 10))"
