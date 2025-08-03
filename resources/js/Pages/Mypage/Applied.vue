@@ -10,18 +10,21 @@
               <div class="text-black font-semibold text-3xl pb-3">
                 내가 등록한 공구 현황이에요.
               </div>
-              <div v-if="!isLoadingInserts" class="text-gray-600 text-base mb-8 -mt-2">
+              <div class="text-gray-600 text-base mb-8 -mt-2">
                 내가 등록한 공구는 {{ ownerItems.length }}건이에요
               </div>
               
               <div v-if="isLoadingInserts">
-                <div v-for="n in 2" :key="`sk-owner-${n}`" class="mt-8 animate-pulse">
-                  <div class="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
-                  <div class="bg-white rounded-xl p-6 mb-5 border border-gray-200/60 shadow-sm w-full">
-                    <div class="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
-                    <div class="h-4 bg-gray-200 rounded w-1/2"></div>
-                    <div class="flex space-x-3 mt-4">
-                      <div class="h-10 w-28 bg-gray-200 rounded-lg"></div>
+                <div v-for="n in 2" :key="`sk-owner-${n}`" class="mt-8">
+                  <div class="h-5 bg-gray-200 rounded-md w-32 mb-4 animate-pulse"></div>
+                  <div class="bg-gray-50 rounded-xl p-6 mb-5 shadow-sm w-full animate-pulse">
+                    <div class="space-y-3">
+                      <div class="h-6 bg-gray-200 rounded-lg w-3/4"></div>
+                      <div class="h-4 bg-gray-200 rounded-md w-1/2"></div>
+                      <div class="h-3 bg-gray-200 rounded-md w-1/3"></div>
+                    </div>
+                    <div class="flex space-x-3 mt-6">
+                      <div class="h-9 w-24 bg-gray-200 rounded-lg"></div>
                     </div>
                   </div>
                 </div>
@@ -111,19 +114,22 @@
               <div class="text-black font-semibold text-3xl pb-3">
                 내가 참여한 공구 현황이에요.
               </div>
-              <div v-if="!isLoadingBuys" class="text-gray-600 text-base mb-8 -mt-2">
+              <div class="text-gray-600 text-base mb-8 -mt-2">
                 대시보드에 있는 공동구매에 {{ userItems.length }}번 참여했어요
               </div>
 
               <div v-if="isLoadingBuys">
-                <div v-for="n in 2" :key="`sk-user-${n}`" class="mt-8 animate-pulse">
-                  <div class="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
-                  <div class="bg-white rounded-xl p-6 mb-5 border border-gray-200/60 shadow-sm w-full">
-                    <div class="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
-                    <div class="h-4 bg-gray-200 rounded w-1/2"></div>
-                    <div class="flex space-x-3 mt-4">
-                      <div class="h-10 w-28 bg-gray-200 rounded-lg"></div>
-                      <div class="h-10 w-28 bg-gray-200 rounded-lg"></div>
+                <div v-for="n in 2" :key="`sk-user-${n}`" class="mt-8">
+                  <div class="h-5 bg-gray-200 rounded-md w-32 mb-4 animate-pulse"></div>
+                  <div class="bg-gray-50 rounded-xl p-6 mb-5 shadow-sm w-full animate-pulse">
+                    <div class="space-y-3">
+                      <div class="h-6 bg-gray-200 rounded-lg w-2/3"></div>
+                      <div class="h-4 bg-gray-200 rounded-md w-5/12"></div>
+                      <div class="h-3 bg-gray-200 rounded-md w-1/4"></div>
+                    </div>
+                    <div class="flex space-x-3 mt-6">
+                      <div class="h-9 w-20 bg-gray-200 rounded-lg"></div>
+                      <div class="h-9 w-20 bg-gray-200 rounded-lg"></div>
                     </div>
                   </div>
                 </div>
