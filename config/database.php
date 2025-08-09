@@ -93,10 +93,6 @@ return [
             'search_path' => 'public',
             'sslmode' => 'require',
             'trust_server_certificate' => true,
-            'options' => [
-                PDO::ATTR_EMULATE_PREPARES => true,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            ],
             'timezone' => 'Asia/Seoul',
             'application_name' => 'Laravel',
             'options' => [
@@ -104,9 +100,6 @@ return [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             ],
-            'after_connect' => function ($connection) {
-                $connection->exec("SET timezone TO 'Asia/Seoul'");
-            },
         ],
 
         'sqlsrv' => [
