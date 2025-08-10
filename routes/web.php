@@ -64,8 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/mypage/applied', fn () => Inertia::render('Mypage/Applied'))->name('mypage.applied');
     Route::get('/mypage/shipping', fn () => Inertia::render('Mypage/Shipping'))->name('mypage.shipping');
     Route::get('/mypage/completed', fn () => Inertia::render('Mypage/Completed'))->name('mypage.completed');
-    
-    // Debug routes
+
     Route::get('/debug/my-buys', [MypageController::class, 'debugMyBuys']);
     Route::get('/debug/my-inserts', [MypageController::class, 'debugMyInserts']);
 });

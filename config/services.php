@@ -36,11 +36,15 @@ return [
     ],
 
     'kakao' => [
-        'client_id' => env('KAKAO_CLIENT_ID', 'f0298b393c792dbd2b88f93af6ede529'),
-        'client_secret' => env('KAKAO_CLIENT_SECRET', '9PQPYwDSa5Et5mpFjdiiTEcDzRGbGPIo'),
+        'client_id' => env('APP_ENV') === 'production' 
+            ? env('KAKAO_CLIENT_ID', 'f0298b393c792dbd2b88f93af6ede529') 
+            : null,
+        'client_secret' => env('APP_ENV') === 'production' 
+            ? env('KAKAO_CLIENT_SECRET', '9PQPYwDSa5Et5mpFjdiiTEcDzRGbGPIo') 
+            : null,
         'redirect' => env('APP_ENV') === 'production'
             ? 'https://gonggoo.kro.kr/auth/kakao/callback'
-            : 'http://localhost:8000/auth/kakao/callback',
+            : null,
         'guzzle' => [
             'curl' => [
                 CURLOPT_SSL_VERIFYPEER => env('APP_ENV') === 'production',
