@@ -11,7 +11,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $inserts = Insert::with(['user', 'buys'])->get();
+        $inserts = Insert::with(['user', 'buys'])->orderBy('created_at', 'desc')->get();
         
         return Inertia::render('Dashboard', [
             'inserts' => $inserts,
