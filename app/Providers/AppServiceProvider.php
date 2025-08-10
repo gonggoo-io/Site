@@ -41,32 +41,34 @@ class AppServiceProvider extends ServiceProvider
             $socialiteWasCalled->extendSocialite('kakao', \SocialiteProviders\Kakao\KakaoProvider::class);
         });
 
-        if (config('app.env') === 'local' || config('app.debug')) {
-            $this->app->afterResolving(\Laravel\Socialite\SocialiteManager::class, function ($manager) {
-                $manager->extend('kakao', function ($app) use ($manager) {
-                    $config = $app['config']['services.kakao'];
-                    
-                    $provider = new \SocialiteProviders\Kakao\KakaoProvider(
-                        $app['request'],
-                        $config['client_id'],
-                        $config['client_secret'],
-                        $config['redirect']
-                    );
-                    
-                    $httpClient = new \GuzzleHttp\Client([
-                        'curl' => [
-                            CURLOPT_SSL_VERIFYPEER => false,
-                            CURLOPT_SSL_VERIFYHOST => false,
-                        ],
-                        'verify' => false,
-                    ]);
-                    
-                    $provider->setHttpClient($httpClient);
-                    
-                    return $provider;
-                });
+        $this->app->afterResolving(\Laravel\Socialite\SocialiteManager::class, function ($manager) {
+            $manager->extend('kakao', function ($app) use ($manager) {
+                $config = $app['config']['services.kakao'];
+                
+                if (empty($config['client_id']) || empty($config['client_secret'])) {
+                    return null;
+                }
+                
+                $provider = new \SocialiteProviders\Kakao\KakaoProvider(
+                    $app['request'],
+                    $config['client_id'],
+                    $config['client_secret'],
+                    $config['redirect']
+                );
+                
+                $httpClient = new \GuzzleHttp\Client([
+                    'curl' => [
+                        CURLOPT_SSL_VERIFYPEER => config('app.env') === 'production',
+                        CURLOPT_SSL_VERIFYHOST => config('app.env') === 'production' ? 2 : 0,
+                    ],
+                    'verify' => config('app.env') === 'production',
+                ]);
+                
+                $provider->setHttpClient($httpClient);
+                
+                return $provider;
             });
-        }
+        });
     }
     
 } 
