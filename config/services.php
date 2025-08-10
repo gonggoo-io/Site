@@ -36,15 +36,9 @@ return [
     ],
 
     'kakao' => [
-        'client_id' => env('APP_ENV') === 'production' 
-            ? env('KAKAO_CLIENT_ID') 
-            : null,
-        'client_secret' => env('APP_ENV') === 'production' 
-            ? env('KAKAO_CLIENT_SECRET') 
-            : null,
-        'redirect' => env('APP_ENV') === 'production'
-            ? 'https://gonggoo.kro.kr/auth/kakao/callback'
-            : null,
+        'client_id' => env('KAKAO_CLIENT_ID'),
+        'client_secret' => env('KAKAO_CLIENT_SECRET'),
+        'redirect' => env('KAKAO_REDIRECT_URI'),
         'guzzle' => [
             'curl' => [
                 CURLOPT_SSL_VERIFYPEER => env('APP_ENV') === 'production',
@@ -53,6 +47,4 @@ return [
             'verify' => env('APP_ENV') === 'production',
         ],
     ],
-
-
 ];
