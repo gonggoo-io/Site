@@ -36,9 +36,9 @@ return [
     ],
 
     'kakao' => [
-        'client_id' => 'f0298b393c792dbd2b88f93af6ede529',
-        'client_secret' => '9PQPYwDSa5Et5mpFjdiiTEcDzRGbGPIo',
-        'redirect' => (isset($_SERVER['HTTP_HOST']) && str_contains($_SERVER['HTTP_HOST'], 'gonggoo.kro.kr'))
+        'client_id' => env('KAKAO_CLIENT_ID', 'f0298b393c792dbd2b88f93af6ede529'),
+        'client_secret' => env('KAKAO_CLIENT_SECRET', '9PQPYwDSa5Et5mpFjdiiTEcDzRGbGPIo'),
+        'redirect' => env('APP_ENV') === 'production'
             ? 'https://gonggoo.kro.kr/auth/kakao/callback'
             : 'http://localhost:8000/auth/kakao/callback',
         'guzzle' => [
@@ -49,5 +49,6 @@ return [
             'verify' => env('APP_ENV') === 'production',
         ],
     ],
+
 
 ];
